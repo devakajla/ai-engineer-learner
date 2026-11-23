@@ -1,0 +1,34 @@
+- q: An `async def` route calls `requests.get(url)` which takes 3 seconds. What happens to other requests on that worker?
+  type: single
+  options: ["Nothing, they run in parallel", "They are blocked for ~3 seconds", "FastAPI moves the call to a thread automatically", "They get a 503"]
+  answer: [1]
+  explain: requests is blocking; inside async def it blocks the event loop. Use httpx.AsyncClient or a plain def route.
+- q: How does FastAPI run a plain `def` route?
+  type: single
+  options: ["On the event loop", "In a thread pool", "In a separate process", "It converts it to async"]
+  answer: [1]
+  explain: Sync routes run in a thread pool so blocking calls don't freeze the event loop.
+- q: |
+    Three awaited calls of 1 second each. How long does this take?
+    ```python
+    await asyncio.gather(call(), call(), call())
+    ```
+  type: single
+  options: ["~1 second", "~3 seconds", "~0 seconds", "It depends on CPU cores"]
+  answer: [0]
+  explain: gather runs them concurrently; the waits overlap.
+- q: Which workloads benefit from async?
+  type: multi
+  options: ["Calling an LLM API", "Many database queries", "Resizing images in Python", "WebSockets with many idle clients"]
+  answer: [0, 1, 3]
+  explain: Async helps I/O-bound waiting; CPU-bound work like image resizing needs processes.
+- q: With an `AsyncSession`, accessing an unloaded relationship like `user.tasks` raises an error. What's the fix?
+  type: single
+  options: ["Use time.sleep", "Load it eagerly with `selectinload(User.tasks)`", "Call it twice", "Switch to requests"]
+  answer: [1]
+  explain: Lazy loading would need an implicit await; async code must load relationships eagerly.
+- q: You must call a blocking library inside an `async def` route. What's the right way?
+  type: single
+  options: ["Call it directly", "`await asyncio.to_thread(blocking_fn, arg)`", "Wrap it in try/except", "Use asyncio.sleep(0) before it"]
+  answer: [1]
+  explain: to_thread (or run_in_threadpool) moves the blocking call off the event loop.

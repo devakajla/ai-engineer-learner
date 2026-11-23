@@ -1,0 +1,38 @@
+- q: What does CORS protect against?
+  type: single
+  options:
+    - All unauthorized API access
+    - Browser JavaScript from other origins calling your API without permission
+    - SQL injection
+    - DDoS attacks
+  answer: [1]
+  explain: CORS is enforced by browsers only; curl and servers ignore it. It's not authentication.
+- q: In `@app.middleware("http")`, what does code after `await call_next(request)` do?
+  type: single
+  options: ["Runs before the route", "Runs after the route produced a response", "Never runs", "Runs only on errors"]
+  answer: [1]
+  explain: call_next runs the rest of the app; code after it can inspect or modify the response.
+- q: What should a 500 response body contain?
+  type: multi
+  options: ["A generic message like \"Internal server error\"", "The full traceback", "A stable error code", "The SQL query that failed"]
+  answer: [0, 2]
+  explain: Details go to logs; clients get a safe, consistent message.
+- q: Why store the request ID in a `ContextVar` instead of a global variable?
+  type: single
+  options:
+    - ContextVars are faster
+    - Each concurrent request/task sees its own value; a global would be overwritten by other requests
+    - Globals can't hold strings
+    - Logging requires ContextVars
+  answer: [1]
+  explain: With async concurrency, many requests are in flight at once; ContextVars keep values per task.
+- q: Where should the mapping "NotFoundError → 404" live?
+  type: single
+  options: ["In the domain exception class", "In the service", "In the API layer's exception handler", "In the repository"]
+  answer: [2]
+  explain: Keeping HTTP details at the edge lets the domain stay transport-agnostic.
+- q: Which belong in middleware rather than in individual routes?
+  type: multi
+  options: ["Adding a request ID header", "Measuring request duration", "Checking if task 5 belongs to the user", "CORS headers"]
+  answer: [0, 1, 3]
+  explain: Ownership checks are route/business-specific — use dependencies or services for them.

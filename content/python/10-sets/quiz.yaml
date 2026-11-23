@@ -1,0 +1,49 @@
+- q: How do you create an empty set?
+  type: single
+  options: ["`{}`", "`set()`", "`set([])` only", "`[]`"]
+  answer: [1]
+  explain: '`{}` is an empty dict. `set()` is the empty set (`set([])` also works but `set()` is the usual way).'
+- q: |
+    What is the length?
+    ```python
+    print(len({1, 2, 2, 3, 3, 3}))
+    ```
+  type: single
+  options: ["`6`", "`3`", "`2`", "`1`"]
+  answer: [1]
+  explain: 'A set keeps each value once: `{1, 2, 3}`.'
+- q: |
+    What is `a & b`?
+    ```python
+    a = {1, 2, 3}
+    b = {2, 3, 4}
+    ```
+  type: single
+  options: ["`{1, 2, 3, 4}`", "`{2, 3}`", "`{1}`", "`{1, 4}`"]
+  answer: [1]
+  explain: '`&` is intersection: items in both sets.'
+- q: |
+    What is `a - b`?
+    ```python
+    a = {1, 2, 3}
+    b = {2, 3, 4}
+    ```
+  type: single
+  options: ["`{1}`", "`{4}`", "`{1, 4}`", "`{2, 3}`"]
+  answer: [0]
+  explain: 'Difference: items in `a` that are not in `b`.'
+- q: Which of these can you put in a set?
+  type: multi
+  options: ["`3`", '`"hello"`', "`(1, 2)`", "`[1, 2]`", '`{"a": 1}`']
+  answer: [0, 1, 2]
+  explain: 'Only hashable items. Lists and dicts are mutable and not hashable.'
+- q: What is the difference between `s.remove(x)` and `s.discard(x)` when `x` is missing?
+  type: single
+  options: ["Both raise KeyError", "`remove` raises KeyError, `discard` does nothing", "`discard` raises KeyError, `remove` does nothing", "Both do nothing"]
+  answer: [1]
+  explain: '`discard` is the quiet version.'
+- q: Why is `x in my_set` usually faster than `x in my_list` for big collections?
+  type: single
+  options: ["Sets are sorted", "Sets use hashing, so lookup does not scan every item", "Lists are stored on disk", "It is not faster"]
+  answer: [1]
+  explain: 'A set finds the item by its hash in about constant time. A list checks items one by one.'

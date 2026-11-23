@@ -1,0 +1,76 @@
+- q: In tool calling, who actually runs the function?
+  type: single
+  options:
+    - The model, on Groq's servers
+    - Your code
+    - The Groq SDK automatically
+    - The user
+  answer: [1]
+  explain: The model only writes a request (function name and arguments). Your code runs the function and sends back the result.
+- q: 'A tool call has `function.arguments` set to the text {"city": "Delhi"}. What type is `arguments`?'
+  type: single
+  options: ["A dictionary", "A string that holds JSON", "A list", "A Pydantic model"]
+  answer: [1]
+  explain: It is a JSON string. You must parse it with json.loads before you use it.
+- q: |
+    What is printed?
+    ```python
+    import json
+    args = json.loads('{"a": 2, "b": 3}')
+
+    def add(a, b):
+        return a + b
+
+    print(add(**args))
+    ```
+  type: single
+  options: ["`5`", "`23`", "A `TypeError`", "`{'a': 2, 'b': 3}`"]
+  answer: [0]
+  explain: "`**args` spreads the dictionary into named arguments, so this is add(a=2, b=3)."
+- q: Which key must a `tool` result message carry, so the model knows which call it answers?
+  type: single
+  options: ["`name`", "`tool_call_id`", "`function`", "`call_number`"]
+  answer: [1]
+  explain: The id of the tool call goes into tool_call_id.
+- q: The model answers a question directly, without any tool. What is `message.tool_calls`?
+  type: single
+  options: ["An empty string", "`None`", "`0`", "A `KeyError` is raised"]
+  answer: [1]
+  explain: When no tool is requested, tool_calls is None (or empty). Check it before you loop.
+- q: |
+    What is printed?
+    ```python
+    def add(a, b):
+        return a + b
+
+    functions = {"add": add}
+
+    def run_call(name, args):
+        if name not in functions:
+            return f"error: unknown tool {name}"
+        return str(functions[name](**args))
+
+    print(run_call("sub", {"a": 1, "b": 1}))
+    ```
+  type: single
+  options: ["A `KeyError`", "`error: unknown tool sub`", "`0`", "`None`"]
+  answer: [1]
+  explain: sub is not in the dictionary, so the function returns an error text instead of crashing. The model can read it and recover.
+- q: What must be in the messages when you call the model the second time?
+  type: multi
+  options:
+    - The original messages
+    - The assistant message that contains the tool calls
+    - One tool message per tool call
+    - Nothing, the API remembers the first call
+  answer: [0, 1, 2]
+  explain: The model has no memory. It needs the whole story - the question, its own request, and the results.
+- q: One model reply contains three tool calls. What must your code do?
+  type: single
+  options:
+    - Run only the first and ignore the rest
+    - Run all three and send one tool message for each, with its own tool_call_id
+    - Merge the three results into one assistant message
+    - Ask the model again without running anything
+  answer: [1]
+  explain: Parallel tool calls need one tool message per call, each linked by its tool_call_id.

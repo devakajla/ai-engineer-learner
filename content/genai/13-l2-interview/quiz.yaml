@@ -1,0 +1,76 @@
+- q: Which statements about LLM APIs are true?
+  type: multi
+  options:
+    - Each call is independent, so the app must send the history
+    - The model learns from every chat you send
+    - Input and output tokens both count toward the context window
+    - Temperature 0 gives a guaranteed identical answer every time
+  answer: [0, 2]
+  explain: The API is stateless and the window covers input plus output. The model does not learn during inference, and temperature 0 is very stable but not a guarantee.
+- q: Which errors should a robust client retry?
+  type: multi
+  options:
+    - 429 rate limit
+    - 400 bad request
+    - 503 service unavailable
+    - 401 invalid API key
+  answer: [0, 2]
+  explain: Rate limits and server errors can pass by themselves. 400 and 401 are mistakes in your request or key, and a retry will fail again.
+- q: |
+    What is printed?
+    ```python
+    print([min(2**i, 6) for i in range(5)])
+    ```
+  type: single
+  options: ["`[1, 2, 4, 6, 6]`", "`[1, 2, 4, 8, 16]`", "`[2, 4, 6, 6, 6]`", "`[1, 2, 4, 6, 8]`"]
+  answer: [0]
+  explain: 2**i is 1, 2, 4, 8, 16. Capped at 6 gives 1, 2, 4, 6, 6. This is the shape of exponential backoff.
+- q: JSON mode is on, and the reply is valid JSON, but `priority` is `"very high"` and your code needs an integer. What should you do?
+  type: single
+  options:
+    - Use it as it is
+    - Validate with Pydantic, and on failure send the error back and retry a few times
+    - Turn the temperature up
+    - Increase max_completion_tokens
+  answer: [1]
+  explain: JSON mode only guarantees syntax. A schema check catches the wrong type, and the repair loop asks the model to fix it.
+- q: |
+    What is printed?
+    ```python
+    import json
+    args = json.loads('[1, 2]')
+    print(isinstance(args, dict))
+    ```
+  type: single
+  options: ["`True`", "`False`", "A `JSONDecodeError`", "`None`"]
+  answer: [1]
+  explain: The text is valid JSON, but it is a list, not an object. That is why tool arguments need an isinstance check.
+- q: In tool calling, the model asks for a tool called `delete_all`. What is the safest design?
+  type: single
+  options:
+    - Run it, because the model knows best
+    - Only run tools that are in an allow-list, validate the arguments, and ask a human to confirm risky ones
+    - Let the model run the code itself
+    - Remove the tool messages from the history
+  answer: [1]
+  explain: Model output is untrusted. Use an allow-list, validate inputs and add confirmation for actions that destroy data or spend money.
+- q: |
+    What is printed?
+    ```python
+    h = ["a", "b", "c"]
+    n = 0
+    print(h[-n:])
+    ```
+  type: single
+  options: ["`[]`", "`['a', 'b', 'c']`", "`['c']`", "An `IndexError`"]
+  answer: [1]
+  explain: -0 equals 0, so the slice starts at the beginning and returns everything. Handle n <= 0 yourself.
+- q: A chat is too long for the context window. Which approach keeps the user's name from 30 messages ago?
+  type: single
+  options:
+    - Keep only the last 5 messages
+    - Summarize the old messages and keep the summary plus the recent ones
+    - Delete the system message
+    - Lower the temperature
+  answer: [1]
+  explain: Trimming forgets. A summary keeps the key facts in a few tokens.

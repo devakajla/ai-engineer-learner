@@ -1,0 +1,70 @@
+- q: "What does `ending_here` mean in Kadane's algorithm?"
+  type: single
+  options:
+    - "The best sum of any subarray in the list"
+    - "The best sum of a subarray that must end at the current index"
+    - "The sum of the whole list so far"
+    - "The last element"
+  answer: [1]
+  explain: "At each step you only decide the best part that ends here. The overall best is the maximum of these."
+
+- q: |
+    What is the output?
+    ```python
+    nums = [-2, 1, -3, 4]
+    ending_here = best = nums[0]
+    for x in nums[1:]:
+        ending_here = max(x, ending_here + x)
+        best = max(best, ending_here)
+    print(best)
+    ```
+  type: single
+  options: ["4", "2", "0", "-1"]
+  answer: [0]
+  explain: "ending_here goes -2, 1, -2, 4. The best is 4 (the number 4 alone)."
+
+- q: "Why do we start with `nums[0]` and not `0` for the best sum?"
+  type: single
+  options:
+    - "Zero is slower"
+    - "If every number is negative the answer must be the biggest negative number, not 0"
+    - "It avoids an index error"
+    - "It does not matter"
+  answer: [1]
+  explain: "The part must be non-empty. Starting at 0 would wrongly allow an empty part."
+
+- q: "In Maximum Product Subarray, why do we keep the smallest product too?"
+  type: single
+  options:
+    - "To find the minimum product subarray"
+    - "A negative number can turn the smallest (most negative) product into the biggest"
+    - "To save memory"
+    - "Because zeros appear"
+  answer: [1]
+  explain: "Multiplying the most negative value by a negative number gives a large positive value."
+
+- q: "How is the maximum circular subarray sum found?"
+  type: single
+  options:
+    - "max(max_subarray, total - min_subarray)"
+    - "total - max_subarray"
+    - "max_subarray * 2"
+    - "min_subarray - total"
+  answer: [0]
+  explain: "A wrapping part is everything minus a middle part; remove the smallest middle part. If all are negative, use max_subarray alone."
+
+- q: "Which questions can use the 'extend or restart' streak idea? (choose all that apply)"
+  type: multi
+  options:
+    - "Longest increasing contiguous run"
+    - "Longest turbulent subarray"
+    - "Longest increasing subsequence (not contiguous)"
+    - "Longest mountain"
+  answer: [0, 1, 3]
+  explain: "Streak questions are about contiguous parts. A subsequence is not contiguous, so it needs a different method."
+
+- q: "Time and extra space of Kadane's algorithm?"
+  type: single
+  options: ["O(n) time, O(1) space", "O(n²) time, O(1) space", "O(n) time, O(n) space", "O(n log n) time, O(1) space"]
+  answer: [0]
+  explain: "One pass with a couple of variables."

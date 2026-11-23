@@ -1,0 +1,77 @@
+- q: What problem do contextual chunks solve?
+  type: single
+  options:
+    - Chunks that are unclear alone, like "The limit is 100."
+    - Slow disks
+    - Wrong model names
+    - Too many users
+  answer: [0]
+  explain: Adding the title and heading before embedding tells the vector what the chunk is about.
+- q: In parent-child retrieval, what do you search and what do you send to the model?
+  type: single
+  options:
+    - Search parents, send children
+    - Search small child chunks, send the bigger parent sections
+    - Search and send children
+    - Search and send parents
+  answer: [1]
+  explain: Children match precisely. Parents give complete context for the answer.
+- q: |
+    What does this print?
+    ```python
+    parts = [p for p in ("", "Free plan") if p]
+    print(" > ".join(parts))
+    ```
+  type: single
+  options:
+    - "Free plan"
+    - " > Free plan"
+    - Empty text
+    - Error
+  answer: [0]
+  explain: The empty text is dropped by the `if p` check, so only one part is joined.
+- q: Three child hits share one parent. How many times should the parent be sent?
+  type: single
+  options:
+    - Three times
+    - Once, with the best score of its children
+    - Never
+    - Once per word
+  answer: [1]
+  explain: Repeats waste context. Merge the parent and keep the highest child score.
+- q: What is the main risk of agentic RAG?
+  type: single
+  options:
+    - It cannot call tools
+    - More calls, higher cost and latency, less predictability, and possible endless loops
+    - It cannot cite
+    - It needs no model
+  answer: [1]
+  explain: Give agents a step limit, a cost cap and logging.
+- q: A model router replies "finance" but your sources are "api" and "hr". What do you do?
+  type: single
+  options:
+    - Search "finance" anyway
+    - Treat it as no valid source (None) and handle it, for example by answering "I don't know"
+    - Crash
+    - Create a new source
+  answer: [1]
+  explain: Never trust model text without checking it against the list of valid values.
+- q: Which question fits GraphRAG best?
+  type: single
+  options:
+    - What is the rate limit of the Free plan?
+    - Which teams depend on the billing service, directly or through others?
+    - What is 2+2?
+    - Translate this to French
+  answer: [1]
+  explain: Relations across many entities are what a knowledge graph handles well.
+- q: What is the right order of work for improving RAG?
+  type: single
+  options:
+    - Add every advanced idea at once
+    - Measure plain RAG, find the failing stage, add one idea for that failure, measure again
+    - Switch to GraphRAG first
+    - Skip evaluation
+  answer: [1]
+  explain: Each idea has a cost. Add it only when it moves a measured number.

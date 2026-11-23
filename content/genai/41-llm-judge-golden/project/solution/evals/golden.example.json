@@ -1,0 +1,5 @@
+[
+  {"question": "How do I delete a task?", "expected": ["tasks.md:2"]},
+  {"question": "What does error 429 mean?", "expected": ["errors.md:1"]},
+  {"question": "What is the price of the moon?", "expected": []}
+]

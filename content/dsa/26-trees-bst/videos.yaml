@@ -1,0 +1,16 @@
+intro: {video_id: VdujirLGDDE, title: "Starting the tree series (DSA Patterns Ep 75)", start: 0, end: 1236}
+segments:
+  - {exercise: 02-preorder, video_id: ZvYJT_QwnEw, title: "Tree traversals (Ep 76)", start: 0, end: 600}
+  - {exercise: 03-inorder, video_id: ZvYJT_QwnEw, title: "Tree traversals (Ep 76)", start: 600, end: 1100}
+  - {exercise: 04-postorder, video_id: ZvYJT_QwnEw, title: "Tree traversals (Ep 76)", start: 1100, end: 1585}
+  - {exercise: 05-level-order, video_id: -g6h0Ok1Buk, title: "Level order traversal (Ep 77)", start: 0, end: 2730}
+  - {exercise: 01-max-depth, video_id: nkWopJZsqXc, title: "One pattern for tree questions (Ep 78)", start: 0, end: 1421}
+  - {exercise: 06-is-symmetric, video_id: dXJdiFMLdZQ, title: "Symmetric binary tree (Ep 79)", start: 0, end: 2392}
+  - {exercise: 07-lca-binary-tree, video_id: _UoIHF3KUpE, title: "LCA in a binary tree (Ep 80)", start: 0, end: 1662}
+  - {exercise: 09-search-bst, video_id: CDo0V5Jbb2o, title: "Introduction to BST (Ep 81)", start: 0, end: 1412}
+  - {exercise: 08-lca-bst, video_id: QopDohCvJVA, title: "LCA in a BST (Ep 82)", start: 0, end: 1271}
+  - {exercise: 10-two-sum-bst, video_id: Zr2z8DD6TuQ, title: "Two sum in a BST (Ep 83)", start: 0, end: 3402}
+  - {exercise: 11-path-sum, video_id: Sat-0sqezpM, title: "Path sum (Ep 84)", start: 0, end: 1832}
+  - {exercise: 12-diameter, video_id: _V7J7exlyzk, title: "Diameter of a binary tree (Ep 85)", start: 0, end: 2636}
+  - {exercise: 13-is-valid-bst, video_id: 5PrzZfhk1OQ, title: "Validate BST (Ep 86)", start: 0, end: 2531}
+  - {exercise: 14-build-tree, video_id: 14NH9aD7XeY, title: "Construct a tree from preorder and inorder (Ep 87)", start: 0, end: 1675}

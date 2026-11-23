@@ -1,0 +1,59 @@
+- q: |
+    What is the output?
+    ```python
+    nums = [1, 2, 4, 7, 11]
+    left, right = 0, len(nums) - 1
+    while left < right:
+        s = nums[left] + nums[right]
+        if s == 9:
+            break
+        if s < 9:
+            left += 1
+        else:
+            right -= 1
+    print(left, right)
+    ```
+  type: single
+  options: ["`1 3`", "`0 4`", "`2 3`", "`1 4`"]
+  answer: [0]
+  explain: "1+11=12 is too big so right=3. 1+7=8 is too small so left=1. 2+7=9: stop at 1 3."
+- q: "Which signals suggest two pointers?"
+  type: multi
+  options: ["Sorted array", "Find a pair or triplet with a sum", "In-place, O(1) extra space", "The input is a graph"]
+  answer: [0, 1, 2]
+  explain: "Sorted data, pair/triplet questions and in-place requirements are the classic signals. A graph needs BFS/DFS."
+- q: |
+    What is the output?
+    ```python
+    nums = [0, 1, 0, 3]
+    slow = 0
+    for fast in range(len(nums)):
+        if nums[fast] != 0:
+            nums[slow] = nums[fast]
+            slow += 1
+    print(slow, nums[:slow])
+    ```
+  type: single
+  options: ["`2 [1, 3]`", "`4 [0, 1, 0, 3]`", "`2 [0, 1]`", "`3 [1, 3, 0]`"]
+  answer: [0]
+  explain: "The reader finds non-zeros 1 and 3. The writer puts them at positions 0 and 1, so slow is 2."
+- q: "Why is the two-end pair-sum scan O(n)?"
+  type: single
+  options: ["Each step moves a pointer, and pointers never go back", "It uses a hash map", "It uses recursion", "It sorts the list each step"]
+  answer: [0]
+  explain: "left only goes right and right only goes left, so at most n steps in total."
+- q: "What is the time complexity of 3Sum with sort + two pointers?"
+  type: single
+  options: ["O(n²)", "O(n³)", "O(n)", "O(n log n)"]
+  answer: [0]
+  explain: "Sorting is O(n log n). Then for each of n values we scan a pair in O(n): O(n²) in total."
+- q: "In the Dutch flag algorithm, when `nums[mid] == 2` we swap with `high`. Why not move `mid`?"
+  type: single
+  options: ["The item swapped in from `high` has not been checked yet", "mid must never move", "high is always 0", "It would make the loop O(n²)"]
+  answer: [0]
+  explain: "The value that came from the right end could be 0, 1 or 2, so we must look at it again."
+- q: "You must merge two sorted lists into a new sorted list in O(n + m). Which type of two pointers?"
+  type: single
+  options: ["One pointer per list, advance the smaller item", "Both pointers on the same list from the ends", "A set of seen numbers", "Sort the joined list"]
+  answer: [0]
+  explain: "Sorting would cost O((n+m) log(n+m)). Advancing the smaller front item is linear."

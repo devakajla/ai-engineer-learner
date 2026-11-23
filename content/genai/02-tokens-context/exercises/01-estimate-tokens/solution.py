@@ -1,0 +1,2 @@
+def estimate_tokens(text):
+    return (len(text) + 3) // 4

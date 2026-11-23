@@ -1,0 +1,45 @@
+# The order here IS the learning order. Never rename an existing slug (progress is stored by it).
+title: DSA
+levels:
+  - id: l1
+    title: "Level 1 — Logic & Functions"
+    lessons:
+      - {slug: 01-how-to-solve, title: "How to solve a problem"}
+      - {slug: 02-math-basics, title: "Math basics"}
+      - {slug: 03-loops-drills, title: "Loop drills"}
+      - {slug: 04-patterns, title: "Pattern problems"}
+      - {slug: 05-functions-decomposition, title: "Functions & decomposition"}
+  - id: l2
+    title: "Level 2 — Built-in Data Structures"
+    lessons:
+      - {slug: 06-strings, title: "Strings"}
+      - {slug: 07-lists, title: "Lists"}
+      - {slug: 08-tuples-unpacking, title: "Tuples & unpacking"}
+      - {slug: 09-sets, title: "Sets"}
+      - {slug: 10-dicts, title: "Dictionaries"}
+      - {slug: 11-nested-and-mixed, title: "Nested & mixed structures"}
+      - {slug: 12-fluency-checkpoint, title: "Fluency checkpoint"}
+  - id: l3
+    title: "Level 3 — Pattern Foundations (Nov–Jan)"
+    lessons:
+      - {slug: 13-complexity-and-patterns, title: "Complexity & how patterns work"}
+      - {slug: 14-two-pointers, title: "Two pointers"}
+      - {slug: 15-sliding-window, title: "Sliding window"}
+      - {slug: 16-prefix-sum, title: "Prefix sum"}
+      - {slug: 17-hashmap-patterns, title: "Hashmap patterns"}
+      - {slug: 18-stack-monotonic, title: "Stack & monotonic stack"}
+      - {slug: 19-kadane, title: "Kadane's algorithm"}
+      - {slug: 20-intervals, title: "Merge intervals"}
+      - {slug: 21-binary-search, title: "Binary search"}
+      - {slug: 22-l3-checkpoint, title: "Level 3 checkpoint"}
+  - id: l4
+    title: "Level 4 — Core Structures (Feb–Mar)"
+    lessons:
+      - {slug: 23-linked-list, title: "Linked list"}
+      - {slug: 24-heap-top-k, title: "Heap & top-K"}
+      - {slug: 25-recursion-backtracking, title: "Recursion & backtracking"}
+      - {slug: 26-trees-bst, title: "Trees & BST"}
+      - {slug: 27-graphs-bfs-dfs, title: "Graphs: BFS & DFS"}
+      - {slug: 28-graphs-topo-dijkstra, title: "Graphs: topo sort & shortest path"}
+      - {slug: 29-greedy-intro-dp, title: "Greedy & intro DP"}
+      - {slug: 30-l4-checkpoint, title: "Level 4 checkpoint"}

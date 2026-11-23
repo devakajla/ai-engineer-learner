@@ -1,0 +1,77 @@
+- q: What is an LLM judge?
+  type: single
+  options:
+    - A model that grades the output of another model using a rubric
+    - A court of law for AI
+    - A vector database
+    - A reranking formula
+  answer: [0]
+  explain: It gets the question, the context, the answer and a rubric, and replies with a score and a reason.
+- q: Which settings make a judge more reliable?
+  type: multi
+  options:
+    - Temperature 0
+    - A clear rubric that says what each score means
+    - Tags around the answer, which is untrusted text
+    - One call that grades ten different things at once
+  answer: [0, 1, 2]
+  explain: One thing per call is steadier. The answer may contain tricks, so it is wrapped as data.
+- q: |
+    What does this print?
+    ```python
+    score = True
+    print(isinstance(score, int))
+    ```
+  type: single
+  options:
+    - "True"
+    - "False"
+    - Error
+    - None
+  answer: [0]
+  explain: In Python `bool` is a subclass of `int`. So a parser must check for `bool` first, or `true` becomes a score of 1.
+- q: What is verbosity bias?
+  type: single
+  options:
+    - The judge dislikes long answers
+    - The judge tends to give longer answers higher scores
+    - The judge talks too much
+    - The embedding gets longer
+  answer: [1]
+  explain: Length can look like quality to a judge. Say in the rubric that length does not matter, and check the scores against length.
+- q: How do you reduce position bias when comparing two answers?
+  type: single
+  options:
+    - Always show the better answer first
+    - Run the comparison in both orders and compare the results
+    - Use a longer prompt
+    - Use top_k
+  answer: [1]
+  explain: If the judge prefers the first slot, swapping the order shows it and cancels it.
+- q: How do you know that you can trust your judge for a task?
+  type: single
+  options:
+    - It sounds confident
+    - Grade a sample yourself and check how often the judge agrees
+    - It is a big model
+    - It uses JSON
+  answer: [1]
+  explain: Agreement with human grades on a sample is the real check.
+- q: Which case favours long context over RAG?
+  type: single
+  options:
+    - Ten million chunks
+    - One 30-page contract that you must summarize as a whole
+    - Different access rights for each user
+    - A very low cost per question at high volume
+  answer: [1]
+  explain: Whole-document tasks need the entire text. RAG sees only pieces.
+- q: Why is a judge not a replacement for code checks?
+  type: single
+  options:
+    - Code checks are exact and free for things like "has a citation" or "valid JSON"
+    - Judges cannot read text
+    - Code checks are slower
+    - Judges are not allowed in tests
+  answer: [0]
+  explain: Use code wherever a rule can be checked exactly. Use the judge for the rest.

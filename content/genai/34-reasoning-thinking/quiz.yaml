@@ -1,0 +1,62 @@
+- q: What is a reasoning model?
+  type: single
+  options:
+    - A model that only works with maths
+    - A chat model trained to write thinking text before its final answer
+    - A model that has no training
+    - A model that always answers faster
+  answer: [1]
+  explain: A reasoning model writes a chain of thought first, then the answer. It is better on hard problems and slower and costlier.
+- q: Why can a small max_completion_tokens be a problem with a thinking model?
+  type: single
+  options:
+    - The model refuses to answer
+    - The thinking can use all the tokens, so the answer is empty or cut off
+    - The API gives a 401 error
+    - Thinking is free, so there is no problem
+  answer: [1]
+  explain: Thinking tokens count as output tokens. If the limit is used up while thinking, the answer never appears, and finish_reason is "length".
+- q: With reasoning_format set to "parsed", where is the thinking text?
+  type: single
+  options:
+    - Inside content, between think tags
+    - In a separate field of the message
+    - It is removed and you do not pay for it
+    - In the system message
+  answer: [1]
+  explain: The "parsed" setting puts the thinking in its own field and leaves only the answer in content. "hidden" removes it, but you still pay for it. Always check the model docs.
+- q: |
+    What is printed?
+    ```python
+    text = "[note] be kind [/note] Hello!"
+    start = text.find("[note]")
+    end = text.find("[/note]")
+    print(text[start + len("[note]"):end].strip())
+    ```
+  type: single
+  options: ["`be kind`", "`Hello!`", "`[note] be kind`", "`-1`"]
+  answer: [0]
+  explain: The slice starts right after the opening tag and stops at the closing tag. strip() removes the spaces.
+- q: What does "text.find('x')" return when "x" is not in the text?
+  type: single
+  options: ["`0`", "`None`", "`-1`", "It raises an error"]
+  answer: [2]
+  explain: find returns the position of the text, or -1 if it is not there. (index would raise an error.)
+- q: Which tasks are a good fit for a reasoning model?
+  type: multi
+  options:
+    - A multi-step maths word problem
+    - Classifying a short email as spam or not
+    - Planning steps for a tricky coding task
+    - Rewriting one sentence politely
+  answer: [0, 2]
+  explain: Thinking helps on hard multi-step work. Easy tasks like classify or rewrite are faster and cheaper on a normal model.
+- q: What should you do with old thinking text when you build the chat history?
+  type: single
+  options:
+    - Keep it, the model needs it
+    - Leave it out and keep only the final answers
+    - Put it in the system message
+    - Send it twice
+  answer: [1]
+  explain: Old thinking only adds input tokens. Keep the final answers in the history.

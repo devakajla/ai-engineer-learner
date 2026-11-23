@@ -1,0 +1,52 @@
+- q: 'What does `@timed` above `def f(): ...` do?'
+  type: single
+  options: ["Calls f immediately", "Equivalent to `f = timed(f)`", "Equivalent to `timed = f(timed)`", "Adds f to a timer list"]
+  answer: [1]
+  explain: Decorator syntax rebinds the name to the decorator's return value.
+- q: |
+    What does this print?
+    ```python
+    funcs = [lambda: i for i in range(3)]
+    print([f() for f in funcs])
+    ```
+  type: single
+  options: ["`[0, 1, 2]`", "`[2, 2, 2]`", "`[0, 0, 0]`", "NameError"]
+  answer: [1]
+  explain: Closures capture the variable i, not its value at creation; when called, i is 2.
+- q: Why use `functools.wraps(func)` in a decorator?
+  type: multi
+  options:
+    - Keeps the original `__name__` and `__doc__`
+    - Makes the function run faster
+    - Exposes the original via `__wrapped__`, so tools can inspect the real signature
+    - It's required for the wrapper to be called
+  answer: [0, 2]
+  explain: Without it, everything looks like a function called "wrapper" — confusing in logs and breaking introspection.
+- q: |
+    What happens when `c()` is called?
+    ```python
+    def make_counter():
+        count = 0
+        def c():
+            count += 1
+            return count
+        return c
+    ```
+  type: single
+  options: ["Returns 1", "UnboundLocalError", "Returns 0", "NameError"]
+  answer: [1]
+  explain: Assigning makes count local to c; reading it before assignment fails. Add `nonlocal count`.
+- q: How many nested functions does a decorator that takes arguments, like `@retry(attempts=3)`, typically need?
+  type: single
+  options: ["1", "2", "3", "4"]
+  answer: [2]
+  explain: Factory (takes args) → decorator (takes func) → wrapper (takes call args).
+- q: When is `@lru_cache` a bad idea?
+  type: multi
+  options:
+    - The function takes a list argument
+    - The function's result depends on the current time or a database
+    - The function is pure and called repeatedly with the same args
+    - The function has side effects like sending emails
+  answer: [0, 1, 3]
+  explain: lru_cache needs hashable args and is only correct for pure functions.

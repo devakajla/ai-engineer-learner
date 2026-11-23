@@ -1,0 +1,47 @@
+- q: |
+    What is the output?
+    ```python
+    def f(a, b=10):
+        return a + b
+
+    print(f(5), f(5, 1))
+    ```
+  type: single
+  options: ["`15 6`", "`15 15`", "`6 6`", "Error"]
+  answer: [0]
+  explain: 'Without `b` the default 10 is used.'
+- q: |
+    What is the output?
+    ```python
+    def f(x):
+        return x, x * 2
+
+    a, b = f(4)
+    print(a + b)
+    ```
+  type: single
+  options: ["`12`", "`8`", "`(4, 8)`", "Error"]
+  answer: [0]
+  explain: '`f(4)` gives `(4, 8)`. `a` is 4, `b` is 8. The sum is 12.'
+- q: What is the main reason to write small helper functions?
+  type: single
+  options: ["Each one is easy to name, reuse and test", "Python runs them faster", "Python needs them", "It uses less memory"]
+  answer: [0]
+  explain: 'Small functions make code readable and testable.'
+- q: |
+    What does this return for `0`?
+    ```python
+    def f(n):
+        if n == 0:
+            return "zero"
+        return "other"
+    ```
+  type: single
+  options: ["`zero`", "`other`", "`zerother`", "`None`"]
+  answer: [0]
+  explain: 'The early return fires first.'
+- q: Which calls are valid for `def f(a, b=2):`?
+  type: multi
+  options: ["`f(1)`", "`f(1, 3)`", "`f(b=5, a=1)`", "`f()`"]
+  answer: [0, 1, 2]
+  explain: '`a` is required; `b` is optional. `f()` misses `a`.'

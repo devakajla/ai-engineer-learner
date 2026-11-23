@@ -1,0 +1,57 @@
+- q: |
+    What is printed?
+    ```python
+    class Team:
+        members = []
+        def add(self, name):
+            self.members.append(name)
+
+    a, b = Team(), Team()
+    a.add("Dev")
+    print(b.members)
+    ```
+  type: single
+  options: ["`[]`", "`['Dev']`", "AttributeError", "`None`"]
+  answer: [1]
+  explain: '`members` is a mutable class attribute shared by all instances. Create it in `__init__` instead.'
+- q: What does `t.complete()` translate to?
+  type: single
+  options: ["`complete(t)`", "`Task.complete(t)`", "`t.__complete__()`", "`Task.complete()`"]
+  answer: [1]
+  explain: Methods are functions on the class; calling via an instance passes the instance as `self`.
+- q: Which is the best use of `@classmethod`?
+  type: single
+  options:
+    - A helper that needs neither the instance nor the class
+    - An alternative constructor like `Task.from_dict(data)`
+    - Making an attribute read-only
+    - Making a method private
+  answer: [1]
+  explain: classmethods receive `cls`, so `cls(...)` builds the right type even for subclasses.
+- q: What are the benefits of `@property` over `get_x()` / `set_x()` methods?
+  type: multi
+  options:
+    - Callers use plain attribute syntax
+    - You can add validation later without changing the public API
+    - It makes the attribute truly private
+    - It allows computed, read-only attributes
+  answer: [0, 1, 3]
+  explain: Properties don't create real privacy; Python has none.
+- q: |
+    What is `t.count` and `Task.count` after this?
+    ```python
+    class Task:
+        count = 0
+
+    t = Task()
+    t.count = 5
+    ```
+  type: single
+  options: ["5 and 5", "5 and 0", "0 and 0", "AttributeError"]
+  answer: [1]
+  explain: Assigning through the instance creates an instance attribute that shadows the class attribute.
+- q: Which method should you always define so objects look useful in logs and the debugger?
+  type: single
+  options: ["`__str__`", "`__repr__`", "`__print__`", "`__format__`"]
+  answer: [1]
+  explain: '`__repr__` is used by the REPL, debuggers, containers and logs; `__str__` falls back to it.'

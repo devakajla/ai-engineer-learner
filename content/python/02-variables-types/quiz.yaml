@@ -1,0 +1,57 @@
+- q: |
+    What is printed?
+    ```python
+    a = [1, 2]
+    b = a
+    b.append(3)
+    print(a)
+    ```
+  type: single
+  options: ["`[1, 2]`", "`[1, 2, 3]`", "`[3]`", "Error"]
+  answer: [1]
+  explain: '`b = a` makes both names point to the same list, so appending through `b` changes what `a` sees.'
+- q: Which of these types are **mutable**?
+  type: multi
+  options: ["`list`", "`tuple`", "`dict`", "`str`", "`set`"]
+  answer: [0, 2, 4]
+  explain: list, dict and set can change in place. tuple and str are immutable.
+- q: |
+    What does this print?
+    ```python
+    a = [1, 2]
+    b = [1, 2]
+    print(a == b, a is b)
+    ```
+  type: single
+  options: ["`True True`", "`True False`", "`False False`", "`False True`"]
+  answer: [1]
+  explain: Equal values (`==` is True) but two separate objects (`is` is False).
+- q: What is the correct way to check for `None`?
+  type: single
+  options: ["`if x == None:`", "`if x is None:`", "`if x = None:`", "`if None(x):`"]
+  answer: [1]
+  explain: '`None` is a singleton, so identity (`is`) is the right and fastest check. `==` can be overridden by classes.'
+- q: What does `isinstance(True, int)` return, and why?
+  type: single
+  options:
+    - "`False`, bool and int are unrelated"
+    - "`True`, because bool is a subclass of int"
+    - "`True`, because isinstance always returns True for literals"
+    - It raises TypeError
+  answer: [1]
+  explain: '`bool` subclasses `int` (`True == 1`, `False == 0`), so isinstance with int is True.'
+- q: |
+    After this code, which statement is true?
+    ```python
+    s = "hi"
+    t = s
+    s = s + "!"
+    ```
+  type: single
+  options:
+    - "`t` is `'hi!'`"
+    - "`t` is still `'hi'`; `s` now points to a new string"
+    - Strings were changed in place
+    - It raises an error because strings are immutable
+  answer: [1]
+  explain: '`s + "!"` builds a new string object and rebinds `s`. `t` still points to the original `"hi"`.'

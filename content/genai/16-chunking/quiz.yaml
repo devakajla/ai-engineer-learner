@@ -1,0 +1,95 @@
+- q: Why do we split long documents into chunks before embedding?
+  type: multi
+  options:
+    - Embedding models read only a limited number of tokens
+    - One vector for a very long text is a blurry average
+    - Smaller chunks mean cheaper prompts later in RAG
+    - Chunks make the model smarter
+  answer: [0, 1, 2]
+  explain: Limits, sharper vectors and cheaper prompts are the reasons. Chunking does not change how smart the model is.
+- q: |
+    What is printed?
+    ```python
+    text = "abcdefghij"
+    print(text[8:14])
+    ```
+  type: single
+  options: ["`ij`", "An `IndexError`", "`ijxxxx`", "An empty string"]
+  answer: [0]
+  explain: A slice past the end is safe. It gives what is left, so "ij".
+- q: |
+    What is printed?
+    ```python
+    items = [1, 2, 3, 4, 5, 6]
+    result = []
+    start = 0
+    while start < len(items):
+        result.append(items[start:start + 3])
+        if start + 3 >= len(items):
+            break
+        start += 2
+    print(result)
+    ```
+  type: single
+  options: ["`[[1, 2, 3], [3, 4, 5], [5, 6]]`", "`[[1, 2, 3], [4, 5, 6]]`", "`[[1, 2, 3], [3, 4, 5], [5, 6], [6]]`", "It never ends"]
+  answer: [0]
+  explain: The windows start at 0, 2 and 4. The window at 4 reaches the end, so the loop stops. Without the break, a window [6] would be added.
+- q: A chunker uses `step = size - overlap`. What goes wrong with `size=100, overlap=100`?
+  type: single
+  options:
+    - The step is 0, so the start never moves and the loop never ends
+    - It makes chunks of length 0
+    - Nothing, overlap can equal the size
+    - It raises a SyntaxError
+  answer: [0]
+  explain: With step 0 the same chunk is cut forever. Check that overlap is smaller than size and raise a ValueError.
+- q: |
+    What is printed?
+    ```python
+    def is_heading(line):
+        stripped = line.lstrip("#")
+        level = len(line) - len(stripped)
+        return 1 <= level <= 6 and stripped.startswith(" ")
+
+    print(is_heading("## Tasks"), is_heading("#tag"), is_heading("# "))
+    ```
+  type: single
+  options: ["`True False True`", "`True True True`", "`False False False`", "`True False False`"]
+  answer: [0]
+  explain: The text `## Tasks` has 2 hashes then a space. The text `#tag` has no space after the hash. The text `# ` has one hash and a space, so it counts.
+- q: Why must a markdown splitter track whether it is inside a code fence?
+  type: single
+  options:
+    - A `# comment` in a code example looks like a heading but is not one
+    - Code is always too long
+    - Fences are headings
+    - The fence lines must be deleted
+  answer: [0]
+  explain: In Python code a comment starts with "# ". Without the fence check, comments would become fake headings and break the chunks.
+- q: Which metadata should each chunk keep, so that you can cite it later?
+  type: multi
+  options:
+    - The source file
+    - The heading
+    - A stable id
+    - The embedding model's weights
+  answer: [0, 1, 2]
+  explain: Source, heading and id let you point back to the original place. The model weights have nothing to do with a single chunk.
+- q: A pack loop joins paragraphs but never appends the chunk it was still building after the loop. What happens?
+  type: single
+  options:
+    - The last chunk of the document is lost
+    - The first chunk is lost
+    - Chunks become too big
+    - Nothing, the loop adds it
+  answer: [0]
+  explain: The unfinished chunk is only added when a new item does not fit. After the loop you must add it yourself.
+- q: When you number chunks over a whole document, what must the counter do between sections?
+  type: single
+  options:
+    - Restart at 0 for each section
+    - Keep counting, so every chunk id in the document is unique
+    - Stay the same
+    - Be random
+  answer: [1]
+  explain: Ids must be unique per document. One counter over all chunks, like `len(chunks)`, gives that.

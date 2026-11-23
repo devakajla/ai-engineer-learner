@@ -1,0 +1,82 @@
+- q: What is an agent, in simple words?
+  type: single
+  options:
+    - A loop where the model picks tool calls, your code runs them, and this repeats until the model answers
+    - A bigger model
+    - A database
+    - A prompt template
+  answer: [0]
+  explain: The model decides the steps. Your code runs the tools and keeps the loop going until the model gives a final answer.
+- q: Why must the model's tool request be added to the message history?
+  type: single
+  options:
+    - The API needs it for billing
+    - The model has no memory, so it must see its request before it sees the tool result
+    - It makes the answer shorter
+    - It is optional
+  answer: [1]
+  explain: Without the assistant message, a tool result appears with no request before it, and the model or the API gets confused.
+- q: |
+    What is returned?
+    ```python
+    def run(max_steps):
+        for step in range(1, max_steps + 1):
+            if step == 4:
+                return step
+        return None
+
+    print(run(3), run(5))
+    ```
+  type: single
+  options:
+    - "None 4"
+    - "3 4"
+    - "4 4"
+    - "None None"
+  answer: [0]
+  explain: With max_steps=3 the loop never reaches step 4, so it returns None. With 5 it returns 4.
+- q: Which are good stop conditions for an agent?
+  type: multi
+  options:
+    - The model answered with no tool call
+    - A hard maximum number of steps
+    - The same tool call repeated too many times
+    - Wait until the user closes the laptop
+  answer: [0, 1, 2]
+  explain: Always have a hard limit and a loop guard. Also consider token, cost and time budgets.
+- q: Why does the cost of an agent grow faster than the number of steps?
+  type: single
+  options:
+    - Tools are expensive
+    - Each step resends the whole history, which gets longer with every step
+    - The model gets slower with age
+    - Cost is fixed
+  answer: [1]
+  explain: Step 10 sends everything from steps 1 to 9 again, plus the new messages.
+- q: A tool raises an error. What should your agent code do?
+  type: single
+  options:
+    - Crash the whole agent
+    - Return the error text as the tool result, so the model can react
+    - Ignore the call without any message
+    - Delete the history
+  answer: [1]
+  explain: 'The model reads the error text and often fixes its call. Keep a loop guard in case it repeats the same bad call.'
+- q: When is a fixed workflow better than an agent?
+  type: single
+  options:
+    - When the steps are known in advance
+    - When the task is open-ended
+    - When you want less testing
+    - Never
+  answer: [0]
+  explain: A workflow is cheaper, faster and more predictable. Use an agent when the steps depend on what the model finds.
+- q: Each agent step is right 90% of the time. What is the chance that 5 steps in a row are all right?
+  type: single
+  options:
+    - About 59%
+    - 90%
+    - 99%
+    - 45%
+  answer: [0]
+  explain: 0.9 to the power 5 is about 0.59. Errors add up across steps, so keep agents short and tools clear.

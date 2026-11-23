@@ -1,0 +1,49 @@
+- q: |
+    What is the output?
+    ```python
+    s = "backend"
+    print(s[1:4], s[-3:])
+    ```
+  type: single
+  options: ["`ack end`", "`ack nd`", "`acke end`", "`bac end`"]
+  answer: [0]
+  explain: '`s[1:4]` takes indexes 1, 2, 3 → "ack". `s[-3:]` takes the last 3 → "end".'
+- q: |
+    What is printed?
+    ```python
+    name = "  dev  "
+    name.strip().upper()
+    print(f"[{name}]")
+    ```
+  type: single
+  options: ["`[DEV]`", "`[dev]`", "`[  dev  ]`", "`[  DEV  ]`"]
+  answer: [2]
+  explain: String methods return new strings. The result was never assigned, so `name` is unchanged.
+- q: Which expressions evaluate to `True`?
+  type: multi
+  options:
+    - '`"python"[::-1] == "nohtyp"`'
+    - '`"a,b,,c".split(",") == ["a", "b", "c"]`'
+    - '`"py" in "happy"`'
+    - '`"hello".find("z") == -1`'
+  answer: [0, 2, 3]
+  explain: 'split(",") keeps the empty string between the two commas: `["a", "b", "", "c"]`. The others are all True.'
+- q: What does `f"{3.14159:.2f}"` produce?
+  type: single
+  options: ["`'3.14'`", "`'3.1'`", "`'3.15'`", "`'3.14159'`"]
+  answer: [0]
+  explain: '`.2f` means fixed-point with 2 digits after the decimal point.'
+- q: Why is `"".join(parts)` preferred over `s += part` in a long loop?
+  type: single
+  options:
+    - join is more readable, nothing else
+    - Strings are immutable, so `+=` copies the whole string each time (quadratic); join builds once
+    - "`+=` is not allowed on strings"
+    - join automatically adds spaces
+  answer: [1]
+  explain: Each `+=` creates a new string by copying the old one. join computes the final size once and copies each piece once.
+- q: What happens with `s = "cat"; s[0] = "b"`?
+  type: single
+  options: ['`s` becomes `"bat"`', "TypeError", "IndexError", 'A new string `"bat"` is created automatically']
+  answer: [1]
+  explain: Strings are immutable; item assignment raises TypeError. Use `"b" + s[1:]`.

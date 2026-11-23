@@ -1,0 +1,38 @@
+- q: Which is the right way to get the current time in a backend?
+  type: single
+  options: ["`datetime.now()`", "`datetime.utcnow()`", "`datetime.now(UTC)`", "`time.time()` converted by hand"]
+  answer: [2]
+  explain: '`datetime.now(UTC)` is time-zone aware. `now()` and `utcnow()` return naive datetimes.'
+- q: What happens when you compare a naive datetime with an aware one using `<`?
+  type: single
+  options: ["The naive one is treated as UTC", "TypeError", "It always returns False", "The aware one is converted to local time"]
+  answer: [1]
+  explain: Python refuses to compare naive and aware datetimes — one more reason to always use aware ones.
+- q: You need the last 100 events in memory, dropping older ones automatically. What should you use?
+  type: single
+  options: ["`list` with `pop(0)`", "`deque(maxlen=100)`", "`Counter`", "`set`"]
+  answer: [1]
+  explain: A bounded deque drops items from the other end automatically, in O(1).
+- q: 'Why `logger.info("user %s logged in", user_id)` instead of an f-string?'
+  type: multi
+  options:
+    - Formatting is skipped when the INFO level is disabled
+    - Log tools can group messages by the constant template
+    - f-strings are not allowed in logging calls
+    - It automatically hides secrets
+  answer: [0, 1]
+  explain: f-strings work but are always evaluated, and every message becomes unique. Neither style hides secrets.
+- q: '`json.dumps({"price": Decimal("9.99")})` raises TypeError. What''s the best fix for money?'
+  type: single
+  options:
+    - Convert to float first
+    - Pass `default=` that returns `str(obj)` for Decimals
+    - Use `pickle` instead of JSON
+    - Round the value
+  answer: [1]
+  explain: Strings keep the exact decimal value; float conversion can introduce rounding errors.
+- q: Which should you use to generate a password-reset token?
+  type: single
+  options: ["`random.randint`", "`uuid.uuid1()`", "`secrets.token_urlsafe()`", "`hash(user_id)`"]
+  answer: [2]
+  explain: secrets uses a cryptographically secure random generator; random is predictable.

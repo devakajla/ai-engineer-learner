@@ -1,0 +1,45 @@
+- q: Which line imports only `sqrt` from `math`?
+  type: single
+  options: ["`import math.sqrt`", "`from math import sqrt`", "`import sqrt from math`", "`include math`"]
+  answer: [1]
+  explain: '`from module import name` is the correct form.'
+- q: |
+    What is printed?
+    ```python
+    import math
+    print(math.ceil(2.1), math.floor(2.9))
+    ```
+  type: single
+  options: ["`3 2`", "`2 2`", "`3 3`", "`2 3`"]
+  answer: [0]
+  explain: '`ceil` rounds up, `floor` rounds down.'
+- q: What does `if __name__ == "__main__":` do?
+  type: single
+  options: ["Runs the block only when the file is executed directly, not when imported", "Runs the block only when imported", "Defines the main function", "Makes the file a package"]
+  answer: [0]
+  explain: 'When a file is run, `__name__` is `"__main__"`. When imported, it is the module name.'
+- q: |
+    What is printed?
+    ```python
+    from collections import Counter
+    print(Counter("aab").most_common(1))
+    ```
+  type: single
+  options: ["`[('a', 2)]`", "`[('b', 1)]`", "`{'a': 2}`", "`('a', 2)`"]
+  answer: [0]
+  explain: '`most_common(1)` returns a list with the one most frequent `(item, count)` pair.'
+- q: You create a file called `random.py` next to your script and then `import random`. What is the likely problem?
+  type: single
+  options: ["Nothing, Python picks the standard one", "Your file hides the standard `random` module", "Python deletes your file", "A circular import"]
+  answer: [1]
+  explain: 'The script folder is searched before installed and stdlib packages in many setups, so your file can shadow the real module. Do not name files like standard modules.'
+- q: Which are good import practice?
+  type: multi
+  options: ["Imports at the top of the file", "`from os import *` everywhere", "Grouping standard library imports before your own", "Running a network call at import time"]
+  answer: [0, 2]
+  explain: 'Star imports and work at import time make code hard to follow and test.'
+- q: How can you fix a circular import between `a.py` and `b.py`?
+  type: multi
+  options: ["Move shared code into a third module", "Import inside the function that needs it", "Rename both files to `main.py`", "Use `import *`"]
+  answer: [0, 1]
+  explain: 'Break the cycle by changing the structure, or delay the import until it is needed.'

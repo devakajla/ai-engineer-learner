@@ -1,0 +1,68 @@
+- q: Which are part of the online (query) phase of RAG?
+  type: multi
+  options:
+    - Retrieve candidate chunks
+    - Rerank
+    - Build the prompt with numbered context
+    - Chunk the documents
+  answer: [0, 1, 2]
+  explain: Chunking, embedding and storing happen offline, in the indexing phase.
+- q: What do you do when no chunk passes the minimum score?
+  type: single
+  options:
+    - Ask the model anyway
+    - Return "I don't know" without calling the model
+    - Lower the score and retry forever
+    - Delete the index
+  answer: [1]
+  explain: It saves cost and avoids invented answers.
+- q: |
+    What is the output?
+    ```python
+    import math
+    print(round(1 / math.log2(3 + 1), 2))
+    ```
+  type: single
+  options:
+    - "0.5"
+    - "0.63"
+    - "1.0"
+    - "0.33"
+  answer: [0]
+  explain: log2(4) is 2, and 1 / 2 is 0.5. This is the discount for position 3 in DCG.
+- q: Why is a prompt rule not enough to protect another tenant's data?
+  type: single
+  options:
+    - Prompts are too short
+    - The model can be tricked or make mistakes. The chunk must never reach the prompt, so filter in code
+    - Prompts are encrypted
+    - Tenants cannot use prompts
+  answer: [1]
+  explain: If a chunk is in the prompt, the model can repeat it. Filtering must happen before.
+- q: A document shrank from 10 chunks to 8 chunks. What must the update do?
+  type: single
+  options:
+    - Only upsert the 8 new chunks
+    - Delete the old chunks of the document, then add the new 8
+    - Re-embed all documents
+    - Nothing
+  answer: [1]
+  explain: Upsert does not remove ids that are no longer produced, so chunks 8 and 9 would stay as stale chunks.
+- q: Retrieved chunks contain the right one, but the answer is wrong. Where do you look?
+  type: multi
+  options:
+    - The order and the noise in the context
+    - The prompt and the "only from context" rule
+    - The temperature
+    - The chunking of the documents (the retrieval stage)
+  answer: [0, 1, 2]
+  explain: The right chunk was found, so retrieval did its job. Look at the context package and generation.
+- q: Which statement about LLM judges is true?
+  type: single
+  options:
+    - They are always unbiased
+    - They can prefer long answers or the first answer, so check them against human grades
+    - They need no rubric
+    - They replace all code checks
+  answer: [1]
+  explain: Verbosity and position bias are well known. A rubric, swapped orders and a human check reduce the risk.

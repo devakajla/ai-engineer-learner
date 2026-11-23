@@ -1,0 +1,80 @@
+- q: What does the "R" and the "A" in RAG stand for?
+  type: single
+  options:
+    - Retrieval and Augmented
+    - Reading and Answering
+    - Ranking and Aggregation
+    - Request and API
+  answer: [0]
+  explain: Retrieval-Augmented Generation. You retrieve text, augment (add to) the prompt, then generate the answer.
+- q: Which problem does RAG solve best?
+  type: single
+  options:
+    - Making the model run faster
+    - Answering from private or fresh documents that the model never saw
+    - Making the model smaller
+    - Teaching the model a new language
+  answer: [1]
+  explain: RAG gives the model the right pages at question time. The model's own dials are not changed.
+- q: What are the two phases of a RAG system?
+  type: single
+  options:
+    - Training and testing
+    - Indexing (offline) and querying (online)
+    - Embedding and printing
+    - Login and logout
+  answer: [1]
+  explain: Indexing prepares the documents once. Querying runs for every question.
+- q: Why do we number the chunks in the prompt?
+  type: single
+  options:
+    - To make the prompt longer
+    - So the answer can cite its sources like [1]
+    - Because the API needs numbers
+    - To sort them by size
+  answer: [1]
+  explain: Numbers give each chunk a short handle. The next lesson uses them for citations.
+- q: |
+    What does this print?
+    ```python
+    items = ["wash", "cook"]
+    lines = []
+    for n, item in enumerate(items, start=1):
+        lines.append(f"{n}. {item}")
+    print(lines[1])
+    ```
+  type: single
+  options:
+    - 1. cook
+    - 2. cook
+    - 2. wash
+    - cook
+  answer: [1]
+  explain: With `start=1` the counter begins at 1, so the second item gets number 2.
+- q: What should the app do when no chunk passes the minimum score?
+  type: single
+  options:
+    - Call the model anyway and hope
+    - Return "I don't know" without calling the model
+    - Lower the minimum score to zero
+    - Use a bigger model
+  answer: [1]
+  explain: With no context the model can only guess. Skipping the call saves money and avoids invented answers.
+- q: Why is the context placed in the user message and not in the system message?
+  type: single
+  options:
+    - The system message cannot hold text
+    - The context changes on every call, while the system message stays the same and can be cached
+    - The user message is read first
+    - It is only a style choice with no effect
+  answer: [1]
+  explain: A stable system prompt can be cached by the provider. Changing text goes in the user message.
+- q: Which settings fit a factual RAG answer?
+  type: multi
+  options:
+    - temperature 0
+    - A rule "answer only from the context"
+    - A rule that allows "I don't know"
+    - temperature 2
+  answer: [0, 1, 2]
+  explain: Low temperature keeps the answer close to the context. The two rules keep the model from guessing.

@@ -1,0 +1,89 @@
+- q: In a ReAct loop, who writes the "Observation:" line?
+  type: single
+  options:
+    - The model
+    - Your code, with the tool result
+    - The user
+    - The tool schema
+  answer: [1]
+  explain: The model writes Thought and Action. Your code runs the tool and adds the Observation with the real result.
+- q: What is the main risk of plan-and-execute?
+  type: single
+  options:
+    - It cannot use tools
+    - The plan is written before the facts are known, so it can be wrong and stay wrong without replanning
+    - It is always slower than one call
+    - It needs no limits
+  answer: [1]
+  explain: A fixed plan keeps going even when a step shows it makes no sense. Real systems replan when results change the picture.
+- q: |
+    What does this print?
+    ```python
+    def parse_list(text):
+        items = []
+        for line in text.splitlines():
+            line = line.strip()
+            i = 0
+            while i < len(line) and line[i].isdigit():
+                i += 1
+            if i == 0 or line[i:i + 1] not in (".", ")"):
+                continue
+            item = line[i + 1:].strip()
+            if item:
+                items.append(item)
+        return items
+
+    print(parse_list("Shopping:\n1. milk\n2) eggs\n\nThanks!"))
+    ```
+  type: single
+  options:
+    - "['milk', 'eggs']"
+    - "['1. milk', '2) eggs']"
+    - "['Shopping:', 'milk', 'eggs', 'Thanks!']"
+    - "[]"
+  answer: [0]
+  explain: Only lines that start with digits and then a dot or a bracket are items. The other lines are skipped.
+- q: Which are good reasons to show the plan to a human before running it?
+  type: multi
+  options:
+    - A bad plan can be stopped before any action is taken
+    - Risky steps can be approved or removed
+    - It makes the model smarter
+    - The user can correct the goal early
+  answer: [0, 1, 3]
+  explain: Plan-and-execute separates planning from acting, so a human can check the plan first. It does not change the model itself.
+- q: When does reflection (critique and revise) work best?
+  type: single
+  options:
+    - When the model only judges its own answer with no outside check
+    - When there is outside feedback such as failing tests or a validator, and clear criteria
+    - When there is no round limit
+    - Only for translation
+  answer: [1]
+  explain: Outside feedback points to a real problem. A model that only judges itself may praise a mistake.
+- q: |
+    What does this print?
+    ```python
+    def run_chores(chores, limit):
+        to_run = chores[:limit]
+        return {"steps_run": len(to_run), "skipped": len(chores) - len(to_run)}
+
+    print(run_chores(["wash", "sweep", "paint"], 2))
+    ```
+  type: single
+  options:
+    - "{'steps_run': 2, 'skipped': 1}"
+    - "{'steps_run': 3, 'skipped': 0}"
+    - "{'steps_run': 1, 'skipped': 2}"
+    - "{'steps_run': 2, 'skipped': 2}"
+  answer: [0]
+  explain: The slice keeps the first 2 chores. One of 3 is left out.
+- q: Why does the step executor in plan-and-execute need the goal, the whole plan and the earlier results, not only the current step?
+  type: single
+  options:
+    - To make the prompt longer
+    - The model has no memory, so it needs the context to do the step well and stay on the goal
+    - Because the API requires it
+    - To avoid using tools
+  answer: [1]
+  explain: Each call is a fresh start (GenAI lesson 4). Without the goal and earlier results, the step is done blind.

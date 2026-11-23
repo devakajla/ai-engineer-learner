@@ -1,0 +1,93 @@
+- q: Which pattern fits "different kinds of input need different handling"?
+  type: single
+  options:
+    - Chain
+    - Routing
+    - Evaluator-optimizer
+    - Voting
+  answer: [1]
+  explain: A cheap classifier picks the category, and each category has its own handler.
+- q: |
+    What does this print?
+    ```python
+    def run_steps(steps, text):
+        current = text
+        for step in steps:
+            current = step(current)
+        return current
+
+    def strip(t):
+        return t.strip()
+
+    def twice(t):
+        return t + t
+
+    print(run_steps([strip, twice], "  ab "))
+    ```
+  type: single
+  options:
+    - "abab"
+    - "  ab   ab "
+    - "ab"
+    - "baba"
+  answer: [0]
+  explain: First strip gives "ab", then twice gives "abab". Each output is the input of the next step.
+- q: What is the main difference between orchestrator-workers and a chain?
+  type: single
+  options:
+    - Workers are cheaper
+    - The number of subtasks is decided by the model at run time
+    - A chain uses tools
+    - There is no difference
+  answer: [1]
+  explain: A chain has fixed steps. In orchestrator-workers the orchestrator chooses how many subtasks there are.
+- q: What does running independent model calls in parallel save?
+  type: single
+  options:
+    - Money
+    - Time
+    - Both money and time
+    - Tokens
+  answer: [1]
+  explain: The wait is the slowest call instead of the sum. The cost is the same or higher.
+- q: Which are good safety rules for an evaluator-optimizer loop?
+  type: multi
+  options:
+    - A hard limit on the number of rounds
+    - Clear quality criteria for the judge
+    - Measuring that the loop really improves results
+    - Let it run until the judge is happy, however long it takes
+  answer: [0, 1, 2]
+  explain: A judge may never be satisfied, so the loop needs a limit. Measure that it helps, because it costs calls.
+- q: |
+    What does this print?
+    ```python
+    def shorten_title(title, max_len, max_rounds=3):
+        revisions = 0
+        while True:
+            if len(title) <= max_len:
+                return revisions, title
+            if revisions == max_rounds:
+                return revisions, title
+            title = " ".join(title.split(" ")[:-1])
+            revisions += 1
+
+    print(shorten_title("a bb ccc dddd", 6, 2))
+    ```
+  type: single
+  options:
+    - "(2, 'a bb')"
+    - "(2, 'a bb ccc')"
+    - "(3, 'a')"
+    - "(0, 'a bb ccc dddd')"
+  answer: [0]
+  explain: "'a bb ccc dddd' is 13 characters, 'a bb ccc' is 8, 'a bb' is 4. After 2 revisions the title fits, and the next check returns (2, 'a bb')."
+- q: A router call returns "I think it is about shipping" but your labels are billing, tech and other. What should your code do?
+  type: single
+  options:
+    - Crash
+    - Use "other", because the reply is not a known label
+    - Pick billing
+    - Call the router again forever
+  answer: [1]
+  explain: Never trust the model's format. Clean the label and fall back to a safe default.

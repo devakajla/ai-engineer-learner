@@ -1,0 +1,66 @@
+- q: |
+    What does this code give after it runs? Account `a` starts with 100.
+    ```python
+    a.balance -= 30
+    raise RuntimeError("boom")      # before any commit
+    session.rollback()
+    ```
+  type: single
+  options: ["The database has 70", "The database still has 100", "The database has 0", "The row is deleted"]
+  answer: [1]
+  explain: Nothing was committed, so the rollback throws the change away. A transaction is all or nothing.
+- q: Which pair of words describes a transaction?
+  type: single
+  options: ["Copy and paste", "Commit and rollback", "Read and write only", "Push and pull"]
+  answer: [1]
+  explain: "`commit` makes all changes permanent. `rollback` undoes them all."
+- q: Which statements about a many-to-many relationship are true?
+  type: multi
+  options:
+    - It needs a third table that links the two
+    - The link table often uses both foreign keys together as its primary key
+    - It can be stored as one column on one of the two tables
+    - In SQLAlchemy it uses `relationship(secondary=...)`
+  answer: [0, 1, 3]
+  explain: Each side has many of the other, so one column cannot hold it. A link table stores the pairs, and `secondary=` tells SQLAlchemy about it.
+- q: Two users load a note at version 3. User A saves, then user B saves with `expected_version=3`. What does optimistic locking do for B?
+  type: single
+  options:
+    - Overwrites A's change silently
+    - Rejects B's save because the version is now 4 (the API sends `409`)
+    - Locks the table so B waits
+    - Deletes the note
+  answer: [1]
+  explain: The update has `WHERE version = 3`. It matches no row, so B learns the note changed and must reload. No table is locked, which is why it is called optimistic.
+- q: Why is the version check done inside the `UPDATE ... WHERE` statement and not in Python?
+  type: single
+  options:
+    - Python is slower
+    - Between reading and writing in Python, another request can change the row. One SQL statement is atomic.
+    - SQL cannot compare numbers in Python
+    - It makes the code shorter
+  answer: [1]
+  explain: A check in Python followed by a write leaves a gap. The database runs one statement as a single step, so the check and the change cannot be split.
+- q: What is a soft delete?
+  type: single
+  options:
+    - Deleting a row with a `DELETE` after a warning
+    - Marking the row as deleted (a flag or a time), and leaving it in the table
+    - Deleting only the first column
+    - Moving a table to another database
+  answer: [1]
+  explain: The row stays, so you can restore it or keep history. Every query that lists data must remember to skip deleted rows.
+- q: A signup inserts an email that has a `UNIQUE` constraint, and the email already exists. Which HTTP status should the API answer?
+  type: single
+  options: ["`400`", "`404`", "`409`", "`500`"]
+  answer: [2]
+  explain: "`409 Conflict` means the request clashes with the current state. Catch `IntegrityError`, roll back, and raise your domain `ConflictError`."
+- q: Why do we usually put the commit in the service and not in the repository?
+  type: single
+  options:
+    - Repositories cannot commit
+    - One service call may make several repository calls that must succeed or fail together
+    - It is faster
+    - FastAPI requires it
+  answer: [1]
+  explain: The service knows the whole business step. It decides where one transaction starts and ends, so several changes stay all or nothing.

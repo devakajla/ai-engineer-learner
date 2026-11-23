@@ -1,0 +1,80 @@
+- q: A RAG answer is wrong. What is the first thing to check?
+  type: single
+  options:
+    - Rewrite the prompt
+    - Whether the right chunk was among the retrieved chunks
+    - Switch to a bigger model
+    - Lower the temperature
+  answer: [1]
+  explain: This one check splits the problem into retrieval (not found) and generation (found but misused).
+- q: The right chunk is not in the top k. Which family of failure is it?
+  type: single
+  options:
+    - Retrieval failure
+    - Generation failure
+    - Context failure
+    - Not a failure
+  answer: [0]
+  explain: The search did not find it. A better prompt cannot fix that.
+- q: |
+    What does this print?
+    ```python
+    guests = ["A", "B", "C", "D", "E"]
+    front = guests[0::2]
+    back = guests[1::2]
+    back.reverse()
+    print(front + back)
+    ```
+  type: single
+  options:
+    - "['A', 'C', 'E', 'D', 'B']"
+    - "['A', 'B', 'C', 'D', 'E']"
+    - "['E', 'C', 'A', 'B', 'D']"
+    - "['A', 'C', 'E', 'B', 'D']"
+  answer: [0]
+  explain: Front is A, C, E. Back is B, D, reversed to D, B. The best is first and the second best is last.
+- q: What is the "lost in the middle" problem?
+  type: single
+  options:
+    - The database loses chunks
+    - Models use the start and the end of a long context better than the middle
+    - Vectors lose precision
+    - Chunks lose their ids
+  answer: [1]
+  explain: Information placed in the middle of a long context is used less. Use fewer chunks and put the best at the ends.
+- q: The model says "I don't know" but the right chunk was retrieved. Which fixes make sense?
+  type: multi
+  options:
+    - Lower the minimum score if it removed the chunk
+    - Soften the over-strict rule in the prompt
+    - Check that the chunk text really holds the answer
+    - Increase the chunk size to 100,000 characters
+  answer: [0, 1, 2]
+  explain: Over-refusing comes from a strict threshold or prompt, or from a chunk that does not clearly hold the answer.
+- q: A test question has no answer in the docs, and the bot invents one. What is this called in our report?
+  type: single
+  options:
+    - retrieval_miss
+    - generation_miss
+    - hallucination
+    - ok
+  answer: [2]
+  explain: When no expected chunk exists, a made-up answer is a hallucination. The right output is "I don't know".
+- q: Why remove repeated chunks before the prompt?
+  type: single
+  options:
+    - Repeats waste context and push out other useful chunks
+    - Repeats are illegal
+    - The model cannot read repeated text
+    - It makes embeddings smaller
+  answer: [0]
+  explain: Every chunk costs tokens. A repeat adds cost and no information.
+- q: What is the right working loop for improving a RAG system?
+  type: single
+  options:
+    - Change many things at once, then check one example
+    - Collect failing questions, find the failing stage, fix one thing, re-run all test questions
+    - Replace the model every week
+    - Add more chunks until it works
+  answer: [1]
+  explain: Fixing one thing and re-running the whole test set shows what helped and what broke.

@@ -1,0 +1,48 @@
+- q: |
+    With this route, what does `GET /tasks/abc` return?
+    ```python
+    @app.get("/tasks/{task_id}")
+    def get_task(task_id: int): ...
+    ```
+  type: single
+  options: ["`200` with `task_id: \"abc\"`", "`404 Not Found`", "`422` validation error", "`500` error"]
+  answer: [2]
+  explain: '"abc" cannot be converted to int, so FastAPI returns 422 with `loc: ["path", "task_id"]`.'
+- q: |
+    Which parameters here are **required** query parameters?
+    ```python
+    @app.get("/search")
+    def search(q: str, limit: int = 10, done: bool | None = None): ...
+    ```
+  type: multi
+  options: ["`q`", "`limit`", "`done`"]
+  answer: [0]
+  explain: A parameter without a default is required. `limit` and `done` have defaults.
+- q: You have `@app.get("/tasks/{task_id}")` (int) defined **above** `@app.get("/tasks/today")`. What does `GET /tasks/today` return?
+  type: single
+  options: ["The today route's response", "`422`, because it matched `/tasks/{task_id}` first", "`404`", "`405`"]
+  answer: [1]
+  explain: Routes are matched in order; the parameterised route matches first and "today" fails int validation.
+- q: Which values does a `bool` query parameter accept as `True`?
+  type: multi
+  options: ["`true`", "`1`", "`yes`", "`on`", "`ok`"]
+  answer: [0, 1, 2, 3]
+  explain: FastAPI/Pydantic accept true/1/yes/on (and their false counterparts). "ok" is a 422.
+- q: Why should `limit` always have an upper bound like `Query(le=100)`?
+  type: single
+  options:
+    - FastAPI requires it
+    - To protect the server and database from huge, expensive requests
+    - Because ints in Python overflow above 100
+    - It makes the docs prettier
+  answer: [1]
+  explain: Unbounded page sizes let a single request load millions of rows — a performance and DoS risk.
+- q: What does "validate at the boundary" mean?
+  type: single
+  options:
+    - Validate data in the database only
+    - Check all external input when it enters the API, then trust it inside the code
+    - Validate only in the frontend
+    - Add if-checks in every function
+  answer: [1]
+  explain: Validation happens once, at the edge (request parsing). Inner code can rely on correct types and ranges.

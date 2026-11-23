@@ -1,0 +1,46 @@
+- q: Which code is safe from SQL injection?
+  type: single
+  options:
+    - "`conn.execute(f\"SELECT * FROM users WHERE email = '{email}'\")`"
+    - "`conn.execute(\"SELECT * FROM users WHERE email = '\" + email + \"'\")`"
+    - "`conn.execute(\"SELECT * FROM users WHERE email = ?\", (email,))`"
+    - "`conn.execute(\"SELECT * FROM users WHERE email = %s\" % email)`"
+  answer: [2]
+  explain: Only the parameterized query sends the value separately from the SQL text.
+- q: What does a `LEFT JOIN` from users to tasks return for a user with no tasks?
+  type: single
+  options: ["Nothing for that user", "One row for the user with NULLs in task columns", "An error", "A row per task in the table"]
+  answer: [1]
+  explain: LEFT JOIN keeps every left-side row; missing matches become NULL.
+- q: Which statements about indexes are true?
+  type: multi
+  options:
+    - They make lookups on the indexed columns faster
+    - They make inserts and updates slightly slower
+    - You should index every column just in case
+    - Primary keys are indexed automatically
+  answer: [0, 1, 3]
+  explain: Each index costs write time and storage, so index only columns you filter, join or sort on.
+- q: Money is moved between two accounts with two UPDATEs. The second fails. What should happen?
+  type: single
+  options:
+    - Keep the first update
+    - Roll back the transaction so neither update is applied
+    - Retry only the second update forever
+    - Delete both accounts
+  answer: [1]
+  explain: Atomicity — the transfer must happen completely or not at all.
+- q: Why shouldn't TaskFlow keep tasks in a Python list in production?
+  type: multi
+  options:
+    - Data is lost on restart
+    - Each worker process would have its own separate list
+    - Lists can't hold dicts
+    - There are no transactions or constraints
+  answer: [0, 1, 3]
+  explain: In-process state isn't persistent or shared; that's why web apps stay stateless and use a database.
+- q: What does the "D" in ACID guarantee?
+  type: single
+  options: ["Data is denormalized", "Committed data survives crashes", "Deletes are soft", "Duplicates are removed"]
+  answer: [1]
+  explain: Durability — once committed, data is written to stable storage.

@@ -1,0 +1,10 @@
+intro: {video_id: cmSh2xbyX7g, title: "Introduction to Dynamic Programming (Ep 105)", start: 0, end: 976}
+segments:
+  - {exercise: 01-max-meetings, video_id: OaHw9ZZHknw, title: "Greedy algorithms (Ep 122)", start: 0, end: 3599}
+  - {exercise: 02-can-jump, video_id: OaHw9ZZHknw, title: "Greedy algorithms (Ep 122)", start: 0, end: 3599}
+  - {exercise: 07-climb-stairs, video_id: JLdrJE7udZo, title: "Climbing stairs (Ep 107)", start: 0, end: 1167}
+  - {exercise: 08-house-robber, video_id: FMhXZU-eUNQ, title: "House robber (Ep 108)", start: 0, end: 2432}
+  - {exercise: 12-knapsack, video_id: Yp1G_KY7-wY, title: "0/1 knapsack (Ep 109)", start: 0, end: 1291}
+  - {exercise: 13-subset-sum, video_id: M0XjVs41H2s, title: "Subset sum equals target (Ep 112)", start: 0, end: 2047}
+  - {exercise: 15-lis, video_id: CdGBURVBMn4, title: "Longest increasing subsequence (Ep 114)", start: 0, end: 1550}
+  - {exercise: 16-lcs, video_id: YkM-xfnZ4DY, title: "LCS (Ep 116)", start: 0, end: 1424}

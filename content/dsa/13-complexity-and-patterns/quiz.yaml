@@ -1,0 +1,66 @@
+- q: |
+    What is the time complexity?
+    ```python
+    for x in items:
+        print(x)
+    for y in items:
+        print(y)
+    ```
+  type: single
+  options: ["O(n)", "O(n²)", "O(1)", "O(2ⁿ)"]
+  answer: [0]
+  explain: "Two loops one after the other: n + n = 2n, and constants are dropped, so O(n)."
+- q: |
+    What is the time complexity?
+    ```python
+    for a in items:
+        for b in items:
+            print(a, b)
+    ```
+  type: single
+  options: ["O(n)", "O(n²)", "O(n log n)", "O(1)"]
+  answer: [1]
+  explain: "A loop inside a loop multiplies: n times n."
+- q: "`n` is 100000 (10⁵). Which complexities fit in about 10⁸ steps?"
+  type: multi
+  options: ["O(n)", "O(n log n)", "O(n²)", "O(n³)"]
+  answer: [0, 1]
+  explain: "n² = 10¹⁰ is far above 10⁸. n log n is about 1.7 million and n is 100 thousand."
+- q: |
+    What is the output?
+    ```python
+    n = 16
+    steps = 0
+    while n > 1:
+        n //= 2
+        steps += 1
+    print(steps)
+    ```
+  type: single
+  options: ["`4`", "`8`", "`16`", "`15`"]
+  answer: [0]
+  explain: "16 -> 8 -> 4 -> 2 -> 1 is four halvings. This is O(log n)."
+- q: "Which of these is O(1) on average?"
+  type: single
+  options: ["`x in my_list`", "`x in my_set`", "`sorted(my_list)`", "`sum(my_list)`"]
+  answer: [1]
+  explain: "Sets use hashing, so membership is O(1) on average. A list scan is O(n)."
+- q: "What is a pattern in problem solving?"
+  type: single
+  options: ["A fixed answer to one problem", "A reusable idea you spot by data shape, question and limits", "A Python library", "A way to avoid brute force forever"]
+  answer: [1]
+  explain: "A pattern is a template plus signals that tell you when it applies."
+- q: |
+    What is the time complexity and extra space?
+    ```python
+    seen = set()
+    for x in nums:
+        if target - x in seen:
+            return True
+        seen.add(x)
+    return False
+    ```
+  type: single
+  options: ["time O(n), space O(n)", "time O(n²), space O(1)", "time O(n), space O(1)", "time O(log n), space O(n)"]
+  answer: [0]
+  explain: "One loop with O(1) set operations is O(n) time. The set can hold n items, so O(n) space."

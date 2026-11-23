@@ -1,0 +1,6 @@
+intro: {video_id: N8vJ8RyQEes, title: "Kadane's algorithm: introduction and intuition (DSA Patterns Ep 22)", start: 0, end: 900}
+segments:
+  - {exercise: 01-max-subarray, video_id: N8vJ8RyQEes, title: "Maximum subarray (Ep 22)", start: 300, end: 1500}
+  - {exercise: 02-max-product-subarray, video_id: N8vJ8RyQEes, title: "Maximum product subarray (Ep 22)", start: 1500, end: 2180}
+  - {exercise: 03-max-subarray-one-deletion, video_id: JUV-Hdtuzsw, title: "Max subarray sum with one deletion (Ep 23)", start: 0, end: 1677}
+  - {exercise: 04-max-circular-subarray, video_id: Bt9rgQgGf64, title: "Circular subarray, revision (Ep 24)", start: 1800, end: 2294}

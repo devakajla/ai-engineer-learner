@@ -1,0 +1,8 @@
+intro: {video_id: V0wJuik3WSE, title: "Stack: introduction and flow chart (DSA Patterns Ep 35)", start: 0, end: 1422}
+segments:
+  - {exercise: 01-remove-adjacent-duplicates, video_id: K1idN2Rqcmw, title: "Remove adjacent duplicates (Ep 36)", start: 0, end: 1630}
+  - {exercise: 02-valid-parentheses, video_id: YutYOZFt6sQ, title: "Valid parentheses (Ep 37)", start: 0, end: 1976}
+  - {exercise: 03-next-greater, video_id: gFqOIPfAEjw, title: "Next greater element (Ep 38)", start: 0, end: 2078}
+  - {exercise: 04-daily-temperatures, video_id: mMKZmo3iyyM, title: "Daily temperatures (Ep 39)", start: 120, end: 900}
+  - {exercise: 05-next-greater-circular, video_id: mMKZmo3iyyM, title: "Next greater element, circular (Ep 39)", start: 900, end: 1900}
+  - {exercise: 06-remove-k-duplicates, video_id: mMKZmo3iyyM, title: "Remove k adjacent duplicates (Ep 39)", start: 1900, end: 3447}

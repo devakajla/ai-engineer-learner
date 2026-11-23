@@ -1,0 +1,50 @@
+- q: Why isn't `Base.metadata.create_all()` enough in production?
+  type: multi
+  options:
+    - It can't add columns to existing tables
+    - It keeps no history of schema changes
+    - It's too slow
+    - Different environments could drift apart
+  answer: [0, 1, 3]
+  explain: Migrations give an ordered, versioned history applied identically everywhere.
+- q: What does the `alembic_version` table contain?
+  type: single
+  options: ["All migration files", "The current revision id of this database", "The Alembic package version", "A copy of the schema"]
+  answer: [1]
+  explain: It stores only the current revision id; Alembic compares it with the migration files to know what to run.
+- q: You renamed `title` to `name` in the model and ran `--autogenerate`. What will the draft likely contain?
+  type: single
+  options:
+    - A rename operation
+    - Drop column `title` + add column `name` — losing the data
+    - Nothing
+    - An error
+  answer: [1]
+  explain: Autogenerate can't tell a rename from drop+add; you must edit the migration (alter_column with new_column_name).
+- q: You need a new NOT NULL column on a table that already has rows. What's the safe approach?
+  type: single
+  options:
+    - Add it as NOT NULL with no default
+    - Add it nullable or with a server_default, backfill, then make it NOT NULL
+    - Drop and recreate the table
+    - Use create_all
+  answer: [1]
+  explain: Existing rows need a value; add a default or backfill before tightening the constraint.
+- q: During a deploy, what's the usual order?
+  type: single
+  options:
+    - Start new code, then migrate
+    - Migrate the database, then start the new code (which must also tolerate the old schema briefly)
+    - Migrate only on Sundays
+    - Never migrate in production
+  answer: [1]
+  explain: Run migrations first; design them to be backward compatible with the still-running old version.
+- q: Why shouldn't migrations import your app's ORM models?
+  type: single
+  options:
+    - Imports are slow
+    - Models change over time; an old migration must keep working against the schema of its time
+    - Alembic forbids it
+    - It causes SQL injection
+  answer: [1]
+  explain: Migrations are a frozen history. Use raw SQL or sa.table() snapshots inside them.

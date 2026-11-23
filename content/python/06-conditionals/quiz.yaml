@@ -1,0 +1,56 @@
+- q: |
+    What is printed?
+    ```python
+    n = 10
+    if n > 5:
+        print("a")
+    elif n > 8:
+        print("b")
+    else:
+        print("c")
+    ```
+  type: single
+  options: ["`a`", "`b`", "`a` and `b`", "`c`"]
+  answer: [0]
+  explain: 'Only the first true branch runs. `n > 5` is true, so `elif` is never checked.'
+- q: How do you correctly check that `x` is missing?
+  type: single
+  options: ["`if x == None:`", "`if x is None:`", "`if not x:` (always the same thing)", "`if x = None:`"]
+  answer: [1]
+  explain: '`is None` checks identity and is the standard way. `not x` also matches `0`, `""` and `[]`.'
+- q: |
+    What is the value of `r`?
+    ```python
+    age = 15
+    r = "adult" if age >= 18 else "minor"
+    ```
+  type: single
+  options: ['`"adult"`', '`"minor"`', "`True`", "SyntaxError"]
+  answer: [1]
+  explain: 'The condition `age >= 18` is false, so the part after `else` is used.'
+- q: |
+    What is printed?
+    ```python
+    code = 502
+    match code:
+        case 200:
+            print("ok")
+        case 500 | 502:
+            print("server")
+        case _:
+            print("other")
+    ```
+  type: single
+  options: ["`ok`", "`server`", "`other`", "`server` and `other`"]
+  answer: [1]
+  explain: '`500 | 502` matches either value. Only the first matching case runs.'
+- q: What does a bare name in a `case` (for example `case color:`) do?
+  type: single
+  options: ["Compares the subject with the variable `color`", "Captures the value into `color` and always matches", "Raises NameError", "Matches only strings"]
+  answer: [1]
+  explain: 'A bare name is a capture pattern. It binds the value and matches everything. Use literals or dotted names to compare.'
+- q: Which of these are valid ways to check that `s` is `"a"` or `"b"`?
+  type: multi
+  options: ['`s in ("a", "b")`', '`s == "a" or s == "b"`', '`s == "a" or "b"`', '`s == ("a" or "b")`']
+  answer: [0, 1]
+  explain: 'The 3rd is always truthy, and the 4th only compares with `"a"`. The first two are correct.'

@@ -1,0 +1,11 @@
+intro: {video_id: _1AbrkD8pak, title: "Introduction to the heap pattern (DSA Patterns Ep 57)", start: 0, end: 2048}
+segments:
+  - {exercise: 01-heap-sort, video_id: zzu-k85RLGs, title: "Heap data structure (Ep 58)", start: 0, end: 1593}
+  - {exercise: 05-k-closest-points, video_id: I1-0ALAJxZI, title: "Heap on pairs (Ep 59)", start: 0, end: 1500}
+  - {exercise: 06-k-smallest-pair-sums, video_id: I1-0ALAJxZI, title: "Heap on pairs (Ep 59)", start: 1500, end: 3091}
+  - {exercise: 04-top-k-frequent, video_id: 5Net0Dd7NAA, title: "Top K frequent elements (Ep 60)", start: 0, end: 2467}
+  - {exercise: 02-kth-largest, video_id: ks8rocoXbJk, title: "5 step heap template (Ep 61)", start: 0, end: 1723}
+  - {exercise: 08-connect-ropes, video_id: SCe8N_v-8Ls, title: "Heap greedy (Ep 62)", start: 0, end: 2032}
+  - {exercise: 10-ipo, video_id: DYBWbmhisiM, title: "IPO (Ep 63)", start: 0, end: 1778}
+  - {exercise: 09-merge-k-sorted, video_id: 55aenUfSIhQ, title: "Merge K sorted lists (Ep 64)", start: 0, end: 1472}
+  - {exercise: 11-task-scheduler, video_id: 1yax0YQOb8w, title: "CPU task scheduler (Ep 65)", start: 0, end: 2539}

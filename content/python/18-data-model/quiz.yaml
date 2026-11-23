@@ -1,0 +1,66 @@
+- q: |
+    What is printed?
+    ```python
+    def f(x, items=[]):
+        items.append(x)
+        return items
+
+    f(1)
+    print(f(2))
+    ```
+  type: single
+  options: ["`[2]`", "`[1, 2]`", "`[1]`", "An error"]
+  answer: [1]
+  explain: The default list is created once when the function is defined and shared between calls.
+- q: |
+    What is `a` at the end?
+    ```python
+    a = {"tags": ["x"]}
+    b = a.copy()
+    b["tags"].append("y")
+    b["n"] = 1
+    ```
+  type: single
+  options: ['`{"tags": ["x"]}`', '`{"tags": ["x", "y"]}`', '`{"tags": ["x", "y"], "n": 1}`', '`{"tags": ["x"], "n": 1}`']
+  answer: [1]
+  explain: A shallow copy shares the nested list (so "y" shows up) but the new top-level key only exists in b.
+- q: |
+    What is `data` after the calls?
+    ```python
+    def reset(items):
+        items = []
+
+    def grow(items):
+        items += [9]
+
+    data = [1]
+    reset(data)
+    grow(data)
+    ```
+  type: single
+  options: ["`[]`", "`[1]`", "`[1, 9]`", "`[9]`"]
+  answer: [2]
+  explain: '`reset` only rebinds its local name. `+=` on a list mutates in place, so the caller sees 9.'
+- q: Which create **independent** inner lists?
+  type: multi
+  options:
+    - "`[[0] * 3] * 3`"
+    - "`[[0] * 3 for _ in range(3)]`"
+    - "`copy.deepcopy(grid)` of an existing grid"
+    - "`grid.copy()` of an existing grid"
+  answer: [1, 2]
+  explain: Multiplying the outer list and shallow copies both share the inner lists.
+- q: What does `len(obj)` call under the hood?
+  type: single
+  options: ["`obj.len()`", "`obj.__len__()`", "`obj.__size__()`", "`obj.length`"]
+  answer: [1]
+  explain: Built-in functions and syntax are powered by dunder methods — the Python data model.
+- q: How does CPython free most objects?
+  type: single
+  options:
+    - Only a periodic mark-and-sweep GC
+    - Reference counting, plus a cyclic garbage collector for cycles
+    - The programmer calls free()
+    - Objects are never freed until the program exits
+  answer: [1]
+  explain: When an object's reference count drops to zero it's freed immediately; the cyclic GC handles reference cycles.

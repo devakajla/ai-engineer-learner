@@ -1,0 +1,85 @@
+- q: An agent calls the same tool with the same arguments four times. Which failure is this?
+  type: single
+  options:
+    - Prompt injection
+    - A loop
+    - Drift
+    - A good result
+  answer: [1]
+  explain: Repeating the same call that did not help is a loop. Detect it, add a hint, and stop after a limit.
+- q: Which of these are good ways to limit the cost of an agent run?
+  type: multi
+  options:
+    - Budgets for steps, tokens, cost and time
+    - Truncating long tool results
+    - Using a cheaper model for easy steps
+    - Removing every limit so it can finish
+  answer: [0, 1, 2]
+  explain: Limits and short results keep the history and the number of steps small. Removing limits risks a runaway bill.
+- q: |
+    What does this print?
+    ```python
+    def check_plan(used, limits):
+        names = [("max_calls", "calls"), ("max_data", "data")]
+        for limit_name, used_name in names:
+            if limit_name in limits and used.get(used_name, 0) >= limits[limit_name]:
+                return limit_name
+        return None
+
+    print(check_plan({"calls": 60}, {"max_calls": 60}))
+    ```
+  type: single
+  options:
+    - None
+    - max_calls
+    - max_data
+    - An error
+  answer: [1]
+  explain: Used equals the limit, and the check is >=, so max_calls is reached.
+- q: An agent reports "Done! I deleted the old files", but the files are still there. What is this failure and how do you catch it?
+  type: single
+  options:
+    - Hallucinated success, catch it by checking the result with code
+    - A loop, catch it by raising the temperature
+    - Drift, catch it by using a bigger model
+    - Not a failure
+  answer: [0]
+  explain: The model claimed success without proof. Verify the outcome with code (does the file still exist?).
+- q: |
+    What does this print?
+    ```python
+    def steps_in_order(recipe, cooked):
+        position = 0
+        for step in cooked:
+            if position < len(recipe) and step == recipe[position]:
+                position += 1
+        return position == len(recipe)
+
+    print(steps_in_order(["chop", "fry"], ["fry", "chop"]))
+    ```
+  type: single
+  options:
+    - "True"
+    - "False"
+    - "None"
+    - An error
+  answer: [1]
+  explain: The pointer waits for "chop" first. "fry" is skipped, then "chop" moves it to 1, but "fry" never comes again, so the recipe is not finished.
+- q: What is a good way to choose an agent framework?
+  type: single
+  options:
+    - Pick the one with the best demo video
+    - Build the plain loop first, then add a framework only when it saves real work, such as durable state, approval or tracing
+    - Always use the newest one
+    - Never use a framework
+  answer: [1]
+  explain: Knowing the plain loop shows what a framework hides. Choose by control, debuggability, maintenance and team skill.
+- q: What should an agent do when it reaches its step limit?
+  type: single
+  options:
+    - Crash with an exception
+    - Stop silently
+    - Stop cleanly and tell the user what happened, with the partial result
+    - Raise the limit and continue
+  answer: [2]
+  explain: A clear message and the partial result are far better than a crash or silence. Raising the limit hides the real cause.

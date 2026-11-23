@@ -1,0 +1,66 @@
+- q: Where should the SQLAlchemy engine be created in a FastAPI app?
+  type: single
+  options: ["Inside each route", "In a per-request dependency", "Once per process (module level or lifespan)", "In each repository method"]
+  answer: [2]
+  explain: The engine owns the connection pool; sessions are per request.
+- q: |
+    What's wrong with this route?
+    ```python
+    @app.get("/report")
+    async def report(db: Session = Depends(get_sync_db)):
+        return db.execute(text("SELECT ... heavy ...")).all()
+    ```
+  type: single
+  options:
+    - Nothing
+    - A blocking sync DB call inside async def blocks the event loop
+    - Depends can't be used with async routes
+    - text() is unsafe
+  answer: [1]
+  explain: Use a plain def route (thread pool) or an async driver with await.
+- q: Which fix removes an N+1 when listing users with their tasks?
+  type: multi
+  options: ["`selectinload(User.tasks)`", "Adding an index on users.email", "A single GROUP BY query for counts", "Increasing the connection pool size"]
+  answer: [0, 2]
+  explain: Eager loading or an aggregate query cut the per-row queries; pool size and unrelated indexes don't.
+- q: A breaking change to `/api/v1/tasks` is needed. What's the professional approach?
+  type: single
+  options:
+    - Change v1 and notify clients by email
+    - Ship `/api/v2/tasks`, keep v1 working, deprecate it with a timeline
+    - Add a query flag that silently changes the format
+    - Never change the API
+  answer: [1]
+  explain: Published versions must stay stable; new versions carry breaking changes.
+- q: Which belong in a catch-all 500 handler?
+  type: multi
+  options: ["Log the full traceback", "Return the exception message to the client", "Return a generic message and error code", "Include the request ID in logs"]
+  answer: [0, 2, 3]
+  explain: Internals stay in logs; clients get a safe, consistent response.
+- q: Your test suite passes but a deliberately broken `delete` (which does nothing) also passes. What does that tell you?
+  type: single
+  options:
+    - The suite is fine
+    - No test verifies that a deleted task is actually gone
+    - pytest is misconfigured
+    - Delete should not be tested
+  answer: [1]
+  explain: A surviving mutant shows behaviour no test checks.
+- q: How do you make two concurrent retries with the same Idempotency-Key not both execute?
+  type: single
+  options:
+    - Hope they don't arrive together
+    - A unique constraint / atomic set-if-not-exists on the key before executing
+    - Sleep for a random time
+    - Use GET instead of POST
+  answer: [1]
+  explain: An atomic claim (DB unique constraint or Redis SET NX) ensures only one request executes.
+- q: Which measures help TaskFlow scale to 1,000 req/s?
+  type: multi
+  options:
+    - Stateless app instances behind a load balancer
+    - PostgreSQL with a sized connection pool and proper indexes
+    - Storing tasks in each worker's memory
+    - Caching hot reads and moving slow work to background workers
+  answer: [0, 1, 3]
+  explain: In-process state breaks horizontal scaling.

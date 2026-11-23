@@ -1,0 +1,79 @@
+- q: Why is ingestion so important in RAG?
+  type: single
+  options:
+    - It makes the model bigger
+    - The index can only be as good as the text that goes in. Garbage in, garbage out
+    - It is required by the API
+    - It replaces the retrieval step
+  answer: [1]
+  explain: Broken text, mixed columns or missing metadata cannot be fixed later by a better prompt.
+- q: What is a good way to store a table for RAG?
+  type: single
+  options:
+    - Cut it every 500 characters
+    - Keep it together (for example as Markdown), or write each row as a sentence with its column names
+    - Drop all tables
+    - Store only the numbers
+  answer: [1]
+  explain: Numbers without their column headers lose their meaning.
+- q: |
+    What does this print?
+    ```python
+    import hashlib
+    a = " ".join("hello   world".split())
+    b = " ".join("hello world".split())
+    print(hashlib.sha256(a.encode()).hexdigest() == hashlib.sha256(b.encode()).hexdigest())
+    ```
+  type: single
+  options:
+    - "True"
+    - "False"
+    - Error
+    - None
+  answer: [0]
+  explain: After normalizing spaces both texts are "hello world", so the hashes are the same.
+- q: A document shrinks from 10 chunks to 8. What goes wrong if you only upsert the new 8?
+  type: single
+  options:
+    - Nothing
+    - The old chunks 8 and 9 stay in the index as stale chunks and can appear in answers
+    - The index is deleted
+    - The embedding model changes
+  answer: [1]
+  explain: Upsert replaces ids that exist. It does not remove ids that are no longer produced. Delete the old chunks of the document first.
+- q: Which groups does an incremental update sort documents into?
+  type: multi
+  options:
+    - add
+    - update
+    - delete
+    - same
+  answer: [0, 1, 2, 3]
+  explain: New ones are added, changed ones updated, removed ones deleted. Unchanged ones need no work.
+- q: When must you re-embed the whole corpus?
+  type: multi
+  options:
+    - You switch to a different embedding model
+    - You change the chunking rules
+    - One document changed
+    - A user asked a new question
+  answer: [0, 1]
+  explain: Old and new vectors or chunks do not mix. A single changed document needs only its own update.
+- q: Why call `embed` once with many texts instead of once per text?
+  type: single
+  options:
+    - It is much faster, because models work in batches
+    - It is required by Chroma
+    - It gives better vectors
+    - It lowers the dimension
+  answer: [0]
+  explain: Batching removes per-call overhead.
+- q: Which metadata do you add during ingestion?
+  type: multi
+  options:
+    - source and title
+    - page or heading
+    - updated date
+    - the user's password
+  answer: [0, 1, 2]
+  explain: Metadata powers citations, filters and freshness. It is very hard to add later.

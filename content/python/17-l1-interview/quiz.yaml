@@ -1,0 +1,78 @@
+- q: |
+    What is printed?
+    ```python
+    print(0.1 + 0.2 == 0.3)
+    ```
+  type: single
+  options: ["`True`", "`False`", "`None`", "Error"]
+  answer: [1]
+  explain: 'Floats are binary approximations. Use `math.isclose` to compare them.'
+- q: |
+    What is printed?
+    ```python
+    a = [1, 2]
+    b = a
+    c = a.copy()
+    b.append(3)
+    print(len(a), len(c))
+    ```
+  type: single
+  options: ["`2 2`", "`3 2`", "`3 3`", "`2 3`"]
+  answer: [1]
+  explain: '`b` is the same list as `a`; `c` is a separate copy.'
+- q: |
+    What is `x`?
+    ```python
+    x = [n for n in range(6) if n % 2]
+    ```
+  type: single
+  options: ["`[0, 2, 4]`", "`[1, 3, 5]`", "`[1, 2, 3, 4, 5]`", "`[0, 1, 0, 1, 0, 1]`"]
+  answer: [1]
+  explain: '`n % 2` is truthy for odd numbers.'
+- q: |
+    What is printed?
+    ```python
+    def f(x, items=[]):
+        items.append(x)
+        return items
+
+    f(1)
+    f(2)
+    print(f(3))
+    ```
+  type: single
+  options: ["`[3]`", "`[1, 2, 3]`", "`[1]`", "`[2, 3]`"]
+  answer: [1]
+  explain: 'The default list is shared across calls.'
+- q: Which of these are hashable (can be dict keys or set members)?
+  type: multi
+  options: ['`"abc"`', "`(1, 2)`", "`[1, 2]`", "`{1, 2}`", "`3.5`"]
+  answer: [0, 1, 4]
+  explain: 'Lists and sets are mutable and not hashable. Strings, tuples of hashables and numbers are.'
+- q: |
+    What is printed?
+    ```python
+    try:
+        print("a")
+        {}["k"]
+    except KeyError:
+        print("b")
+    else:
+        print("c")
+    finally:
+        print("d")
+    ```
+  type: single
+  options: ["`a b d`", "`a c d`", "`a d`", "`b d`"]
+  answer: [0]
+  explain: '`a` prints, then the missing key raises KeyError, so `except` runs, `else` is skipped, and `finally` runs.'
+- q: How do you remove duplicates from a list while keeping the order?
+  type: single
+  options: ["`set(items)`", "`list(dict.fromkeys(items))`", "`sorted(items)`", "`items.unique()`"]
+  answer: [1]
+  explain: 'Dict keys are unique and keep insertion order. A set loses the order.'
+- q: What does `-7 // 2` evaluate to?
+  type: single
+  options: ["`-3`", "`-4`", "`-3.5`", "`3`"]
+  answer: [1]
+  explain: 'Floor division rounds toward negative infinity.'

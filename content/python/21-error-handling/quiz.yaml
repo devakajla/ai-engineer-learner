@@ -1,0 +1,57 @@
+- q: |
+    What is printed?
+    ```python
+    def f():
+        try:
+            return "try"
+        finally:
+            print("cleanup")
+
+    print(f())
+    ```
+  type: single
+  options: ["`try`", "`cleanup` then `try`", "`try` then `cleanup`", "`cleanup`"]
+  answer: [1]
+  explain: finally runs before the function actually returns, so "cleanup" prints first.
+- q: When does the `else` block of a `try` statement run?
+  type: single
+  options: ["Always", "Only if an exception was raised", "Only if no exception was raised in the try block", "Only after finally"]
+  answer: [2]
+  explain: else runs when the try block completes without an exception (and before finally).
+- q: |
+    Which handler runs for `open("missing.txt")`?
+    ```python
+    try:
+        open("missing.txt")
+    except OSError:
+        print("A")
+    except FileNotFoundError:
+        print("B")
+    ```
+  type: single
+  options: ["A", "B", "Both", "Neither"]
+  answer: [0]
+  explain: FileNotFoundError is a subclass of OSError and the first matching handler wins — put specific handlers first.
+- q: What does `raise ConfigError("bad") from e` do?
+  type: single
+  options:
+    - Discards e
+    - Raises ConfigError and stores e as its `__cause__`, shown in the traceback
+    - Raises e again
+    - Converts e into a ConfigError in place
+  answer: [1]
+  explain: Explicit chaining keeps the original error for debugging.
+- q: Which failures are reasonable to retry automatically?
+  type: multi
+  options: ["A connection timeout", "HTTP 429 Too Many Requests", "HTTP 422 validation error", "HTTP 503 Service Unavailable", "A KeyError in your own code"]
+  answer: [0, 1, 3]
+  explain: Retry transient problems. 422 and bugs will fail again no matter how often you retry.
+- q: Why add random jitter to retry delays?
+  type: single
+  options:
+    - To make tests harder
+    - So many clients that failed together don't all retry at the exact same moment
+    - Because time.sleep is inaccurate
+    - It's required by HTTP
+  answer: [1]
+  explain: Synchronized retries create load spikes (thundering herd); jitter spreads them out.

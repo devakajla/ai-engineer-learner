@@ -1,0 +1,65 @@
+- q: A browser sends a login form. Which parameter type reads `username` from the form data?
+  type: single
+  options: ["`username: str`", "`username: Annotated[str, Form()]`", "`username: Annotated[str, Query()]`", "`username: Annotated[str, Body()]`"]
+  answer: [1]
+  explain: Form fields need `Form()`. A plain `str` would be read from the query, and `Body()` reads JSON.
+- q: 'A route has `payload: LoginIn` (a Pydantic model). A client sends the same data as an HTML form. What happens?'
+  type: single
+  options:
+    - FastAPI reads the form into the model
+    - "`422`, because a model is read from a JSON body"
+    - "`500` error"
+    - The route is skipped
+  answer: [1]
+  explain: A Pydantic model is read from a JSON body. For form data, declare each field with `Form()`.
+- q: Which of these are real attributes of an `UploadFile`?
+  type: multi
+  options: ["`filename`", "`content_type`", "`file`", "`password`"]
+  answer: [0, 1, 2]
+  explain: An `UploadFile` has `filename`, `content_type` and `file` (a file-like object you can read). It has no `password`.
+- q: Why is `file.content_type` not enough to prove that a file is really a PNG?
+  type: single
+  options:
+    - It is always empty
+    - The client sets it, so it can lie
+    - Browsers never send it
+    - It only works for text files
+  answer: [1]
+  explain: The client chooses the file name and content type. For strong checks, look at the file's real bytes and always limit the size.
+- q: A client uploads a 50 MB file to your avatar route. Which status code fits "the file is too big"?
+  type: single
+  options: ["`400`", "`404`", "`413`", "`415`"]
+  answer: [2]
+  explain: "`413 Content Too Large` means the request body is bigger than the server accepts. `415` means the file type is not supported."
+- q: |
+    How does this route read a cookie?
+    ```python
+    @app.get("/me")
+    def me(session: Annotated[str | None, Cookie()] = None): ...
+    ```
+  type: single
+  options:
+    - It reads the `session` value from the `Cookie` header of the request
+    - It reads `session` from the query string
+    - It creates a cookie named session
+    - It reads the JSON body
+  answer: [0]
+  explain: "`Cookie()` reads a value from the request's cookies. To create a cookie, use `response.set_cookie(...)`."
+- q: Why set `httponly=True` on a session cookie?
+  type: single
+  options:
+    - So JavaScript on the page cannot read it, which limits theft by injected scripts
+    - So the cookie works over HTTP only and not HTTPS
+    - So it lasts forever
+    - So the server can read it faster
+  answer: [0]
+  explain: An HttpOnly cookie is sent to the server with requests but hidden from page JavaScript, so a script injected into the page cannot steal it.
+- q: Which code gives a downloadable file?
+  type: single
+  options:
+    - '`return open("report.txt").read()`'
+    - '`return FileResponse(path, filename="report.txt")`'
+    - '`return {"file": "report.txt"}`'
+    - '`return RedirectResponse("report.txt")`'
+  answer: [1]
+  explain: "`FileResponse` streams the file from disk and, with `filename`, sets `Content-Disposition: attachment` so the browser saves it."

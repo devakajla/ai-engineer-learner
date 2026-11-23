@@ -1,0 +1,66 @@
+- q: What does CPython do with your `.py` file before running it?
+  type: single
+  options:
+    - Compiles it directly to machine code
+    - Compiles it to bytecode, which a virtual machine executes
+    - Nothing; it reads and runs each line of text directly
+    - Converts it to C and compiles that
+  answer: [1]
+  explain: CPython compiles source to bytecode (cached in `__pycache__`) and the Python virtual machine runs the bytecode.
+- q: |
+    What happens here?
+    ```python
+    x = 5
+    x = "five"
+    ```
+  type: single
+  options:
+    - TypeError, x was declared as int
+    - It works; the name x now points to a str object
+    - It works, but x is converted to int 5
+    - SyntaxError
+  answer: [1]
+  explain: Names have no fixed type in Python. Assignment just makes the name point to a different object.
+- q: Which statements about Python's typing are true?
+  type: multi
+  options:
+    - Python is dynamically typed
+    - Python is weakly typed, so `"5" + 5` gives `"55"`
+    - Types belong to objects, not to variable names
+    - Python is strongly typed
+  answer: [0, 2, 3]
+  explain: Dynamic (checked at runtime, types on objects) and strong (`"5" + 5` raises TypeError).
+- q: Why prefer `python -m pytest` over just `pytest`?
+  type: single
+  options:
+    - It is faster
+    - It guarantees pytest runs with the same interpreter (and venv) you called
+    - It runs tests in parallel
+    - pytest cannot be run any other way
+  answer: [1]
+  explain: '`python -m X` runs module X with that exact interpreter, avoiding a mismatch with some other `pytest` on your PATH.'
+- q: |
+    What does `result` hold?
+    ```python
+    def f(n):
+        print(n * 2)
+
+    result = f(3)
+    ```
+  type: single
+  options:
+    - "6"
+    - "'6'"
+    - "None"
+    - It raises an error
+  answer: [2]
+  explain: '`f` prints 6 but has no `return`, so it returns `None`. Exercises check returned values — always `return`.'
+- q: What does a virtual environment give you?
+  type: multi
+  options:
+    - A separate set of installed packages per project
+    - A faster Python interpreter
+    - The ability to use different versions of a library in different projects
+    - Automatic type checking
+  answer: [0, 2]
+  explain: A venv isolates installed packages per project. It does not change speed or add type checking.

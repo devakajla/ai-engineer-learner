@@ -1,0 +1,78 @@
+- q: What is prompt injection?
+  type: single
+  options:
+    - A way to make the model faster
+    - Untrusted text that contains instructions the model may follow
+    - A bug in the Groq SDK
+    - A way to add examples to a prompt
+  answer: [1]
+  explain: The model cannot reliably tell your instructions from text that only looks like instructions, so a document or a user can take control.
+- q: Which one is an indirect injection?
+  type: single
+  options:
+    - A user types "ignore your rules" in the chat
+    - A web page your bot reads contains hidden text that gives the bot orders
+    - Your own system prompt is too long
+    - The API key is wrong
+  answer: [1]
+  explain: Indirect means the attack comes through data the app fetches, not through the user's own message.
+- q: Which of these reduce the risk of injection?
+  type: multi
+  options:
+    - Wrap untrusted text in tags and say it is data
+    - Give the model only the tools it needs
+    - Put the admin password in the system prompt so the model can use it
+    - Check the reply before it reaches a user or a tool
+  answer: [0, 1, 3]
+  explain: Delimiters, least privilege and output checks are real layers. A secret in the prompt can be leaked.
+- q: Why do we remove the closing tag from untrusted text before wrapping it?
+  type: single
+  options:
+    - To make the text shorter
+    - So the text cannot close our tag early and place instructions outside the data area
+    - Because tags are not allowed in prompts
+    - To save tokens
+  answer: [1]
+  explain: A text that holds `</document>` could end the data area itself. Removing it keeps all the untrusted text inside.
+- q: |
+    What does this print?
+    ```python
+    BANNED = ["spam", "scam"]
+    text = "A SCAM and some Spam"
+    print([w for w in BANNED if w in text.lower()])
+    ```
+  type: single
+  options:
+    - "[]"
+    - "['spam', 'scam']"
+    - "['scam']"
+    - "['SCAM', 'Spam']"
+  answer: [1]
+  explain: The text is lowercased first, so both words match. The result follows the order of the BANNED list.
+- q: Why is a keyword detector for injection not enough?
+  type: single
+  options:
+    - It is too slow
+    - Attackers can change spelling, use other languages or hide the order in other words
+    - Python cannot search text
+    - It uses too many tokens
+  answer: [1]
+  explain: A filter catches lazy attacks. Use it as an alarm and log, together with other layers.
+- q: What is the main point of a mini eval?
+  type: single
+  options:
+    - To train the model
+    - To measure a prompt on a fixed set of cases, so changes are judged by facts, not by one example
+    - To make the model answer faster
+    - To check the API key
+  answer: [1]
+  explain: Like unit tests for code. You run the same cases before and after a change and compare pass rates.
+- q: Why is the `failed` list as useful as the pass rate?
+  type: single
+  options:
+    - It makes the rate higher
+    - It tells you which cases to look at, so you know what to fix
+    - It is required by Groq
+    - It stores the model's answers
+  answer: [1]
+  explain: A rate says how good you are. The failed list says where to look.

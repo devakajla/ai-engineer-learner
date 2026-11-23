@@ -1,0 +1,52 @@
+- q: What does opening a file with mode `"w"` do if the file already exists?
+  type: single
+  options: ["Appends to it", "Erases the old content", "Raises an error", "Opens it read-only"]
+  answer: [1]
+  explain: '`"w"` truncates the file. Use `"a"` to append.'
+- q: Why should you use `with open(...) as f:`?
+  type: single
+  options: ["It makes the file read faster", "It closes the file automatically, even when an error happens", "It is required for text files", "It creates the file if missing"]
+  answer: [1]
+  explain: 'The file is closed at the end of the block, so data is saved and resources are freed.'
+- q: |
+    What is the content of `a.txt`?
+    ```python
+    with open("a.txt", "w") as f:
+        f.write("one")
+        f.write("two")
+    ```
+  type: single
+  options: ["`one` and `two` on separate lines", "`onetwo`", "Only `two`", "Error"]
+  answer: [1]
+  explain: '`write` does not add a newline.'
+- q: |
+    What is printed?
+    ```python
+    from pathlib import Path
+    p = Path("data") / "report.final.csv"
+    print(p.suffix, p.stem)
+    ```
+  type: single
+  options: ["`.csv report.final`", "`.final report`", "`.csv report`", "`csv report.final`"]
+  answer: [0]
+  explain: '`suffix` is the last extension, `stem` is the name without it.'
+- q: |
+    What is printed?
+    ```python
+    import json
+    print(json.loads('{"a": [1, true, null]}')["a"])
+    ```
+  type: single
+  options: ["`[1, True, None]`", "`[1, true, null]`", "`['1', 'true', 'null']`", "Error"]
+  answer: [0]
+  explain: 'JSON `true` and `null` become Python `True` and `None`.'
+- q: A CSV file has a column `age`. What type is `row["age"]` from `csv.DictReader`?
+  type: single
+  options: ["`int`", "`str`", "`float`", "Depends on the value"]
+  answer: [1]
+  explain: 'The csv module never converts types. Use `int(row["age"])`.'
+- q: Which are good ways to read a very large text file?
+  type: multi
+  options: ["`for line in f:`", "`f.read()`", "`f.readline()` in a loop", "`f.readlines()`"]
+  answer: [0, 2]
+  explain: '`read()` and `readlines()` load everything into memory.'

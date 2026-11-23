@@ -1,0 +1,11 @@
+intro: {video_id: Fu7LD_mIo00, title: "Two pointers: intro and flow chart (DSA Patterns Ep 3)", start: 0, end: 840}
+segments:
+  - {exercise: 01-two-sum-sorted, video_id: Fu7LD_mIo00, title: "Two Sum (Ep 3)", start: 900, end: 2850}
+  - {exercise: 02-two-sum-values, video_id: Fu7LD_mIo00, title: "Two Sum (Ep 3)", start: 900, end: 2850}
+  - {exercise: 03-remove-duplicates, video_id: PvyEr3CeKzE, title: "Remove Duplicates from Sorted Array (Ep 4)", start: 180, end: 1810}
+  - {exercise: 04-merge-sorted, video_id: nPdxCoVHC90, title: "Merging two sorted arrays (Ep 5)", start: 540, end: 1470}
+  - {exercise: 05-squares-sorted, video_id: nPdxCoVHC90, title: "Squares of a Sorted Array (Ep 5)", start: 150, end: 3042}
+  - {exercise: 06-three-sum, video_id: rM9EthMlXnw, title: "3Sum (Ep 7)", start: 120, end: 2010}
+  - {exercise: 07-three-sum-closest, video_id: rM9EthMlXnw, title: "3Sum Closest (Ep 7)", start: 2010, end: 2582}
+  - {exercise: 08-triplet-sum-smaller, video_id: ljJJcYql6Bc, title: "Triplet Sum Smaller (Ep 8)", start: 240, end: 1050}
+  - {exercise: 09-sort-colors, video_id: ljJJcYql6Bc, title: "Sort Colors / Dutch National Flag (Ep 8)", start: 1080, end: 2476}

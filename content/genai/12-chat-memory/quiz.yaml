@@ -1,0 +1,76 @@
+- q: |
+    What is printed?
+    ```python
+    items = ["a", "b", "c", "d"]
+    print(items[-2:], items[-9:])
+    ```
+  type: single
+  options: ["`['c', 'd'] ['a', 'b', 'c', 'd']`", "`['c', 'd'] []`", "An `IndexError`", "`['a', 'b'] ['a', 'b', 'c', 'd']`"]
+  answer: [0]
+  explain: A negative slice counts from the end. When you ask for more items than exist, you simply get all of them.
+- q: |
+    What is printed?
+    ```python
+    items = ["a", "b", "c"]
+    print(items[-0:])
+    ```
+  type: single
+  options: ["`[]`", "`['a', 'b', 'c']`", "`['c']`", "An error"]
+  answer: [1]
+  explain: -0 is 0, so the slice starts at the beginning and returns everything. This is why you must handle n = 0 yourself.
+- q: |
+    What is printed?
+    ```python
+    items = ["a", "b", "c", "d"]
+    keep = 1
+    cut = len(items) - keep
+    print(items[:cut], items[cut:])
+    ```
+  type: single
+  options: ["`['a', 'b', 'c'] ['d']`", "`['a', 'b'] ['c', 'd']`", "`['a', 'b', 'c', 'd'] []`", "`[] ['a', 'b', 'c', 'd']`"]
+  answer: [0]
+  explain: cut is 3. The slice before it is the old part and the slice from it is the recent part.
+- q: |
+    What is printed?
+    ```python
+    kept = ["x", "y"]
+    kept = kept.reverse()
+    print(kept)
+    ```
+  type: single
+  options: ["`['y', 'x']`", "`['x', 'y']`", "`None`", "An error"]
+  answer: [2]
+  explain: ".reverse() changes the list in place and returns None. Assigning its result throws the list away."
+- q: |
+    The budget is 5 tokens. The messages (oldest to newest) cost 3, 4, 2, 2 tokens. Walking from the newest and stopping at the first message that does not fit, which messages are kept?
+  type: single
+  options: ["The last two (2 and 2)", "The last three (4, 2 and 2)", "All four", "Only the last one"]
+  answer: [0]
+  explain: 2 + 2 = 4 fits. Adding the 4 would make 8, which is over 5, so stop. Older messages are not considered.
+- q: Which are good reasons to summarize old messages instead of only deleting them?
+  type: multi
+  options:
+    - The key facts (like the user's name) are kept
+    - It needs no model call
+    - The prompt gets shorter
+    - It can drift or lose some details
+  answer: [0, 2]
+  explain: A summary keeps key facts in fewer tokens. It does need a model call, and it can lose details (that is a drawback, not a reason to use it).
+- q: The history has 3 messages and you want to keep the last 5. What should a summary function do?
+  type: single
+  options:
+    - Ask the model for a summary anyway
+    - Return the history unchanged, with no model call
+    - Raise an error
+    - Return an empty list
+  answer: [1]
+  explain: Nothing is old enough to summarize. Skip the call, because every call costs money.
+- q: Why check the size of the history before you ask the model for a summary?
+  type: single
+  options:
+    - A summary costs a model call, so do it only when the history is too big
+    - The model cannot summarize short chats
+    - Summaries are free
+    - The API forbids it
+  answer: [0]
+  explain: Measure first. If the history fits the budget, do nothing and save the call.

@@ -1,0 +1,62 @@
+- q: |
+    What is printed?
+    ```python
+    print("Hi {name}, you are {age}.".format(name="Dev", age=30))
+    ```
+  type: single
+  options: ["`Hi Dev, you are 30.`", "`Hi {name}, you are {age}.`", "A `KeyError`", "`Hi name, you are age.`"]
+  answer: [0]
+  explain: format replaces each placeholder with the value of the same name.
+- q: |
+    What happens here?
+    ```python
+    "Hi {name}!".format(city="Delhi")
+    ```
+  type: single
+  options: ["It returns `Hi !`", "It returns `Hi Delhi!`", "A `KeyError` for `name`", "It returns `Hi {name}!`"]
+  answer: [2]
+  explain: The template needs "name". The extra city value is ignored, but the missing name raises a KeyError.
+- q: |
+    What is printed?
+    ```python
+    print('JSON like {{"a": "{x}"}}'.format(x="1"))
+    ```
+  type: single
+  options: ['`JSON like {"a": "1"}`', '`JSON like {{"a": "1"}}`', "A `KeyError`", '`JSON like {"a": "{x}"}`']
+  answer: [0]
+  explain: Doubled braces become one real brace. {x} is still a placeholder, so it gets "1".
+- q: |
+    What is printed?
+    ```python
+    from string import Formatter
+    names = [n for _, n, _, _ in Formatter().parse("{a} and {b} and {a}") if n is not None]
+    print(names)
+    ```
+  type: single
+  options: ["`['a', 'b']`", "`['a', 'b', 'a']`", "`['a', 'a', 'b']`", "`[]`"]
+  answer: [1]
+  explain: parse gives every placeholder in order, including repeats. This list is not made unique.
+- q: |
+    What is printed?
+    ```python
+    versions = ["v1", "v10", "v2"]
+    print(max(versions))
+    ```
+  type: single
+  options: ["`v10`", "`v2`", "`v1`", "A `TypeError`"]
+  answer: [1]
+  explain: Strings compare character by character. "v2" is bigger than "v10" because "2" is bigger than "1". To find the latest, compare the numbers.
+- q: Why keep prompt versions and log which one was used?
+  type: multi
+  options:
+    - You can go back if a new prompt is worse
+    - You can compare versions on the same test questions
+    - You can tell which prompt wrote a bad answer
+    - It makes the model faster
+  answer: [0, 1, 2]
+  explain: Versioning helps rollback, comparison and debugging. It has no effect on model speed.
+- q: A prompt template must contain a real `{` character. What do you write?
+  type: single
+  options: ["`\\{`", "`{{`", "`[{]`", "`{ }`"]
+  answer: [1]
+  explain: In str.format a doubled brace is the way to write one real brace.

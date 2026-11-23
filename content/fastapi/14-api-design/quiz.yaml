@@ -1,0 +1,50 @@
+- q: Why is `LIMIT 20 OFFSET 200000` slow on a big table?
+  type: single
+  options:
+    - LIMIT is not supported by indexes
+    - The database still has to walk past the first 200,000 rows
+    - OFFSET forces a full table lock
+    - It returns 200,000 rows to the client
+  answer: [1]
+  explain: Offsets are skipped by reading them; cursor pagination seeks directly with WHERE id < :cursor.
+- q: Which collection is the best fit for cursor pagination?
+  type: single
+  options: ["An admin page listing 30 settings", "An activity feed with millions of events and constant inserts", "A list of 5 subscription plans", "A dropdown of countries"]
+  answer: [1]
+  explain: Cursor pagination stays fast and stable for large, fast-growing collections.
+- q: Which changes are **breaking** for existing API clients?
+  type: multi
+  options:
+    - Renaming the field `title` to `name`
+    - Adding a new optional response field `tags`
+    - Making a previously optional request field required
+    - Adding a new endpoint
+  answer: [0, 2]
+  explain: Adding optional fields or endpoints is backwards compatible; renames and new requirements are not.
+- q: A client retries `POST /payments` with the same `Idempotency-Key` and the same body. What should the server do?
+  type: single
+  options:
+    - Create a second payment
+    - Return the stored response from the first request without charging again
+    - Return 409 Conflict
+    - Ignore the header
+  answer: [1]
+  explain: Same key + same request = replay the original response. Same key + different body is the error case.
+- q: Why add `id` as a tie-breaker when sorting by `created_at`?
+  type: single
+  options:
+    - It makes the query faster
+    - Rows with equal timestamps would otherwise have a random order, causing duplicates/missing items across pages
+    - SQL requires two sort keys
+    - To hide the id
+  answer: [1]
+  explain: Pagination needs a total, deterministic order.
+- q: 'Why return `{"items": [...], "total": ...}` instead of a bare JSON array?'
+  type: multi
+  options:
+    - You can add metadata (total, next_cursor) later without breaking clients
+    - Arrays are not valid JSON
+    - Clients learn how many items exist
+    - It's required by FastAPI
+  answer: [0, 2]
+  explain: An object envelope can grow; a top-level array can't get new fields.

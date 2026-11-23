@@ -1,0 +1,5 @@
+{
+  "tasks.md": {"tenant": "acme", "groups": [], "updated": "2026-11-01"},
+  "payroll.md": {"tenant": "acme", "groups": ["hr"], "updated": "2026-10-01"},
+  "other-company.md": {"tenant": "globex", "groups": [], "updated": "2026-11-10"}
+}

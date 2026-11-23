@@ -1,0 +1,71 @@
+- q: |
+    What is printed?
+    ```python
+    try:
+        x = int("12a")
+    except ValueError:
+        x = -1
+    print(x)
+    ```
+  type: single
+  options: ["`12`", "`-1`", "Traceback", "`None`"]
+  answer: [1]
+  explain: '`int("12a")` raises ValueError, which the `except` block handles.'
+- q: |
+    What is printed?
+    ```python
+    try:
+        print("a")
+    except ValueError:
+        print("b")
+    else:
+        print("c")
+    finally:
+        print("d")
+    ```
+  type: single
+  options: ["`a d`", "`a c d`", "`a b d`", "`a c`"]
+  answer: [1]
+  explain: 'No error, so `else` runs, and `finally` always runs last.'
+- q: |
+    What does this return?
+    ```python
+    def f():
+        try:
+            return 1
+        finally:
+            print("cleanup")
+    ```
+  type: single
+  options: ["Prints `cleanup`, then returns 1", "Returns 1 and never prints", "Raises an error", "Prints `cleanup` and returns `None`"]
+  answer: [0]
+  explain: '`finally` runs even when `return` is reached in `try`.'
+- q: 'Which exception does `{"a": 1}["b"]` raise?'
+  type: single
+  options: ["`ValueError`", "`IndexError`", "`KeyError`", "`AttributeError`"]
+  answer: [2]
+  explain: 'A missing dict key raises KeyError.'
+- q: 'Which is the problem with `except: pass`?'
+  type: multi
+  options: ["It hides bugs", "It also catches Ctrl+C (KeyboardInterrupt)", "It is a syntax error", "Nobody learns that something failed"]
+  answer: [0, 1, 3]
+  explain: 'Bare except catches everything and `pass` silences it. Catch specific errors and at least log them.'
+- q: |
+    What happens?
+    ```python
+    def set_age(age):
+        if age < 0:
+            raise ValueError("negative")
+        return age
+
+    set_age(-5)
+    ```
+  type: single
+  options: ["Returns `-5`", "Raises ValueError with message `negative`", "Returns `None`", "Prints `negative`"]
+  answer: [1]
+  explain: '`raise` stops the function and sends the error to the caller.'
+- q: How do you read a traceback?
+  type: single
+  options: ["Start at the top, the first line is the error", "Start at the bottom: error type and message, then the call path above it", "Only the file name matters", "Ignore it and restart the program"]
+  answer: [1]
+  explain: 'The last line is the actual error; the lines above show how the code got there.'

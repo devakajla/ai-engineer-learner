@@ -1,0 +1,35 @@
+- q: Which pattern fits "find the first value that appears twice"?
+  type: single
+  options: ["Seen-set", "Accumulator", "Peel digits", "Two indexes"]
+  answer: [0]
+  explain: 'Check if the value is already in the set; if not, add it.'
+- q: Which line is the counter-dict pattern?
+  type: single
+  options: ["`counts[x] = counts.get(x, 0) + 1`", "`seen.add(x)`", "`total += x`", "`best = max(best, x)`"]
+  answer: [0]
+  explain: 'It adds one to the current count, with 0 for a new key.'
+- q: |
+    What is the output?
+    ```python
+    seen = set()
+    out = []
+    for x in [1, 2, 1, 3, 2]:
+        if x not in seen:
+            seen.add(x)
+            out.append(x)
+    print(out)
+    ```
+  type: single
+  options: ["`[1, 2, 3]`", "`[1, 2, 1, 3, 2]`", "`[1, 1, 2, 2, 3]`", "`[3]`"]
+  answer: [0]
+  explain: 'Only the first time each value is seen it goes to the output list.'
+- q: You need to know quickly whether a value was seen before, for 1 million values. Which structure?
+  type: single
+  options: ["A set", "A list", "A tuple", "A string"]
+  answer: [0]
+  explain: '`in` on a set is fast; on a list it scans every item.'
+- q: Which are good edge cases for a list function?
+  type: multi
+  options: ["Empty list", "One item", "All items equal", "Only a typical list"]
+  answer: [0, 1, 2]
+  explain: 'Edge cases are the unusual inputs. A typical list alone does not test them.'

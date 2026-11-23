@@ -1,0 +1,45 @@
+- q: |
+    What is `result`?
+    ```python
+    nums = [3, 1, 2]
+    result = nums.sort()
+    ```
+  type: single
+  options: ["`[1, 2, 3]`", "`None`", "`[3, 1, 2]`", "An error"]
+  answer: [1]
+  explain: list.sort() sorts in place and returns None. Use sorted() for a new list.
+- q: 'How do you sort users by age **descending**, then name **ascending**?'
+  type: single
+  options:
+    - '`sorted(users, key=lambda u: (u["age"], u["name"]), reverse=True)`'
+    - '`sorted(users, key=lambda u: (-u["age"], u["name"]))`'
+    - '`sorted(users, key=lambda u: u["age"] - u["name"])`'
+    - '`sorted(sorted(users, key=lambda u: u["age"]), key=lambda u: u["name"])`'
+  answer: [1]
+  explain: Negating the numeric key flips its order while keeping name ascending. Option 1 reverses names too.
+- q: |
+    What does this print?
+    ```python
+    from itertools import groupby
+    data = ["a", "b", "a"]
+    print([(k, len(list(g))) for k, g in groupby(data)])
+    ```
+  type: single
+  options: ["`[('a', 2), ('b', 1)]`", "`[('a', 1), ('b', 1), ('a', 1)]`", "`[('a', 2)]`", "An error"]
+  answer: [1]
+  explain: groupby only groups consecutive equal items. Sort first to get one group per key.
+- q: Which functions short-circuit (stop early)?
+  type: multi
+  options: ["`any()`", "`all()`", "`sum()`", "`sorted()`"]
+  answer: [0, 1]
+  explain: any stops at the first truthy item, all at the first falsy one.
+- q: What does `partial(int, base=2)` return?
+  type: single
+  options: ["The number 2", "A new callable that calls `int(x, base=2)`", "A list", "A generator"]
+  answer: [1]
+  explain: partial pre-fills arguments and returns a new callable.
+- q: What does `zip([1, 2, 3], ["a", "b"])` produce (as a list)?
+  type: single
+  options: ["`[(1, 'a'), (2, 'b'), (3, None)]`", "`[(1, 'a'), (2, 'b')]`", "ValueError", "`[(1, 2, 3), ('a', 'b')]`"]
+  answer: [1]
+  explain: zip stops at the shortest input. Use strict=True to get an error instead.

@@ -1,0 +1,66 @@
+- q: What is the basic job of an LLM?
+  type: single
+  options:
+    - It looks up facts in a database
+    - It predicts the next token, again and again
+    - It runs your Python code
+    - It searches the internet for each question
+  answer: [1]
+  explain: An LLM only predicts the next token. Repeating that step builds a whole answer. It does not look anything up.
+- q: Which of these are true about inference?
+  type: multi
+  options:
+    - It uses the fixed model to answer a prompt
+    - It changes the model's numbers
+    - Calling an API is inference
+    - It takes weeks and thousands of computers
+  answer: [0, 2]
+  explain: Inference uses a finished model and does not change it. Weeks of work on thousands of computers describes training.
+- q: |
+    What is printed?
+    ```python
+    options = {"tea": 0.5, "coffee": 0.3, "milk": 0.2}
+    best = None
+    best_chance = 0
+    for word, chance in options.items():
+        if chance > best_chance:
+            best = word
+            best_chance = chance
+    print(best)
+    ```
+  type: single
+  options: ["`tea`", "`coffee`", "`milk`", "`None`"]
+  answer: [0]
+  explain: The loop remembers the word with the highest chance. "tea" has 0.5, the biggest.
+- q: A model confidently names a Python function that does not exist. What is this called?
+  type: single
+  options: ["A token limit", "Inference", "A hallucination", "A knowledge cutoff"]
+  answer: [2]
+  explain: A hallucination is a false answer that sounds right. The model predicts likely words, and likely words are not always true.
+- q: Which of these are good ways to reduce hallucinations?
+  type: multi
+  options:
+    - Give the model trusted documents to answer from
+    - Tell it to say "I don't know" when the context has no answer
+    - Believe answers that sound confident
+    - Check important answers against a trusted source
+  answer: [0, 1, 3]
+  explain: Trusted context, a clear "say you don't know" rule and checking all help. A confident tone tells you nothing about truth.
+- q: Why can't a plain LLM answer questions about your company's private documents?
+  type: single
+  options:
+    - It refuses private data
+    - It never saw them in training, so you must put the text in the prompt
+    - Python cannot read documents
+    - The API blocks long questions
+  answer: [1]
+  explain: The model only knows its training data and what you send in the prompt. RAG is the common way to send the right text.
+- q: You chat with a model for an hour. What does the model learn from your chat?
+  type: single
+  options:
+    - Everything, it gets smarter
+    - Your name, for all future users
+    - Nothing, inference does not change the model
+    - Only your questions, not its answers
+  answer: [2]
+  explain: Inference never changes the model's numbers. A chat only "remembers" because the old messages are sent again.

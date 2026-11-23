@@ -1,0 +1,6 @@
+def parse_version(text):
+    ...
+
+
+def satisfies(version, rule):
+    ...

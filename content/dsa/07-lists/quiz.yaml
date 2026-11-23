@@ -1,0 +1,63 @@
+- q: |
+    What is the output?
+    ```python
+    a = [1, 2, 3]
+    b = a
+    b.append(4)
+    print(a)
+    ```
+  type: single
+  options: ["`[1, 2, 3, 4]`", "`[1, 2, 3]`", "`[4]`", "Error"]
+  answer: [0]
+  explain: '`b = a` makes both names point to the same list.'
+- q: |
+    What is the output?
+    ```python
+    x = [3, 1, 2]
+    y = x.sort()
+    print(y)
+    ```
+  type: single
+  options: ["`None`", "`[1, 2, 3]`", "`[3, 1, 2]`", "Error"]
+  answer: [0]
+  explain: '`sort()` sorts in place and returns `None`.'
+- q: |
+    What is the output?
+    ```python
+    nums = [5, 6, 7, 8]
+    print(nums[1:3], nums[-2])
+    ```
+  type: single
+  options: ["`[6, 7] 7`", "`[6, 7, 8] 7`", "`[5, 6] 8`", "`[6, 7] 8`"]
+  answer: [0]
+  explain: 'Slice 1:3 is indexes 1 and 2. `nums[-2]` is the second last, 7.'
+- q: |
+    What is the output?
+    ```python
+    for i, v in enumerate(["x", "y"]):
+        print(i, v, end=" ")
+    ```
+  type: single
+  options: ["`0 x 1 y`", "`x 0 y 1`", "`1 x 2 y`", "`0 1`"]
+  answer: [0]
+  explain: '`enumerate` gives (index, value) starting at 0.'
+- q: Which of these change the original list?
+  type: multi
+  options: ["`items.append(1)`", "`sorted(items)`", "`items.sort()`", "`items[::-1]`"]
+  answer: [0, 2]
+  explain: '`sorted` and slices return new lists.'
+- q: |
+    What is the output?
+    ```python
+    nums = [1, 2, 3]
+    total = 0
+    out = []
+    for n in nums:
+        total += n
+        out.append(total)
+    print(out)
+    ```
+  type: single
+  options: ["`[1, 3, 6]`", "`[1, 2, 3]`", "`[6]`", "`[6, 6, 6]`"]
+  answer: [0]
+  explain: 'Running total after each item: 1, 3, 6.'

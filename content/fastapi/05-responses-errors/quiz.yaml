@@ -1,0 +1,56 @@
+- q: |
+    What does the client receive?
+    ```python
+    class UserOut(BaseModel):
+        id: int
+        email: str
+
+    @app.get("/me", response_model=UserOut)
+    def me():
+        return {"id": 1, "email": "a@b.c", "password_hash": "x9f"}
+    ```
+  type: single
+  options:
+    - '`{"id": 1, "email": "a@b.c", "password_hash": "x9f"}`'
+    - '`{"id": 1, "email": "a@b.c"}`'
+    - A 500 error because of the extra field
+    - '`{}`'
+  answer: [1]
+  explain: response_model filters the output to the declared fields, so the hash never leaves the server.
+- q: What is the right status code for a successful `DELETE /tasks/5` that returns no body?
+  type: single
+  options: ["`200`", "`201`", "`204`", "`202`"]
+  answer: [2]
+  explain: 204 No Content signals success with an empty body.
+- q: 'A client sends `PATCH /tasks/5` with `{"done": true}`. What does `payload.model_dump(exclude_unset=True)` return?'
+  type: single
+  options:
+    - '`{"done": True}`'
+    - '`{"title": None, "description": None, "priority": None, "done": True}`'
+    - '`{}`'
+    - The full task
+  answer: [0]
+  explain: exclude_unset keeps only the fields the client actually sent.
+- q: A user signs up with an email that's already registered. Which status code fits best?
+  type: single
+  options: ["`400`", "`404`", "`409`", "`500`"]
+  answer: [2]
+  explain: 409 Conflict means the request conflicts with the current state (a duplicate).
+- q: Why `raise HTTPException(...)` instead of `return`ing an error dict?
+  type: multi
+  options:
+    - Raising stops execution immediately, even from inside helper functions
+    - FastAPI converts it into a proper response with the given status code
+    - Returning a dict would still send status 200
+    - Raising is faster
+  answer: [0, 1, 2]
+  explain: A returned dict is just a normal 200 response. Raising sets the status and short-circuits the code path.
+- q: Which practices make error responses good?
+  type: multi
+  options:
+    - The same error shape across all endpoints
+    - Including the stack trace so clients can debug
+    - Correct status codes
+    - Clear, specific messages like "Task not found"
+  answer: [0, 2, 3]
+  explain: Stack traces and internals must never reach clients — they're a security risk.

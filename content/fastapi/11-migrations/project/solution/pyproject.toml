@@ -1,0 +1,12 @@
+[project]
+name = "taskflow"
+version = "0.1.0"
+description = "A task-manager REST API built with FastAPI"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi[standard]>=0.115",
+    "pydantic-settings>=2.4",
+    "sqlalchemy>=2.0",
+    "alembic>=1.13",
+]

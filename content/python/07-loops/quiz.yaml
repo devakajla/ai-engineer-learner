@@ -1,0 +1,50 @@
+- q: What does `list(range(2, 8, 2))` give?
+  type: single
+  options: ["`[2, 4, 6]`", "`[2, 4, 6, 8]`", "`[2, 3, 4, 5, 6, 7]`", "`[0, 2, 4, 6]`"]
+  answer: [0]
+  explain: 'Start 2, step 2, and the stop value 8 is not included.'
+- q: |
+    What is printed?
+    ```python
+    for i in range(5):
+        if i == 3:
+            break
+        print(i, end=" ")
+    ```
+  type: single
+  options: ["`0 1 2`", "`0 1 2 3`", "`0 1 2 4`", "`3`"]
+  answer: [0]
+  explain: '`break` stops the loop when `i` is 3, before it is printed.'
+- q: |
+    What is printed?
+    ```python
+    for n in [1, 3, 5]:
+        if n % 2 == 0:
+            break
+    else:
+        print("done")
+    ```
+  type: single
+  options: ["`done`", "Nothing", "`1 3 5`", "SyntaxError"]
+  answer: [0]
+  explain: 'The loop never hit `break`, so the `else` block runs.'
+- q: |
+    What does this print?
+    ```python
+    for i, ch in enumerate("ab", start=1):
+        print(i, ch)
+    ```
+  type: single
+  options: ["`1 a` then `2 b`", "`0 a` then `1 b`", "`a 1` then `b 2`", "`1 a` only"]
+  answer: [0]
+  explain: '`enumerate(..., start=1)` counts from 1.'
+- q: What is `list(zip([1, 2, 3], ["a", "b"]))`?
+  type: single
+  options: ['`[(1, "a"), (2, "b")]`', '`[(1, "a"), (2, "b"), (3, None)]`', "IndexError", '`[(1, 2, 3), ("a", "b")]`']
+  answer: [0]
+  explain: '`zip` stops when the shortest input ends.'
+- q: Which loops are good Python style for printing every item of `names`?
+  type: multi
+  options: ["`for n in names:`", "`for i in range(len(names)):` then `names[i]`", "`for i, n in enumerate(names):` when you need the index", "`for n in names.items():`"]
+  answer: [0, 2]
+  explain: 'Loop over items directly, and use `enumerate` when you need the index. A list has no `.items()`.'

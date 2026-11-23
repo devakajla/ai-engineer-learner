@@ -1,0 +1,57 @@
+- q: |
+    What is printed?
+    ```python
+    d = {"a": 1}
+    print(d.get("b", 0))
+    ```
+  type: single
+  options: ["`None`", "`0`", "KeyError", "`1`"]
+  answer: [1]
+  explain: '`get` returns the default when the key is missing and does not raise.'
+- q: |
+    What is printed?
+    ```python
+    d = {"a": 1, "b": 2}
+    print("a" in d, 2 in d)
+    ```
+  type: single
+  options: ["`True True`", "`True False`", "`False True`", "`False False`"]
+  answer: [1]
+  explain: '`in` checks keys. `2` is a value, not a key.'
+- q: |
+    What is `a` after this code?
+    ```python
+    a = {"x": 1, "y": 2}
+    a.update({"y": 9, "z": 3})
+    ```
+  type: single
+  options: ["`{'x': 1, 'y': 2, 'z': 3}`", "`{'x': 1, 'y': 9, 'z': 3}`", "`{'y': 9, 'z': 3}`", "`None`"]
+  answer: [1]
+  explain: '`update` adds new keys and overwrites existing ones with the new values.'
+- q: |
+    What is printed?
+    ```python
+    d = {}
+    for ch in "aab":
+        d[ch] = d.get(ch, 0) + 1
+    print(d)
+    ```
+  type: single
+  options: ["`{'a': 2, 'b': 1}`", "`{'a': 1, 'b': 1}`", "`{'a': 3}`", "KeyError"]
+  answer: [0]
+  explain: 'Each letter starts at 0 (from `get`) and adds 1 per occurrence.'
+- q: Which of these can be a dict key?
+  type: multi
+  options: ['`"name"`', "`42`", "`(1, 2)`", "`[1, 2]`"]
+  answer: [0, 1, 2]
+  explain: 'Keys must be hashable. Lists are not.'
+- q: What does `for x in d.items():` give for each `x`?
+  type: single
+  options: ["The key", "The value", "A `(key, value)` tuple", "The index"]
+  answer: [2]
+  explain: 'Usually unpacked: `for key, value in d.items():`.'
+- q: 'What is `{"a": 1} | {"a": 2, "b": 3}`?'
+  type: single
+  options: ["`{'a': 1, 'b': 3}`", "`{'a': 2, 'b': 3}`", "TypeError", "`{'a': 3}`"]
+  answer: [1]
+  explain: 'The right dict wins on duplicate keys.'

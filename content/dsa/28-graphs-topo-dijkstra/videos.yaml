@@ -1,0 +1,13 @@
+intro: {video_id: OSYgRvaWFSI, title: "Topological sort (Ep 94)", start: 0, end: 1968}
+segments:
+  - {exercise: 01-can-finish-courses, video_id: OSYgRvaWFSI, title: "Topological sort (Ep 94)", start: 0, end: 1968}
+  - {exercise: 02-course-order, video_id: OSYgRvaWFSI, title: "Topological sort (Ep 94)", start: 0, end: 1968}
+  - {exercise: 03-is-bipartite, video_id: LIGrIglQ7TY, title: "Bipartite graph / colouring (Ep 95)", start: 0, end: 1419}
+  - {exercise: 04-shortest-path-length, video_id: HBI6DQOT_qk, title: "Shortest path, no weights (Ep 97)", start: 0, end: 1770}
+  - {exercise: 05-dijkstra, video_id: 93copdtW4ZQ, title: "Dijkstra's algorithm (Ep 98)", start: 0, end: 3117}
+  - {exercise: 06-network-delay, video_id: Mb01XUSuLjE, title: "Two key Dijkstra questions (Ep 99)", start: 0, end: 2594}
+  - {exercise: 07-bellman-ford, video_id: A3sZWwalzz4, title: "Bellman-Ford (Ep 100)", start: 0, end: 2093}
+  - {exercise: 08-cheapest-flights, video_id: -AEEZEWOA-E, title: "Cheapest flights within K stops (Ep 103)", start: 0, end: 1954}
+  - {exercise: 09-swim-in-water, video_id: Gq81OeJNTwI, title: "Swim in rising water (Ep 101)", start: 0, end: 2147}
+  - {exercise: 10-word-ladder, video_id: HpsjPUwQHfw, title: "Word ladder (Ep 104)", start: 0, end: 1899}
+  - {exercise: 11-mst-cost, video_id: u0SH8wO85m0, title: "Prim's algorithm (Ep 102)", start: 0, end: 2493}

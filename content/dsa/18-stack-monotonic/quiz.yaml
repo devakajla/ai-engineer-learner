@@ -1,0 +1,87 @@
+- q: "In Python, which operations give you a stack using a plain list?"
+  type: single
+  options:
+    - "`insert(0, x)` and `pop(0)`"
+    - "`append(x)` and `pop()`"
+    - "`sort()` and `reverse()`"
+    - "`extend()` and `remove()`"
+  answer: [1]
+  explain: "append and pop() work at the end of the list, both in O(1). The `0` versions are O(n)."
+
+- q: |
+    What is the output?
+    ```python
+    s = "([)]"
+    pair = {")": "(", "]": "["}
+    stack = []
+    ok = True
+    for ch in s:
+        if ch in pair:
+            if not stack or stack.pop() != pair[ch]:
+                ok = False
+                break
+        else:
+            stack.append(ch)
+    print(ok)
+    ```
+  type: single
+  options: ["True", "False", "IndexError", "None"]
+  answer: [1]
+  explain: "At ')' the top is '[', not '(', so it fails."
+
+- q: |
+    What is the output?
+    ```python
+    nums = [2, 1, 5]
+    result = [-1] * 3
+    stack = []
+    for i, x in enumerate(nums):
+        while stack and nums[stack[-1]] < x:
+            result[stack.pop()] = x
+        stack.append(i)
+    print(result)
+    ```
+  type: single
+  options: ["[5, 5, -1]", "[5, 2, -1]", "[-1, 5, -1]", "[1, 2, 5]"]
+  answer: [0]
+  explain: "5 arrives and pops index 1 (value 1) and index 0 (value 2); both answers become 5. Index 2 stays with -1."
+
+- q: "Why is a monotonic stack solution O(n) even with a `while` inside the `for`?"
+  type: single
+  options:
+    - "The while loop runs only once"
+    - "Each index is pushed once and popped at most once"
+    - "Python optimises it"
+    - "It is really O(n log n)"
+  answer: [1]
+  explain: "Total pushes are n and total pops are at most n."
+
+- q: "For 'next SMALLER element', when do you pop the stack top?"
+  type: single
+  options:
+    - "While `nums[top] < x`"
+    - "While `nums[top] > x`"
+    - "While `nums[top] == x`"
+    - "Never"
+  answer: [1]
+  explain: "A smaller x answers every waiting item that is bigger than it."
+
+- q: "Which are common mistakes with stacks? (choose all that apply)"
+  type: multi
+  options:
+    - "Calling `pop()` on an empty list"
+    - "Storing values when you need indexes for distances"
+    - "Not checking that the stack is empty at the end of a bracket check"
+    - "Using `append` to push"
+  answer: [0, 1, 2]
+  explain: "`append` is the correct way to push. The other three are real bugs."
+
+- q: "How do you solve 'next greater element' in a CIRCULAR list?"
+  type: single
+  options:
+    - "Sort the list first"
+    - "Loop 2n times using `i % n`, pushing indexes only in the first n steps"
+    - "Run the normal solution twice and join the results"
+    - "It cannot be done with a stack"
+  answer: [1]
+  explain: "The second round lets items near the end find answers at the start."

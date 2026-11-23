@@ -1,0 +1,50 @@
+- q: "What happens if a recursive function has no base case?"
+  type: single
+  options: ["It keeps calling itself until Python raises RecursionError", "It returns None", "It returns 0", "It stops after one call"]
+  answer: [0]
+  explain: "Nothing stops the calls, so Python stops it after about 1000 nested calls with RecursionError."
+
+- q: |
+    What is the output?
+    ```python
+    def f(n):
+        if n == 0:
+            return 0
+        return n + f(n - 1)
+
+    print(f(4))
+    ```
+  type: single
+  options: ["4", "6", "10", "24"]
+  answer: [2]
+  explain: "4 + 3 + 2 + 1 + 0 = 10."
+
+- q: "In backtracking, why do you save list(current) and not current?"
+  type: single
+  options: ["current keeps changing later, so you need a copy", "list() sorts it", "It is faster", "Python requires it"]
+  answer: [0]
+  explain: "result would hold many references to the same list, which ends up empty. A copy keeps the answer at that moment."
+
+- q: "What is the 'undo' step for in backtracking?"
+  type: single
+  options: ["To go back to the previous state and try the next choice", "To delete the answer", "To sort the result", "To stop the recursion"]
+  answer: [0]
+  explain: "After exploring a choice you remove it so the next choice starts from the same state."
+
+- q: "Sorted input with duplicates. Which line avoids duplicate subsets in the loop `for i in range(start, n)`?"
+  type: single
+  options: ["if i > start and nums[i] == nums[i - 1]: continue", "if nums[i] == nums[0]: continue", "if i == start: continue", "if nums[i] > 0: continue"]
+  answer: [0]
+  explain: "At the same depth, only the first of equal numbers may start a branch. i > start (not i > 0) keeps the deeper levels working."
+
+- q: "How many subsets does a list of n different numbers have?"
+  type: single
+  options: ["2^n", "n^2", "n!", "2n"]
+  answer: [0]
+  explain: "Each number is taken or skipped, so 2 choices n times."
+
+- q: "How does memoization change Fibonacci?"
+  type: single
+  options: ["From exponential time to O(n)", "From O(n) to O(log n)", "It uses less memory", "It makes it iterative"]
+  answer: [0]
+  explain: "Each fib(k) is computed once and then read from the dict."

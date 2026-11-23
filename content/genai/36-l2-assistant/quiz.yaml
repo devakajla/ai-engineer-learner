@@ -1,0 +1,67 @@
+- q: Why is `examples=None` better than `examples=[]` as a default argument?
+  type: single
+  options:
+    - "`[]` is not allowed in Python"
+    - A default list is created once and shared by every call, so changes can leak between calls
+    - "`None` runs faster"
+    - The API rejects empty lists
+  answer: [1]
+  explain: A default value is created once. If the function changed that list, the next call would see the change. `None` plus a fresh list inside is safe.
+- q: What does `check_reply` return for a valid reply?
+  type: single
+  options:
+    - "`(result, None)`"
+    - "`(None, error)`"
+    - "`True`"
+    - It raises an error
+  answer: [0]
+  explain: It returns a pair. For a valid reply, the first item is the object and the second is `None`. For an invalid reply it is the other way round.
+- q: In the repair loop, what do you add to the messages after a bad reply?
+  type: multi
+  options:
+    - The bad reply as an `assistant` message
+    - A `user` message with the error text and a request to fix it
+    - Nothing, you just call again
+    - A new system prompt
+  answer: [0, 1]
+  explain: The model must see its own mistake and the error. Without them, it would likely repeat the same wrong answer.
+- q: |
+    What happens here?
+    ```python
+    assistant(client, registry, "tutor", {"level": "x"}, "q", tools=TOOLS, model_class=Ticket)
+    ```
+  type: single
+  options:
+    - Two calls are made, then a ValueError
+    - A ValueError is raised before any call
+    - The tools are ignored
+    - The model decides what to do
+  answer: [1]
+  explain: Both options at once is a mistake in the caller's code. We fail early, before spending money.
+- q: Why does a tool question use at least two model calls?
+  type: single
+  options:
+    - The first call asks for the tool, the second writes the final answer from the tool result
+    - Every call is made twice for safety
+    - The API requires a warm-up call
+    - The tool runs inside the model
+  answer: [0]
+  explain: The model only asks for the tool. Your code runs it. Then a second call lets the model read the result and answer.
+- q: Why does one `ask_structured` work for many shapes?
+  type: single
+  options:
+    - Pydantic guesses the shape from the reply
+    - The model class is passed in as a value, and it does the checking
+    - It only checks that the reply is JSON
+    - It ignores the shape
+  answer: [1]
+  explain: A class is a value you can pass around. `model_class.model_validate_json` checks against that class's fields and rules.
+- q: In a workflow, who picks the next step?
+  type: single
+  options:
+    - The model
+    - Your code
+    - The user
+    - The API
+  answer: [1]
+  explain: In a workflow your code fixes the path. In an agent the model chooses the next step.

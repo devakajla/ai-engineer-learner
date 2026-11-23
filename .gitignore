@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+.pytest_cache/
+.DS_Store
+.env
+.claude/settings.local.json
+node_modules/
+frontend/.next/
+frontend/next-env.d.ts
+booklets/_build/

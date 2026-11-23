@@ -1,0 +1,47 @@
+- q: |
+    What is printed?
+    ```python
+    print([n * 2 for n in range(4)])
+    ```
+  type: single
+  options: ["`[0, 2, 4, 6]`", "`[2, 4, 6, 8]`", "`[0, 1, 2, 3]`", "`[0, 2, 4, 6, 8]`"]
+  answer: [0]
+  explain: '`range(4)` is 0, 1, 2, 3; each one is doubled.'
+- q: |
+    What is printed?
+    ```python
+    print([n for n in range(10) if n % 3 == 0])
+    ```
+  type: single
+  options: ["`[3, 6, 9]`", "`[0, 3, 6, 9]`", "`[0, 3, 6]`", "`[1, 2, 4, 5, 7, 8]`"]
+  answer: [1]
+  explain: 'The filter keeps numbers divisible by 3, including 0.'
+- q: Which comprehension changes each item to `"pos"` or `"neg"` depending on its sign?
+  type: single
+  options: ['`["pos" if n > 0 else "neg" for n in nums]`', '`["pos" for n in nums if n > 0 else "neg"]`', '`[for n in nums: "pos" if n > 0 else "neg"]`', '`["pos" if n > 0 for n in nums]`']
+  answer: [0]
+  explain: 'A conditional expression (with `else`) goes at the front. A filter `if` (without `else`) goes at the end.'
+- q: |
+    What is printed?
+    ```python
+    matrix = [[1, 2], [3, 4]]
+    print([n for row in matrix for n in row])
+    ```
+  type: single
+  options: ["`[[1, 2], [3, 4]]`", "`[1, 2, 3, 4]`", "`[1, 3, 2, 4]`", "`[(1, 2), (3, 4)]`"]
+  answer: [1]
+  explain: 'The loops are read like nested loops: first `row`, then `n` in that row.'
+- q: |
+    What is `d`?
+    ```python
+    d = {w: len(w) for w in ["hi", "hello"]}
+    ```
+  type: single
+  options: ["`{'hi', 'hello'}`", "`{'hi': 2, 'hello': 5}`", "`['hi', 'hello']`", "`{2: 'hi', 5: 'hello'}`"]
+  answer: [1]
+  explain: 'A `key: value` expression makes a dict comprehension.'
+- q: What is the main advantage of `sum(n * n for n in range(10**6))` over `sum([n * n for n in range(10**6)])`?
+  type: single
+  options: ["It is a dict", "It does not build a million-item list in memory", "It sorts the numbers", "There is no difference at all"]
+  answer: [1]
+  explain: 'The generator expression produces one item at a time.'

@@ -1,0 +1,14 @@
+# The order here IS the learning order. Never rename an existing slug (progress is stored by it).
+# Prerequisites: Python Level 1, GenAI Levels 1-2 (tool calling) and GenAI lesson 27 (the agent loop).
+# Study order in week 6: agentic 01, then GenAI 27, then agentic 02-05. Exercises are offline: they use a fake client, never the network.
+# Frameworks (LangChain, LangGraph) come in the next levels. This level uses plain Python only.
+title: Agentic AI
+levels:
+  - id: a1
+    title: "Level A1 — Agents without a framework"
+    lessons:
+      - {slug: 01-workflow-vs-agent, title: "Workflow or agent? When NOT to use an agent"}
+      - {slug: 02-tool-design, title: "Designing tools an agent can use"}
+      - {slug: 03-workflow-patterns, title: "Workflow patterns: chain, route, orchestrate, improve"}
+      - {slug: 04-react-plan-reflect, title: "ReAct, plan-and-execute and reflection"}
+      - {slug: 05-failure-modes-frameworks, title: "Why agents fail, and a map of frameworks"}

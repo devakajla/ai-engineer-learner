@@ -1,0 +1,82 @@
+- q: What is the job of the pretraining stage?
+  type: single
+  options:
+    - Teach the model to follow instructions
+    - Teach the model to predict the next token from a huge amount of text
+    - Make the model safe and polite
+    - Connect the model to the internet
+  answer: [1]
+  explain: Pretraining is the next-token game played on a huge text. Following instructions comes in stage 2 and safety style in stage 3.
+- q: Which stage uses human rankings of answers (A is better than B)?
+  type: single
+  options: ["Pretraining", "SFT (instruction tuning)", "RLHF or DPO (preference tuning)", "Inference"]
+  answer: [2]
+  explain: RLHF and DPO use human comparisons of answers. SFT uses given question and answer pairs.
+- q: You send "The capital of France is" to a base model. What is most likely?
+  type: single
+  options:
+    - It refuses to answer
+    - It continues the text, for example "Paris." or even more text
+    - It asks you a question
+    - It errors because it is not a chat
+  answer: [1]
+  explain: A base model only continues text. It was not trained to treat input as an instruction.
+- q: Which of these are real reasons an LLM hallucinates?
+  type: multi
+  options:
+    - It predicts likely text, not checked facts
+    - Training data has gaps and a knowledge cutoff
+    - Training often rewards confident answers, so it rarely says "I don't know"
+    - It copies answers from a secret database
+  answer: [0, 1, 2]
+  explain: Likely-text prediction, data gaps, the cutoff and answer-rewarding training all cause it. There is no secret database lookup.
+- q: |
+    What is printed?
+    ```python
+    row = {"n": 3, "x": 1}
+    total = sum(row.values())
+    print(round(row["n"] / total, 2))
+    ```
+  type: single
+  options: ["`3`", "`0.75`", "`0.25`", "`4`"]
+  answer: [1]
+  explain: The total is 3 + 1 = 4. The chance of "n" is 3 / 4 = 0.75.
+- q: |
+    What is printed?
+    ```python
+    word = "aab"
+    counts = {}
+    for i in range(len(word) - 1):
+        first = word[i]
+        second = word[i + 1]
+        if first not in counts:
+            counts[first] = {}
+        counts[first][second] = counts[first].get(second, 0) + 1
+    print(counts)
+    ```
+  type: single
+  options:
+    - "`{'a': {'a': 1, 'b': 1}}`"
+    - "`{'a': {'a': 1}, 'b': {}}`"
+    - "`{'a': {'b': 2}}`"
+    - "`{'a': 2, 'b': 1}`"
+  answer: [0]
+  explain: The pairs are a→a and a→b. Both start with "a", so the row for "a" has a:1 and b:1. The last letter has nothing after it.
+- q: Your app needs the model to know your company's private price list. What is the best approach?
+  type: single
+  options:
+    - Fine-tune the model on the price list and trust it
+    - Retrieve the relevant prices and put them in the prompt
+    - Ask the model to guess
+    - Use a higher temperature
+  answer: [1]
+  explain: Fine-tuning changes style and behaviour, and is unreliable for facts. Putting the right text in the prompt (RAG) is the standard fix.
+- q: What is true about a reasoning model compared to a normal chat model?
+  type: single
+  options:
+    - It thinks step by step first, so it is often better at hard problems but slower and costlier
+    - It is always faster
+    - It has no training stages
+    - It never hallucinates
+  answer: [0]
+  explain: Reasoning models write thinking tokens before the answer. That helps on hard tasks and costs time and money.

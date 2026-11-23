@@ -1,0 +1,51 @@
+- q: In a layered FastAPI app, where should the rule "a task title must be unique per user" live?
+  type: single
+  options: ["In the route function", "In the service layer", "In the repository", "In `main.py`"]
+  answer: [1]
+  explain: Business rules belong in services. Routes handle HTTP; repositories handle storage.
+- q: Why should a service raise `TaskNotFoundError` instead of `HTTPException(404)`?
+  type: single
+  options:
+    - HTTPException is slower
+    - So the service isn't tied to HTTP and can be reused by workers, CLIs and tests; the route maps it to 404
+    - Services can't import from FastAPI
+    - Because 404 is the wrong code
+  answer: [1]
+  explain: Domain errors keep business logic transport-agnostic. The edge (route or exception handler) translates them.
+- q: |
+    With this code, what is the full path of `list_tasks`?
+    ```python
+    router = APIRouter(prefix="/tasks")
+
+    @router.get("")
+    def list_tasks(): ...
+
+    app.include_router(router, prefix="/api/v1")
+    ```
+  type: single
+  options: ["`/tasks`", "`/api/v1`", "`/api/v1/tasks`", "`/tasks/api/v1`"]
+  answer: [2]
+  explain: Prefixes stack from the outside in — include prefix, then router prefix, then route path.
+- q: Which statements about config are best practice?
+  type: multi
+  options:
+    - Read config from environment variables
+    - Commit `.env` so teammates have the same secrets
+    - Commit a `.env.example` with placeholder values
+    - Validate config types at startup (e.g. with pydantic-settings)
+  answer: [0, 2, 3]
+  explain: Never commit `.env` — it holds secrets. `.env.example` documents the variables safely.
+- q: '`Settings` has `debug: bool = False`, the `.env` file has `DEBUG=false`, and the shell has `export DEBUG=true`. What is `settings.debug`?'
+  type: single
+  options: ["`False`", "`True`", "It raises an error", "`\"true\"` (a string)"]
+  answer: [1]
+  explain: Real environment variables override the .env file, which overrides class defaults. The value is converted to bool.
+- q: What is the main benefit of a repository layer?
+  type: single
+  options:
+    - It makes the API faster
+    - Storage can change (list → SQL) without changing services or routes
+    - It removes the need for schemas
+    - It's required by FastAPI
+  answer: [1]
+  explain: The repository hides how data is stored behind a small interface.

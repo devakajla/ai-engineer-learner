@@ -1,0 +1,49 @@
+- q: |
+    What happens at runtime?
+    ```python
+    def add(a: int, b: int) -> int:
+        return a + b
+
+    add("x", "y")
+    ```
+  type: single
+  options: ["TypeError", "Returns 'xy'", "Returns 0", "SyntaxError"]
+  answer: [1]
+  explain: Python ignores type hints at runtime. Only type checkers or validators like Pydantic use them.
+- q: What's the right annotation for an optional string parameter defaulting to None?
+  type: single
+  options: ["`name: str = None`", "`name: str | None = None`", "`name: Optional = None`", "`name: None | str`"]
+  answer: [1]
+  explain: '`str | None` says None is allowed; `str = None` lies to the type checker.'
+- q: Which are true about `Any`?
+  type: multi
+  options:
+    - It disables type checking for that value
+    - It is the same as `object`
+    - It should be used sparingly
+    - It makes the code faster
+  answer: [0, 2]
+  explain: '`object` still requires narrowing before use; `Any` turns checking off. Hints never affect speed.'
+- q: 'How does FastAPI use `limit: Annotated[int, Query(le=100)] = 20`?'
+  type: single
+  options:
+    - It ignores Annotated entirely
+    - It treats the type as int and reads `Query(le=100)` as validation metadata
+    - It makes limit a path parameter
+    - Annotated is only for documentation
+  answer: [1]
+  explain: Annotated carries the plain type plus extra metadata that frameworks read.
+- q: 'You write `def first[T](items: list[T]) -> T`. What does a type checker infer for `first(["a", "b"])`?'
+  type: single
+  options: ["`Any`", "`str`", "`list[str]`", "`T`"]
+  answer: [1]
+  explain: T is bound to str from the argument, so the return type is str.
+- q: When is `Literal["todo", "doing", "done"]` a good choice?
+  type: single
+  options:
+    - For any string field
+    - For a small fixed set of allowed string values
+    - For numbers only
+    - For values computed at runtime
+  answer: [1]
+  explain: Literal restricts a value to specific constants (an Enum is the alternative when you need behaviour).

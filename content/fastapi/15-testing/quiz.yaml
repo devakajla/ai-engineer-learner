@@ -1,0 +1,54 @@
+- q: Where do fixtures shared by many test files usually live?
+  type: single
+  options: ["`tests/fixtures.py` imported everywhere", "`tests/conftest.py` (auto-discovered)", "`app/main.py`", "`pyproject.toml`"]
+  answer: [1]
+  explain: pytest loads conftest.py automatically and makes its fixtures available to tests in that directory tree.
+- q: |
+    When does the code after `yield` run?
+    ```python
+    @pytest.fixture
+    def client():
+        app.dependency_overrides[get_db] = override
+        yield TestClient(app)
+        app.dependency_overrides.clear()
+    ```
+  type: single
+  options: ["Before the test", "After the test finishes (even if it failed)", "Only if the test passed", "Never"]
+  answer: [1]
+  explain: Fixture teardown after yield always runs once the test is done.
+- q: Your endpoint calls an LLM provider. What should the tests do?
+  type: multi
+  options:
+    - Call the real provider so tests are realistic
+    - Override the LLM client dependency with a fake
+    - Test what happens when the provider times out
+    - Skip testing that endpoint
+  answer: [1, 2]
+  explain: Real calls are slow, flaky and cost money; fakes let you test success and failure paths deterministically.
+- q: A test only checks `assert r.status_code == 200` for `GET /tasks/1`. What's the problem?
+  type: single
+  options:
+    - Nothing
+    - It would still pass if the body returned the wrong task or missing fields
+    - 200 is the wrong code
+    - TestClient can't read bodies
+  answer: [1]
+  explain: Weak assertions don't catch behavioural bugs; check the body too.
+- q: What does mutation testing measure?
+  type: single
+  options:
+    - How fast tests run
+    - Whether your tests fail when bugs are deliberately introduced into the code
+    - Line coverage
+    - How many tests exist
+  answer: [1]
+  explain: Surviving mutants reveal behaviour your tests don't actually verify.
+- q: Why should each test get a fresh database state?
+  type: single
+  options:
+    - It's faster
+    - So tests don't depend on each other's data or execution order
+    - SQLite requires it
+    - pytest runs tests in parallel by default
+  answer: [1]
+  explain: Shared state makes tests order-dependent and flaky.

@@ -1,0 +1,69 @@
+- q: What should you do first when a program feels slow?
+  type: single
+  options:
+    - Measure it (for example with a profiler) to find where the time goes
+    - Rewrite the whole program in another language
+    - Add caching to every function
+    - Use more threads
+  answer: [0]
+  explain: Guessing is often wrong. Measure, fix the biggest problem, and measure again.
+- q: Why is `x in my_set` usually faster than `x in my_list` for big collections?
+  type: single
+  options:
+    - A set finds the item by its hash in about constant time, a list checks one by one
+    - Sets are always stored in the CPU cache
+    - Lists are sorted by default
+    - There is no difference
+  answer: [0]
+  explain: A set lookup is O(1) on average. A list lookup is O(n).
+- q: |
+    How does the time grow for this code when `items` gets 10 times bigger?
+    ```python
+    for a in items:
+        for b in items:
+            if a == b:
+                count += 1
+    ```
+  type: single
+  options: ["About 10 times more", "About 100 times more", "About the same", "About 1000 times more"]
+  answer: [1]
+  explain: A loop inside a loop over the same data is O(n²). 10 times more data means about 100 times more work.
+- q: Which of these makes repeated work cheaper?
+  type: multi
+  options:
+    - Moving a calculation that never changes out of the loop
+    - Caching the result of a pure function with `functools.cache`
+    - Building a big string with `+=` in a loop
+    - Using `"".join(pieces)` to build a string
+  answer: [0, 1, 3]
+  explain: "`+=` copies the whole string every time, so it is slower. join builds it once."
+- q: |
+    You call `first_even(numbers)`, and `numbers` is a generator of one million items. The first even number is the 3rd item. How many items does this code read?
+    ```python
+    def first_even(numbers):
+        for n in numbers:
+            if n % 2 == 0:
+                return n
+    ```
+  type: single
+  options: ["3", "1,000,000", "2", "None"]
+  answer: [0]
+  explain: The function returns as soon as it finds the answer, so the generator is read only up to the 3rd item.
+- q: What does `cumtime` in the output of `cProfile` show?
+  type: single
+  options:
+    - The total time in a function, including the functions it calls
+    - The time of the last call only
+    - The number of calls
+    - The memory used
+  answer: [0]
+  explain: "`cumtime` is the cumulative time. A big cumtime points to where to look first."
+- q: Why do we usually take the smallest time from `timeit.repeat`?
+  type: single
+  options:
+    - Other work on the computer can only make a run slower, so the smallest time is the least disturbed
+    - The smallest time is the average
+    - The other times are errors in the code
+    - Python removes the bigger numbers
+  answer: [0]
+  explain: Noise from other programs adds time, never removes it. The minimum is the most honest measure.

@@ -1,0 +1,59 @@
+- q: |
+    What is the output?
+    ```python
+    d = {"a": 1}
+    print(d.get("b", 0) + d["a"])
+    ```
+  type: single
+  options: ["`1`", "`0`", "KeyError", "`None`"]
+  answer: [0]
+  explain: '`get("b", 0)` is 0; plus 1 is 1.'
+- q: |
+    What is the output?
+    ```python
+    counts = {}
+    for ch in "aab":
+        counts[ch] = counts.get(ch, 0) + 1
+    print(counts)
+    ```
+  type: single
+  options: ["`{'a': 2, 'b': 1}`", "`{'a': 1, 'b': 1}`", "`{'a': 2}`", "KeyError"]
+  answer: [0]
+  explain: 'The pattern adds 1 for every occurrence.'
+- q: |
+    What does `2 in {"a": 2}` return?
+    ```python
+    print(2 in {"a": 2})
+    ```
+  type: single
+  options: ["`False`", "`True`", "KeyError", "`None`"]
+  answer: [0]
+  explain: '`in` checks the keys, not the values.'
+- q: |
+    What is the output?
+    ```python
+    d = {"x": 1, "y": 2}
+    for k, v in d.items():
+        print(k + str(v), end=" ")
+    ```
+  type: single
+  options: ["`x1 y2`", "`xy 12`", "`1x 2y`", "Error"]
+  answer: [0]
+  explain: '`items()` gives (key, value) pairs in insertion order.'
+- q: Which can be a dict key?
+  type: multi
+  options: ["`\"name\"`", "`(1, 2)`", "`[1, 2]`", "`42`"]
+  answer: [0, 1, 3]
+  explain: 'Keys must be hashable. Lists are not.'
+- q: |
+    What is the output?
+    ```python
+    d = {}
+    d.setdefault("k", []).append(1)
+    d.setdefault("k", []).append(2)
+    print(d)
+    ```
+  type: single
+  options: ["`{'k': [1, 2]}`", "`{'k': [2]}`", "`{'k': [1]}`", "Error"]
+  answer: [0]
+  explain: '`setdefault` returns the existing list the second time.'

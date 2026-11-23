@@ -1,0 +1,71 @@
+- q: "Which is the main reason a hashmap makes Two Sum O(n)?"
+  type: single
+  options:
+    - "It sorts the list for free"
+    - "Looking up a key is O(1) on average, so no inner loop is needed"
+    - "It uses two pointers"
+    - "It avoids using extra memory"
+  answer: [1]
+  explain: "For each x you look up target - x in O(1). The cost is O(n) extra memory."
+
+- q: |
+    What is the output?
+    ```python
+    counts = {}
+    for ch in "banana":
+        counts[ch] = counts.get(ch, 0) + 1
+    print(counts["a"], counts.get("z", 0))
+    ```
+  type: single
+  options: ["3 0", "3 KeyError", "2 0", "1 0"]
+  answer: [0]
+  explain: "There are three a's, and .get returns the default 0 for a missing key."
+
+- q: "In Two Sum, why do we store `x` in the dict AFTER checking for `target - x`?"
+  type: single
+  options:
+    - "Dicts cannot be changed while reading"
+    - "Otherwise an item could pair with itself"
+    - "It is faster"
+    - "It does not matter"
+  answer: [1]
+  explain: "With target 6 and x = 3, storing first would find 3 and pair the item with itself."
+
+- q: "Which can be a dict key? (choose all that apply)"
+  type: multi
+  options: ["\"abc\"", "(1, 2)", "[1, 2]", "42"]
+  answer: [0, 1, 3]
+  explain: "Keys must be hashable (immutable). A list is mutable, so it cannot be a key."
+
+- q: |
+    What is the output?
+    ```python
+    groups = {}
+    for w in ["ab", "ba", "cd"]:
+        groups.setdefault("".join(sorted(w)), []).append(w)
+    print(len(groups))
+    ```
+  type: single
+  options: ["1", "2", "3", "0"]
+  answer: [1]
+  explain: "'ab' and 'ba' share the key 'ab'; 'cd' has its own key."
+
+- q: "In longest consecutive sequence, why do we only start counting when `x - 1` is NOT in the set?"
+  type: single
+  options:
+    - "To skip negative numbers"
+    - "So each run is counted once from its start, keeping it O(n)"
+    - "Because sets are unordered"
+    - "To handle duplicates"
+  answer: [1]
+  explain: "If x - 1 exists, x is in the middle of a run that is counted from its first number. This avoids counting runs again and again."
+
+- q: "Which is a typical hashmap trade-off?"
+  type: single
+  options:
+    - "More time, less memory"
+    - "Less time, more memory"
+    - "Same time, same memory"
+    - "Less time, less memory"
+  answer: [1]
+  explain: "You spend O(n) extra space to turn repeated searching into O(1) lookups."

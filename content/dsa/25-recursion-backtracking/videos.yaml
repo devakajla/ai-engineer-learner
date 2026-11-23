@@ -1,0 +1,11 @@
+intro: {video_id: HdPb_thlF5s, title: "Intro to recursion (DSA Patterns Ep 66)", start: 0, end: 1533}
+segments:
+  - {exercise: 01-sum-list, video_id: HdPb_thlF5s, title: "Intro to recursion (Ep 66)", start: 0, end: 1533}
+  - {exercise: 02-max-of-list, video_id: Qh_U6NYf99o, title: "Recursion fixed template (Ep 67)", start: 0, end: 1016}
+  - {exercise: 06-subsets, video_id: I081UkZCLlc, title: "Recursion and backtracking explained (Ep 68)", start: 0, end: 1584}
+  - {exercise: 04-fibonacci, video_id: j4wjZqzhMqc, title: "Fibonacci (Ep 69)", start: 0, end: 1100}
+  - {exercise: 05-palindrome-recursive, video_id: j4wjZqzhMqc, title: "Palindrome string (Ep 69)", start: 1100, end: 2162}
+  - {exercise: 03-is-sorted, video_id: -gC-QEdpvO4, title: "Recursion in 3 easy questions (Ep 70)", start: 0, end: 1818}
+  - {exercise: 07-generate-parentheses, video_id: PqwlS4bcr1Y, title: "Start recursion backtracking (Ep 71)", start: 0, end: 1977}
+  - {exercise: 08-letter-combinations, video_id: IKfIT6uFOcs, title: "5 point template for recursion (Ep 72)", start: 0, end: 2847}
+  - {exercise: 09-combination-sum, video_id: AflRvP5LFFc, title: "Combination sum (Ep 73)", start: 0, end: 1565}

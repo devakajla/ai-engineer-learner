@@ -1,0 +1,82 @@
+- q: |
+    What is printed?
+    ```python
+    import json
+    data = json.loads('{"ok": true, "n": null}')
+    print(data["ok"], data["n"])
+    ```
+  type: single
+  options: ["`true null`", "`True None`", "`True null`", "A `JSONDecodeError`"]
+  answer: [1]
+  explain: loads turns true into True and null into None.
+- q: Which of these is valid JSON?
+  type: single
+  options:
+    - "`{'name': 'Dev'}`"
+    - '`{"name": "Dev",}`'
+    - '`{"name": "Dev"}`'
+    - "`{name: Dev}`"
+  answer: [2]
+  explain: JSON needs double quotes around keys and strings, and no comma after the last item.
+- q: |
+    What is printed?
+    ```python
+    import json
+    try:
+        json.loads("not json")
+        print("ok")
+    except json.JSONDecodeError:
+        print("bad")
+    ```
+  type: single
+  options: ["`ok`", "`bad`", "Nothing", "A `KeyError`"]
+  answer: [1]
+  explain: The text is not valid JSON, so loads raises JSONDecodeError and the except block prints bad.
+- q: |
+    What is printed?
+    ```python
+    text = 'Sure! {"a": 1} Done.'
+    start = text.find("{")
+    end = text.rfind("}")
+    print(text[start : end + 1])
+    ```
+  type: single
+  options: ['`{"a": 1}`', '`{"a": 1`', '`Sure! {"a": 1}`', '`"a": 1`']
+  answer: [0]
+  explain: start is the index of "{" and end is the index of "}". The slice needs end + 1 to include the closing brace.
+- q: You call the API with JSON mode, but your messages never contain the word "JSON". What happens?
+  type: single
+  options:
+    - It works normally
+    - The API returns an error, because the prompt must mention JSON
+    - The model answers in XML
+    - The model uses a higher temperature
+  answer: [1]
+  explain: JSON mode needs the word "JSON" in the messages. Without it the request is rejected.
+- q: What does JSON mode guarantee?
+  type: single
+  options:
+    - The reply is valid JSON
+    - The reply has exactly the keys you want
+    - The values have the right types
+    - The reply is true
+  answer: [0]
+  explain: Only the syntax is guaranteed. You must still check keys and types yourself (lesson 10).
+- q: Which of these can still break JSON, even in JSON mode?
+  type: multi
+  options:
+    - The answer is cut off by max_completion_tokens
+    - The model uses the wrong key names
+    - The model writes a number as a string
+    - The key names are in double quotes
+  answer: [0, 1, 2]
+  explain: Cut-off text can be invalid JSON. Wrong keys and wrong types are not checked by JSON mode. Double-quoted keys are normal.
+- q: What does JSON schema mode add on top of plain JSON mode?
+  type: single
+  options:
+    - It makes the model faster
+    - You describe the exact keys and types you want, so the shape is followed more reliably
+    - It removes the need to validate in code
+    - It lets the model run Python
+  answer: [1]
+  explain: A schema describes the keys and types. It reduces mistakes, but you should still validate the reply in code.

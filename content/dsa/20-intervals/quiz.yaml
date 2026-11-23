@@ -1,0 +1,63 @@
+- q: "Why do we sort intervals by start time before merging?"
+  type: single
+  options:
+    - "Python requires sorted input"
+    - "After sorting, an overlapping interval is always next to the current merged one"
+    - "To make the end times equal"
+    - "To remove duplicates"
+  answer: [1]
+  explain: "Sorted by start, you only compare each interval with the last merged one in a single pass."
+
+- q: |
+    What is the output?
+    ```python
+    merged = []
+    for s, e in sorted([[1, 4], [2, 3], [6, 7]]):
+        if merged and s <= merged[-1][1]:
+            merged[-1][1] = max(merged[-1][1], e)
+        else:
+            merged.append([s, e])
+    print(merged)
+    ```
+  type: single
+  options: ["[[1, 4], [6, 7]]", "[[1, 3], [6, 7]]", "[[1, 4], [2, 3], [6, 7]]", "[[1, 7]]"]
+  answer: [0]
+  explain: "[2, 3] is inside [1, 4], so the end stays max(4, 3) = 4. Replacing the end with 3 would be a bug."
+
+- q: "Closed intervals [1, 4] and [4, 5]: what does merge intervals usually return?"
+  type: single
+  options: ["[[1, 5]]", "[[1, 4], [4, 5]]", "[[1, 4]]", "An error"]
+  answer: [0]
+  explain: "They touch at 4, and for closed intervals touching counts as overlapping."
+
+- q: "Meetings are [start, end). Can [1, 5] and [5, 8] use the same room?"
+  type: single
+  options:
+    - "Yes, the first ends exactly when the second starts"
+    - "No, they overlap at 5"
+    - "Only if sorted by end"
+    - "Only with a heap"
+  answer: [0]
+  explain: "For half-open meetings the end time is free, so the check is start < previous end for a conflict."
+
+- q: "In the sweep-line method for the most overlapping intervals, what are the events?"
+  type: single
+  options:
+    - "+1 at each start and -1 at each end, sorted by time, with a running sum"
+    - "Only the start times"
+    - "The lengths of the intervals"
+    - "The middle of each interval"
+  answer: [0]
+  explain: "The running sum is the number of intervals active at that time. Its maximum is the answer."
+
+- q: "To keep the maximum number of non-overlapping intervals, which greedy order is correct?"
+  type: single
+  options: ["Sort by end and take the one that ends first", "Sort by start and take the earliest start", "Sort by length, shortest first", "Random order"]
+  answer: [0]
+  explain: "The interval that ends first leaves the most room for the remaining ones."
+
+- q: "Intersection of two sorted interval lists: after computing the overlap, which pointer do you move?"
+  type: single
+  options: ["The one whose interval ends first", "Both", "The one whose interval starts first", "Always the first list"]
+  answer: [0]
+  explain: "The interval that ends first cannot overlap with any later interval of the other list."

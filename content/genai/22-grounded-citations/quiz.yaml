@@ -1,0 +1,77 @@
+- q: What is a "grounded" answer?
+  type: single
+  options:
+    - An answer written very slowly
+    - An answer where every claim is supported by the given context
+    - An answer in a short sentence
+    - An answer from a small model
+  answer: [1]
+  explain: Grounded means supported by the retrieved text. A claim that is not in the context is a hallucination.
+- q: |
+    What does this print?
+    ```python
+    n = 7
+    print(1 <= n <= 3)
+    ```
+  type: single
+  options:
+    - "True"
+    - "False"
+    - "7"
+    - "Error"
+  answer: [1]
+  explain: A chained comparison checks both parts. 7 is not at most 3, so the result is False.
+- q: The model cites `[7]` but only 3 chunks were sent. What should the code do?
+  type: single
+  options:
+    - Accept it, the model knows best
+    - Mark the citation invalid and repair or flag the answer
+    - Ignore all citations
+    - Send 7 chunks next time
+  answer: [1]
+  explain: A citation outside the range of sent chunks is made up. Catch it and retry once, or mark the answer as not ok.
+- q: Why must you keep the same list of hits that you put in the prompt?
+  type: single
+  options:
+    - Lists cannot be copied
+    - The number [1] means the first chunk of that list. A reordered list would point to the wrong source
+    - The API needs the same object
+    - It saves memory
+  answer: [1]
+  explain: Citations are positions in the list the model saw.
+- q: How should "I don't know." be treated by the citation check?
+  type: single
+  options:
+    - As a failure
+    - As a correct answer with no citation
+    - As a reason to call a bigger model
+    - As an error to log and hide
+  answer: [1]
+  explain: When the context lacks the answer, "I don't know" is the right output.
+- q: A citation number is valid. Does that prove the claim is supported?
+  type: single
+  options:
+    - Yes, always
+    - No, the model can cite a real chunk for a claim it does not support
+    - Only if the number is 1
+    - Only with temperature 0
+  answer: [1]
+  explain: The check proves only that the number exists. Quotes or a judge are needed to test support.
+- q: Which of these help check that a citation really supports a claim?
+  type: multi
+  options:
+    - Ask for an exact quote and test that it is inside the cited chunk
+    - Ask another model call whether the chunk supports the claim
+    - Count how many citations the answer has
+    - Increase the temperature
+  answer: [0, 1]
+  explain: A quote that is not in the chunk is made up. A judge can test support. Counting citations proves nothing.
+- q: How many repair tries should a cited answer function make?
+  type: single
+  options:
+    - Unlimited, until it works
+    - A small fixed number, such as one repair, then return a "not ok" result
+    - Zero, never repair
+    - One hundred
+  answer: [1]
+  explain: Every repair costs a call. Limit it and tell the caller when it still failed.

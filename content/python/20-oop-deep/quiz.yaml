@@ -1,0 +1,50 @@
+- q: You define `__eq__` on a class but not `__hash__`. What happens when you put an instance in a set?
+  type: single
+  options:
+    - It works using the default id-based hash
+    - "`TypeError: unhashable type`"
+    - It works but equality is ignored
+    - Python generates a hash from `__eq__`
+  answer: [1]
+  explain: Defining `__eq__` sets `__hash__` to None, making instances unhashable unless you define `__hash__`.
+- q: How do you give a dataclass field an empty-list default?
+  type: single
+  options:
+    - "`tags: list[str] = []`"
+    - "`tags: list[str] = field(default_factory=list)`"
+    - "`tags: list[str] = None`"
+    - "`tags: list[str] = list`"
+  answer: [1]
+  explain: Dataclasses reject mutable defaults; default_factory creates a new list per instance.
+- q: Which does `@dataclass(frozen=True)` give you?
+  type: multi
+  options:
+    - Assigning to fields raises an error
+    - Instances are hashable
+    - Runtime type validation of fields
+    - Generated `__init__` and `__repr__`
+  answer: [0, 1, 3]
+  explain: Dataclasses never validate types at runtime — that's Pydantic's job.
+- q: What happens when you instantiate a subclass of an ABC that didn't implement one `@abstractmethod`?
+  type: single
+  options:
+    - It works; the error appears when the method is called
+    - "`TypeError` at instantiation"
+    - The method returns None
+    - A warning is printed
+  answer: [1]
+  explain: ABCs check abstract methods when creating the instance — failing early.
+- q: '`TaskService` needs storage. Which design is better and why?'
+  type: single
+  options:
+    - "`class TaskService(InMemoryTaskRepository)` — reuse via inheritance"
+    - "`TaskService(repo)` storing the repository — composition, easy to swap and test"
+    - A global repository variable imported in the service
+    - Copy the repository methods into the service
+  answer: [1]
+  explain: A service has-a repository. Injecting it allows SQL/in-memory/fake implementations.
+- q: In `__eq__`, what should you return when `other` is an unrelated type?
+  type: single
+  options: ["`False`", "`NotImplemented`", "raise TypeError", "`None`"]
+  answer: [1]
+  explain: NotImplemented lets Python try the reflected operation and then fall back to identity comparison.

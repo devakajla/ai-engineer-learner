@@ -1,0 +1,42 @@
+- q: "What is the base case of most tree recursions?"
+  type: single
+  options: ["The node is None", "The node is the root", "The node has a left child", "The value is 0"]
+  answer: [0]
+  explain: "None means an empty tree, which you can answer directly. Every other node reduces to its two children."
+
+- q: |
+    Tree: root 2 with left child 1 and right child 3. What does inorder return?
+  type: single
+  options: ["[2, 1, 3]", "[1, 2, 3]", "[1, 3, 2]", "[3, 2, 1]"]
+  answer: [1]
+  explain: "Inorder is left, node, right: 1, 2, 3."
+
+- q: "Same tree (2 with children 1 and 3). What does postorder return?"
+  type: single
+  options: ["[1, 3, 2]", "[2, 1, 3]", "[1, 2, 3]", "[3, 1, 2]"]
+  answer: [0]
+  explain: "Postorder is left, right, node: 1, 3, 2."
+
+- q: "Which structure do you use for level order traversal?"
+  type: single
+  options: ["A queue (deque)", "A stack", "A heap", "A set"]
+  answer: [0]
+  explain: "A queue is first in, first out, so nodes leave level by level. Each round handles len(queue) nodes."
+
+- q: "Why is checking only node.left.val < node.val < node.right.val not enough for a valid BST?"
+  type: single
+  options: ["A node deeper in the tree must also respect limits from its ancestors", "Python cannot compare node values", "It is too slow", "Because BSTs allow equal values"]
+  answer: [0]
+  explain: "For example 3 under the right child of 5 is smaller than 5 and breaks the BST rule even if its parent looks fine."
+
+- q: "Which traversal of a BST gives the values in sorted order?"
+  type: single
+  options: ["Inorder", "Preorder", "Postorder", "Level order"]
+  answer: [0]
+  explain: "Left (smaller), node, right (bigger) at every node."
+
+- q: "Diameter of a tree: at each node, which value is the longest path that bends at this node (in edges)?"
+  type: single
+  options: ["height(left) + height(right)", "max(height(left), height(right))", "height(left) * height(right)", "1 + height(left)"]
+  answer: [0]
+  explain: "The path goes down the left side, through the node, and down the right side. Heights here count nodes below the node."

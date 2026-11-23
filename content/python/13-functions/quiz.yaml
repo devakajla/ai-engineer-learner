@@ -1,0 +1,71 @@
+- q: |
+    What is printed?
+    ```python
+    def f(x):
+        x + 1
+
+    print(f(2))
+    ```
+  type: single
+  options: ["`3`", "`None`", "`2`", "Error"]
+  answer: [1]
+  explain: 'There is no `return`, so the function returns `None`.'
+- q: |
+    What is printed?
+    ```python
+    def add(item, bucket=[]):
+        bucket.append(item)
+        return bucket
+
+    add(1)
+    print(add(2))
+    ```
+  type: single
+  options: ["`[2]`", "`[1, 2]`", "`[1]`", "`[]`"]
+  answer: [1]
+  explain: 'The default list is created once and shared by all calls.'
+- q: |
+    What is printed?
+    ```python
+    def show(*args, **kwargs):
+        print(args, kwargs)
+
+    show(1, 2, a=3)
+    ```
+  type: single
+  options: ["`[1, 2] {'a': 3}`", "`(1, 2) {'a': 3}`", "`(1, 2, 3) {}`", "`(1, 2) ('a', 3)`"]
+  answer: [1]
+  explain: '`*args` is a tuple, `**kwargs` is a dict.'
+- q: |
+    What happens?
+    ```python
+    count = 0
+
+    def bump():
+        count = count + 1
+
+    bump()
+    ```
+  type: single
+  options: ["`count` becomes 1", "UnboundLocalError", "NameError for `bump`", "Nothing happens, no error"]
+  answer: [1]
+  explain: 'Assigning to `count` inside the function makes it local, so reading it first fails.'
+- q: |
+    What does `def connect(host, *, port=5432)` mean for `port`?
+    ```python
+    connect("db", 1234)
+    ```
+  type: single
+  options: ["It sets `port=1234`", "TypeError: `port` is keyword-only", "It sets `host` twice", "It ignores 1234"]
+  answer: [1]
+  explain: 'Parameters after `*` can only be passed by keyword: `connect("db", port=1234)`.'
+- q: 'What is `power(**opts)` if `opts = {"base": 2, "exponent": 3}`?'
+  type: single
+  options: ["`power(2, 3)` with keywords `base` and `exponent`", "`power({'base': 2, 'exponent': 3})`", "A syntax error", "`power('base', 'exponent')`"]
+  answer: [0]
+  explain: '`**` unpacks a dict into keyword arguments.'
+- q: Which are good practice?
+  type: multi
+  options: ["Use `None` as a default and create a list inside", "Return values instead of changing globals", "Use `[]` as a default argument", "Give every function one clear job"]
+  answer: [0, 1, 3]
+  explain: 'A mutable default is shared between calls, so avoid it.'

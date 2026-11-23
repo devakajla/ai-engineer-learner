@@ -1,0 +1,66 @@
+- q: Where should your Groq API key live?
+  type: single
+  options:
+    - Written inside your Python file
+    - In an environment variable, outside your code
+    - In a public GitHub repo
+    - In the model name
+  answer: [1]
+  explain: An environment variable keeps the secret out of your code. Keys in code leak when the code is shared.
+- q: |
+    What does this print if `GROQ_API_KEY` was never set?
+    ```python
+    import os
+    print(os.environ.get("GROQ_API_KEY"))
+    ```
+  type: single
+  options: ["A `KeyError`", "`None`", "An empty string", "`gsk_`"]
+  answer: [1]
+  explain: ".get returns None for a missing key. os.environ[...] would raise KeyError instead."
+- q: Which expression gives the text of the model's answer?
+  type: single
+  options:
+    - "`response.text`"
+    - "`response.choices.message.content`"
+    - "`response.choices[0].message.content`"
+    - "`response.content[0]`"
+  answer: [2]
+  explain: choices is a list. Take the first item, then its message, then the content.
+- q: A response has `finish_reason == "length"`. What does this mean?
+  type: single
+  options:
+    - The model finished normally
+    - The answer was cut off because it hit max_completion_tokens
+    - The input was too short
+    - The key is invalid
+  answer: [1]
+  explain: "'length' means the model ran out of its output limit. 'stop' is a natural end."
+- q: Why do we write `ask(client, question)` and not create the client inside the function?
+  type: multi
+  options:
+    - Tests can pass a fake client with no internet
+    - One client can be reused for many calls
+    - It makes the model faster
+    - It is easier to swap providers later
+  answer: [0, 1, 3]
+  explain: Passing the client in helps testing, reuse and swapping. It does not change model speed.
+- q: What are the three numbers in `response.usage`?
+  type: multi
+  options:
+    - prompt_tokens
+    - completion_tokens
+    - total_tokens
+    - price_in_dollars
+  answer: [0, 1, 2]
+  explain: Usage has input (prompt), output (completion) and total token counts. It does not contain a price.
+- q: |
+    What is printed?
+    ```python
+    from types import SimpleNamespace as NS
+    r = NS(choices=[NS(message=NS(content="hi"))])
+    print(r.choices[0].message.content.upper())
+    ```
+  type: single
+  options: ["`hi`", "`HI`", "An error", "`None`"]
+  answer: [1]
+  explain: The dots read parts of the object one by one. The text is "hi", and .upper() makes it "HI".

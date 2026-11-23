@@ -1,0 +1,95 @@
+- q: |
+    What is printed?
+    ```python
+    a = [[0] * 2] * 2
+    a[0][0] = 9
+    print(a)
+    ```
+  type: single
+  options: ["`[[9, 0], [0, 0]]`", "`[[9, 0], [9, 0]]`", "`[[9, 9], [9, 9]]`", "Error"]
+  answer: [1]
+  explain: The outer list holds two references to one inner list.
+- q: |
+    What is printed?
+    ```python
+    def gen():
+        yield 1
+        yield 2
+    g = gen()
+    print(list(g), list(g))
+    ```
+  type: single
+  options: ["`[1, 2] [1, 2]`", "`[1, 2] []`", "`[] []`", "Error"]
+  answer: [1]
+  explain: Generators are single-use iterators.
+- q: |
+    What is printed?
+    ```python
+    class A:
+        items = []
+    x, y = A(), A()
+    x.items.append(1)
+    y.items = [2]
+    print(A.items, x.items, y.items)
+    ```
+  type: single
+  options: ["`[1] [1] [2]`", "`[] [1] [2]`", "`[1] [1] [1]`", "`[2] [1] [2]`"]
+  answer: [0]
+  explain: append mutates the shared class list; `y.items = [2]` creates an instance attribute on y only.
+- q: |
+    What is printed?
+    ```python
+    try:
+        print("a")
+        raise ValueError
+    except ValueError:
+        print("b")
+    else:
+        print("c")
+    finally:
+        print("d")
+    ```
+  type: single
+  options: ["a b c d", "a b d", "a c d", "a d"]
+  answer: [1]
+  explain: else runs only when no exception occurred; finally always runs.
+- q: Which statements are true?
+  type: multi
+  options:
+    - "`@functools.wraps` preserves the wrapped function's name and docstring"
+    - Defining `__eq__` keeps the default `__hash__`
+    - "`dataclass(frozen=True)` instances are hashable"
+    - Type hints are checked at runtime by Python
+  answer: [0, 2]
+  explain: Defining __eq__ sets __hash__ to None; Python never enforces hints itself.
+- q: |
+    What is printed?
+    ```python
+    from functools import lru_cache
+    calls = 0
+    @lru_cache
+    def sq(x):
+        global calls
+        calls += 1
+        return x * x
+    sq(3); sq(3); sq(4)
+    print(calls)
+    ```
+  type: single
+  options: ["1", "2", "3", "0"]
+  answer: [1]
+  explain: sq(3) is computed once and cached; sq(4) is a new argument.
+- q: 'A Pydantic `TaskUpdate` has all-optional fields. The client sends `{"title": null}`. Which call gives `{"title": None}`?'
+  type: single
+  options: ["`model_dump()`", "`model_dump(exclude_none=True)`", "`model_dump(exclude_unset=True)`", "`model_dump(exclude_defaults=True)`"]
+  answer: [2]
+  explain: exclude_unset keeps explicitly sent fields (even null) and drops the rest; exclude_none would drop it.
+- q: Which are good reasons to prefer composition over inheritance for `TaskService` and its repository?
+  type: multi
+  options:
+    - The repository can be swapped (memory → SQL) without changing the service
+    - Tests can inject a fake repository
+    - It removes the need for type hints
+    - A service is not a kind of repository
+  answer: [0, 1, 3]
+  explain: Composition models has-a relationships and keeps parts replaceable.

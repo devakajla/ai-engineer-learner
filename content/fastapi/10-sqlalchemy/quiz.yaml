@@ -1,0 +1,48 @@
+- q: How often should you create the SQLAlchemy engine and the session in a web app?
+  type: single
+  options:
+    - Engine per request, session once
+    - Engine once per app, session per request
+    - Both per request
+    - Both once per app
+  answer: [1]
+  explain: The engine owns the connection pool and is long-lived; sessions are short units of work.
+- q: |
+    How many SQL queries does this run for 50 users (lazy relationship)?
+    ```python
+    users = session.scalars(select(User)).all()
+    for u in users:
+        print(len(u.tasks))
+    ```
+  type: single
+  options: ["1", "2", "51", "50"]
+  answer: [2]
+  explain: 1 query for users + 1 per user for tasks = N+1. selectinload makes it 2.
+- q: 'What does `description: Mapped[str | None] = mapped_column(Text)` produce?'
+  type: single
+  options: ["A NOT NULL text column", "A nullable text column", "A text column with default ''", "An error"]
+  answer: [1]
+  explain: The Optional type in Mapped makes the column nullable.
+- q: What do you need so `response_model=TaskRead` can serialize a SQLAlchemy `Task` object?
+  type: single
+  options: ["`extra=\"forbid\"`", "`from_attributes=True` in TaskRead's model_config", "`orm_mode=False`", "Convert to dict manually always"]
+  answer: [1]
+  explain: from_attributes lets Pydantic read attributes from arbitrary objects such as ORM instances.
+- q: Which statements about `Base.metadata.create_all()` are true?
+  type: multi
+  options:
+    - It creates tables that don't exist yet
+    - It adds new columns to existing tables
+    - It's fine for tests and early prototypes
+    - Production schema changes should use migrations instead
+  answer: [0, 2, 3]
+  explain: create_all never alters existing tables — that's what migrations are for.
+- q: Why does an app need a connection pool?
+  type: multi
+  options:
+    - Opening connections is slow and expensive
+    - Databases limit the total number of connections
+    - It makes queries return more rows
+    - It lets sessions reuse already-open connections
+  answer: [0, 1, 3]
+  explain: Pools amortize connection setup and cap usage per app instance.

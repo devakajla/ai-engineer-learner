@@ -1,0 +1,53 @@
+- q: |
+    What is printed?
+    ```python
+    nums = (x * 2 for x in [1, 2, 3])
+    print(sum(nums), sum(nums))
+    ```
+  type: single
+  options: ["`12 12`", "`12 0`", "`6 6`", "TypeError"]
+  answer: [1]
+  explain: A generator is exhausted after the first full iteration; the second sum gets nothing.
+- q: |
+    What is printed?
+    ```python
+    def gen():
+        print("start")
+        yield 1
+
+    g = gen()
+    print("created")
+    next(g)
+    ```
+  type: single
+  options: ["`start` then `created`", "`created` then `start`", "only `created`", "only `start`"]
+  answer: [1]
+  explain: Calling a generator function runs nothing; the body starts on the first next().
+- q: Which objects are lazy iterators (not lists)?
+  type: multi
+  options: ["`(x for x in data)`", "`[x for x in data]`", "an open file object", "`map(str, data)`"]
+  answer: [0, 2, 3]
+  explain: Generator expressions, files and map objects produce items on demand.
+- q: Why is a generator pipeline good for a 10 GB log file?
+  type: single
+  options:
+    - It's multi-threaded
+    - It processes one line at a time, so memory stays constant, and it can stop early
+    - It compresses the file
+    - It reads the file faster from disk
+  answer: [1]
+  explain: Lazy stages pull one item at a time; nothing builds a giant list.
+- q: What does `yield from inner` do inside a generator?
+  type: single
+  options:
+    - Returns the whole inner list as one item
+    - Yields each item of `inner` in turn
+    - Ends the generator
+    - Converts inner into a list
+  answer: [1]
+  explain: It delegates iteration to the inner iterable.
+- q: How do you safely take the first 5 items of an infinite generator `g`?
+  type: single
+  options: ["`list(g)[:5]`", "`g[:5]`", "`list(itertools.islice(g, 5))`", "`len(g[:5])`"]
+  answer: [2]
+  explain: Generators don't support slicing or len; islice lazily takes a bounded number of items.

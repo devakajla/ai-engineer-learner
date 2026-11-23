@@ -1,0 +1,76 @@
+- q: In which approach does the CODE decide the order of the steps?
+  type: single
+  options:
+    - An agent
+    - A workflow
+    - Neither
+    - Both, always
+  answer: [1]
+  explain: In a workflow the path is fixed in code. In an agent the model chooses the next step.
+- q: A task needs no tools, and you only need to classify a text. What is the best approach?
+  type: single
+  options:
+    - A multi-agent system
+    - An agent with a search tool
+    - One model call
+    - A workflow of 5 calls
+  answer: [2]
+  explain: With no tools and known work, one call is the simplest approach that works.
+- q: |
+    What does this print?
+    ```python
+    print(round(0.9 ** 3, 3))
+    ```
+  type: single
+  options:
+    - "2.7"
+    - "0.729"
+    - "0.9"
+    - "0.27"
+  answer: [1]
+  explain: 0.9 * 0.9 * 0.9 is 0.729. Chances multiply, so three good steps in a row are less sure than one.
+- q: Why is a 10-step agent run less reliable than a single step, even when each step works 95% of the time?
+  type: single
+  options:
+    - The model gets tired
+    - All 10 steps must work, so the chances multiply (about 0.6)
+    - Tools are slower
+    - Agents ignore the history
+  answer: [1]
+  explain: 0.95 to the power 10 is about 0.6. The more steps in a row, the lower the chance that all are right.
+- q: Which are good reasons to prefer a workflow over an agent?
+  type: multi
+  options:
+    - You know the steps in advance
+    - The action is risky and cannot be undone
+    - You need the same path every time
+    - The steps depend on unpredictable tool results
+  answer: [0, 1, 2]
+  explain: Unpredictable steps are the case where an agent fits. The other three are reasons to keep the path in code.
+- q: |
+    What does this print?
+    ```python
+    bikes = [
+        {"name": "a", "speed": 20, "price": 300},
+        {"name": "b", "speed": 35, "price": 900},
+    ]
+    good = [b for b in bikes if b["speed"] >= 30 and b["price"] <= 1000]
+    print(good[0]["name"] if good else None)
+    ```
+  type: single
+  options:
+    - a
+    - b
+    - None
+    - An error
+  answer: [1]
+  explain: Only bike b has speed 30 or more and a price up to 1000, so it is the only good one.
+- q: What is "escalation" in the start-simple pattern?
+  type: single
+  options:
+    - Calling the agent first, then the simple path
+    - Trying the cheap path first and calling the expensive agent only when a check fails
+    - Running both at the same time and averaging
+    - Asking the user to choose
+  answer: [1]
+  explain: Most requests are easy, so they stay cheap. Only the hard ones pay for the agent.

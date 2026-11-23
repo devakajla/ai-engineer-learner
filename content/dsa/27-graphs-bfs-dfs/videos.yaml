@@ -1,0 +1,10 @@
+intro: {video_id: vcx1HWoHK1o, title: "Intro to graphs (DSA Patterns Ep 88)", start: 0, end: 1245}
+segments:
+  - {exercise: 01-build-graph, video_id: WR-hWofGb_U, title: "Graph representation (Ep 89)", start: 0, end: 2388}
+  - {exercise: 02-dfs-order, video_id: O04KAy7cLBs, title: "DFS and BFS (Ep 90)", start: 0, end: 1400}
+  - {exercise: 03-bfs-order, video_id: O04KAy7cLBs, title: "DFS and BFS (Ep 90)", start: 1400, end: 2818}
+  - {exercise: 06-number-of-islands, video_id: mbSYZzBjs4U, title: "Number of islands (Ep 91)", start: 0, end: 2269}
+  - {exercise: 08-rotten-oranges, video_id: 4L4MYtxGh9s, title: "Rotten oranges: multi-source BFS (Ep 92)", start: 0, end: 2160}
+  - {exercise: 09-cycle-undirected, video_id: D5jgZ4PnU5o, title: "DFS cycle detection (Ep 93)", start: 0, end: 1500}
+  - {exercise: 10-cycle-directed, video_id: D5jgZ4PnU5o, title: "DFS cycle detection (Ep 93)", start: 1500, end: 2978}
+  - {exercise: 11-surrounded-regions, video_id: 6ZtNHvGeEu4, title: "Surrounded regions (Ep 96)", start: 0, end: 1044}

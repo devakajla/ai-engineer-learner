@@ -1,0 +1,42 @@
+- q: What is uvicorn's job?
+  type: single
+  options:
+    - It validates request bodies
+    - It is the ASGI server that listens on a port and passes requests to the app
+    - It generates the OpenAPI docs
+    - It is a database driver
+  answer: [1]
+  explain: uvicorn handles sockets and HTTP parsing, then calls the ASGI app (FastAPI). Validation and docs are FastAPI's job.
+- q: In the command `uvicorn app.main:app`, what does `app.main:app` mean?
+  type: single
+  options:
+    - Run the file app/main/app.py
+    - Import module `app.main` and use the variable named `app` in it
+    - Start two apps called app and main
+    - Use the app called "main"
+  answer: [1]
+  explain: The part before the colon is the import path of the module; the part after is the ASGI application object.
+- q: FastAPI is built on top of which libraries?
+  type: multi
+  options: ["Starlette", "Flask", "Pydantic", "Django"]
+  answer: [0, 2]
+  explain: Starlette provides the ASGI web toolkit; Pydantic provides validation and serialization.
+- q: Your app defines only `@app.get("/items")`. A client sends `DELETE /items`. What does FastAPI return?
+  type: single
+  options: ["`404 Not Found`", "`405 Method Not Allowed`", "`500 Internal Server Error`", "`200 OK`"]
+  answer: [1]
+  explain: The path exists but not for that method → 405.
+- q: Where can you try your endpoints in the browser with zero extra code?
+  type: single
+  options: ["`/swagger.html`", "`/docs`", "`/api`", "`/test`"]
+  answer: [1]
+  explain: '`/docs` serves Swagger UI built from `/openapi.json`. `/redoc` is the read-only alternative.'
+- q: Which statements about `TestClient` are true?
+  type: multi
+  options:
+    - It needs uvicorn running on port 8000
+    - It calls the ASGI app directly in memory
+    - "`client.get(\"/health\").json()` returns the parsed JSON body"
+    - It can only test GET requests
+  answer: [1, 2]
+  explain: No server is needed, and it supports every method (`post`, `patch`, `delete`, ...).

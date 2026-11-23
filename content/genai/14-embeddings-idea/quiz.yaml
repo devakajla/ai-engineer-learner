@@ -1,0 +1,82 @@
+- q: What is an embedding?
+  type: single
+  options:
+    - A fixed-length list of numbers that represents a text
+    - A summary of the text in plain words
+    - The number of tokens in the text
+    - A compressed copy of the text that can be turned back into the text
+  answer: [0]
+  explain: An embedding is a vector (a list of numbers) of fixed length. You cannot turn it back into the text, and it is not a word summary.
+- q: Which of these is true about embeddings from a good model?
+  type: multi
+  options:
+    - Texts with similar meaning get close vectors
+    - A short word and a long paragraph give vectors of the same length
+    - You can read a single number and know what it means
+    - You can compare vectors from two different models
+  answer: [0, 1]
+  explain: Close means similar meaning, and the length (the dimension) is fixed. The single numbers mean nothing alone, and different models have different spaces.
+- q: |
+    What is printed?
+    ```python
+    a = [1, 2, 3]
+    b = [4, 5, 6]
+    print(sum(x * y for x, y in zip(a, b)))
+    ```
+  type: single
+  options: ["`32`", "`21`", "`15`", "`[4, 10, 18]`"]
+  answer: [0]
+  explain: 1*4 + 2*5 + 3*6 = 4 + 10 + 18 = 32. The dot product is the sum of the pair products.
+- q: |
+    What is printed?
+    ```python
+    a = [0, 0]
+    b = [3, 4]
+    print(sum((x - y) ** 2 for x, y in zip(a, b)) ** 0.5)
+    ```
+  type: single
+  options: ["`5.0`", "`25`", "`7`", "`12`"]
+  answer: [0]
+  explain: The squared differences are 9 and 16. Their sum is 25, and the square root of 25 is 5.0.
+- q: |
+    What is printed?
+    ```python
+    print(len(list(zip([1, 2, 3], [4, 5]))))
+    ```
+  type: single
+  options: ["`2`", "`3`", "`5`", "An error"]
+  answer: [0]
+  explain: zip stops at the shorter list without any warning. That is why you must check that the two vectors have the same length yourself.
+- q: You embedded 10,000 documents with model A. Next month you switch to model B for the questions only. What happens?
+  type: single
+  options:
+    - Search keeps working, B is better
+    - Search breaks or gives poor results, because the vectors are from different models
+    - Only the first 100 documents are affected
+    - The dimension adjusts by itself
+  answer: [1]
+  explain: Each model has its own space. Documents and questions must use the same model. If you change the model, embed all documents again.
+- q: |
+    What is printed?
+    ```python
+    def shout(text):
+        return text.upper()
+
+    def apply_twice(text, fn):
+        return fn(fn(text))
+
+    print(apply_twice("hi", shout))
+    ```
+  type: single
+  options: ["`HI`", "`hi`", "An error, because `shout` has no brackets", "`HIHI`"]
+  answer: [0]
+  explain: shout is passed as a value (no brackets) and called inside as fn(...). Upper-casing twice still gives HI.
+- q: In a nearest-item search with a distance, which item do you return?
+  type: single
+  options:
+    - The one with the largest distance
+    - The one with the smallest distance
+    - The first one
+    - The longest one
+  answer: [1]
+  explain: A small distance means close, so the nearest item has the smallest distance.

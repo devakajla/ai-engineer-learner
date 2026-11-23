@@ -1,0 +1,45 @@
+- q: Which line creates a tuple with exactly one item?
+  type: single
+  options: ["`t = (5)`", "`t = (5,)`", "`t = [5]`", "`t = tuple(5)`"]
+  answer: [1]
+  explain: 'The trailing comma makes a tuple. `(5)` is just the number 5, and `tuple(5)` raises TypeError.'
+- q: |
+    What happens?
+    ```python
+    t = (1, 2, 3)
+    t[0] = 10
+    ```
+  type: single
+  options: ["`t` becomes `(10, 2, 3)`", "TypeError", "IndexError", "`t` becomes `(10,)`"]
+  answer: [1]
+  explain: 'Tuples are immutable. Item assignment is not supported.'
+- q: |
+    What is printed?
+    ```python
+    a, b = 1, 2
+    a, b = b, a
+    print(a, b)
+    ```
+  type: single
+  options: ["`1 2`", "`2 1`", "`2 2`", "`1 1`"]
+  answer: [1]
+  explain: 'The right side `(b, a)` is built first, then unpacked into `a` and `b`.'
+- q: |
+    What is `rest`?
+    ```python
+    first, *rest = (10, 20, 30)
+    ```
+  type: single
+  options: ["`(20, 30)`", "`[20, 30]`", "`20`", "`[10, 20, 30]`"]
+  answer: [1]
+  explain: 'A starred name always collects the remaining items into a list.'
+- q: What happens with `a, b = (1, 2, 3)`?
+  type: single
+  options: ["`a=1, b=2`", "`a=1, b=(2, 3)`", "ValueError: too many values to unpack", "`a=(1, 2), b=3`"]
+  answer: [2]
+  explain: 'The number of names must match unless you use a starred name.'
+- q: Which of these can be a dictionary key?
+  type: multi
+  options: ["`(1, 2)`", "`[1, 2]`", '`("a", 5)`', "`([1], 2)`"]
+  answer: [0, 2]
+  explain: 'Keys must be hashable. A tuple is hashable if all its items are. Lists are not, so a tuple holding a list is not either.'

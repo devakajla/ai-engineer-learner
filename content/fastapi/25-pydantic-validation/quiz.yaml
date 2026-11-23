@@ -1,0 +1,70 @@
+- q: |
+    A client sends `{"username": "  Dev "}`. What does `payload.username` hold inside the route?
+    ```python
+    class SignupIn(BaseModel):
+        username: str
+
+        @field_validator("username")
+        @classmethod
+        def clean(cls, value):
+            return value.strip().lower()
+    ```
+  type: single
+  options: ["`\"  Dev \"`", "`\"dev\"`", "`\"Dev\"`", "A `422` error"]
+  answer: [1]
+  explain: The validator runs after the type check and its return value replaces the input, so the cleaned text `"dev"` is stored.
+- q: A `field_validator` finds a bad value. What should it do?
+  type: single
+  options:
+    - Return `None`
+    - Raise `ValueError("message")`
+    - Return `False`
+    - Raise `HTTPException(422)`
+  answer: [1]
+  explain: Pydantic turns a `ValueError` into a validation error, and FastAPI sends it as a 422 with the exact `loc`. Do not raise `HTTPException` in a model.
+- q: Which rule needs a `model_validator` and not a `field_validator`?
+  type: single
+  options:
+    - "`age` must be at least 18"
+    - "`end_date` must be after `start_date`"
+    - "`name` must be lowercase"
+    - "`email` must contain `@`"
+  answer: [1]
+  explain: A `field_validator` sees one field. A rule that compares two fields needs the whole model, so use `model_validator`.
+- q: What does a `computed_field` do?
+  type: single
+  options:
+    - It reads a value from the database
+    - It adds a value worked out from other fields to the model's output
+    - It makes a field required
+    - It checks the input before the model is made
+  answer: [1]
+  explain: A `computed_field` on a `@property` is included in `model_dump()` and in the JSON response, but it is not read from the input.
+- q: |
+    What does `Field(discriminator="channel")` on a union of models do?
+  type: single
+  options:
+    - It makes Pydantic try every model and keep the first that works
+    - It reads the value of `channel` and picks that one model, so errors come from that model only
+    - It removes the `channel` field
+    - It sorts the models by name
+  answer: [1]
+  explain: With a discriminator, Pydantic looks at one field to choose the model. It is faster and gives clearer errors than trying all models.
+- q: Which statements about Pydantic validation are true?
+  type: multi
+  options:
+    - A `field_validator` can change the value it checks
+    - A `Literal["a", "b"]` field accepts only `"a"` or `"b"`
+    - By default Pydantic converts `"5"` into `5` for an `int` field
+    - A validator on a model can send a `404` response
+  answer: [0, 1, 2]
+  explain: Validators can clean values, `Literal` limits the allowed values, and the default mode converts compatible values. Validators only report invalid data, they do not choose HTTP status codes.
+- q: A body fails a `model_validator` that raises `ValueError("dates are wrong")`. Where does the error appear in the `422` answer?
+  type: single
+  options:
+    - '`loc: ["body", "check_out"]`'
+    - '`loc: ["body"]`, with a message starting "Value error, dates are wrong"'
+    - It is not shown
+    - As a `500` error
+  answer: [1]
+  explain: An error from the whole model has no single field, so its `loc` points at the body. Pydantic adds "Value error, " in front of your text.

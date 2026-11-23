@@ -1,0 +1,71 @@
+- q: Which statements about embeddings are true?
+  type: multi
+  options:
+    - Documents and queries must be embedded with the same model
+    - Vectors from two different models can be compared directly
+    - Changing the embedding model means re-embedding all documents
+    - A bigger dimension is always better
+  answer: [0, 2]
+  explain: Each model has its own space. A bigger dimension can hold more detail but is not always better, and it costs memory.
+- q: |
+    What is printed?
+    ```python
+    a = [1, 0]
+    b = [1, 1]
+    dot = sum(x * y for x, y in zip(a, b))
+    len_a = sum(x * x for x in a) ** 0.5
+    len_b = sum(x * x for x in b) ** 0.5
+    print(round(dot / (len_a * len_b), 3))
+    ```
+  type: single
+  options: ["`0.707`", "`1.0`", "`0.5`", "`1.414`"]
+  answer: [0]
+  explain: dot = 1, lengths are 1 and sqrt(2). 1 / 1.414 = 0.707.
+- q: You have 1,000,000 vectors with 384 numbers of 4 bytes each. About how much memory do the raw vectors need?
+  type: single
+  options: ["About 1.5 GB", "About 15 MB", "About 150 GB", "About 4 KB"]
+  answer: [0]
+  explain: 1,000,000 * 384 * 4 = 1,536,000,000 bytes, about 1.5 GB. The index adds more on top.
+- q: |
+    What is printed?
+    ```python
+    runs = [(["a", "b", "c"], "b"), (["x", "y", "z"], "q")]
+    total = 0
+    for retrieved, relevant in runs:
+        if relevant in retrieved:
+            total += 1 / (retrieved.index(relevant) + 1)
+    print(total / len(runs))
+    ```
+  type: single
+  options: ["`0.25`", "`0.5`", "`1.0`", "`0.0`"]
+  answer: [0]
+  explain: The first run finds "b" at rank 2, which gives 1/2. The second run finds nothing, which gives 0. The mean is 0.5 / 2 = 0.25. This is the MRR.
+- q: Why is hybrid search often better than vector search alone for API docs?
+  type: single
+  options:
+    - Exact terms like error codes and header names are found by keyword search, and meaning is found by vectors
+    - It uses less memory
+    - It needs no embedding model
+    - It makes the documents shorter
+  answer: [0]
+  explain: Each method fails where the other works. Fusing them covers both.
+- q: What does MMR (maximal marginal relevance) try to do when it picks results?
+  type: single
+  options:
+    - Balance relevance to the query against being different from results already picked
+    - Pick only the most similar results
+    - Remove all metadata
+    - Sort the results alphabetically
+  answer: [0]
+  explain: MMR avoids a top-k full of near-duplicates, by penalizing candidates that are similar to results already chosen.
+- q: |
+    What is printed?
+    ```python
+    scores = [0.5, 0.9, 0.9, 0.1]
+    pairs = sorted([(-s, i) for i, s in enumerate(scores)])
+    print([i for _, i in pairs])
+    ```
+  type: single
+  options: ["`[1, 2, 0, 3]`", "`[2, 1, 0, 3]`", "`[0, 1, 2, 3]`", "`[3, 0, 1, 2]`"]
+  answer: [0]
+  explain: Sorting (-score, index) puts the best score first, and for equal scores the lower index first. That gives 1, 2, 0, 3.

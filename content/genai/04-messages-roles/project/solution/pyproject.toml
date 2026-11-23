@@ -1,0 +1,9 @@
+[project]
+name = "devdocs-copilot"
+version = "0.1.0"
+description = "Answers questions about API docs, with sources"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "groq>=1.0",
+]

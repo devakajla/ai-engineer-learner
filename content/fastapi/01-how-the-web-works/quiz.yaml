@@ -1,0 +1,50 @@
+- q: A client calls `DELETE /tasks/5` twice. The first call returns 204, the second 404. Is DELETE still idempotent?
+  type: single
+  options:
+    - No, because the responses are different
+    - Yes, idempotency is about the server state, which is the same after 1 or N calls
+    - Only if the server returns 204 both times
+    - DELETE is never idempotent
+  answer: [1]
+  explain: Idempotency means repeating the request leaves the same server state. The task is gone either way; the response code may differ.
+- q: Which methods are **idempotent**?
+  type: multi
+  options: ["`GET`", "`POST`", "`PUT`", "`DELETE`"]
+  answer: [0, 2, 3]
+  explain: Repeating GET, PUT or DELETE gives the same state. POST usually creates a new resource each time.
+- q: A logged-in user tries to delete another user's task. Which status code fits best?
+  type: single
+  options: ["`400`", "`401`", "`403`", "`404`"]
+  answer: [2]
+  explain: The server knows who the user is (so not 401) but they lack permission → 403 Forbidden. (Some APIs return 404 to hide that the task exists — also acceptable.)
+- q: Which is the best REST design to get the 20 most recent unfinished tasks?
+  type: single
+  options:
+    - "`GET /getUnfinishedTasks/20`"
+    - "`POST /tasks/search` with body `{\"done\": false}`"
+    - "`GET /tasks?done=false&limit=20`"
+    - "`GET /tasks/done/false/20`"
+  answer: [2]
+  explain: The resource is the task collection (path); filters and limits are options (query string).
+- q: |
+    In this request, what is `Content-Type: application/json`?
+    ```http
+    POST /tasks HTTP/1.1
+    Host: api.taskflow.dev
+    Content-Type: application/json
+
+    {"title": "x"}
+    ```
+  type: single
+  options: ["The body", "A header", "The query string", "The status line"]
+  answer: [1]
+  explain: Lines between the request line and the blank line are headers. This one says the body is JSON.
+- q: Which statements about HTTP are true?
+  type: multi
+  options:
+    - HTTP is stateless; each request must carry what the server needs
+    - 5xx codes mean the client sent a bad request
+    - "`201 Created` is the usual response to a successful POST that creates a resource"
+    - A GET request should never change data on the server
+  answer: [0, 2, 3]
+  explain: 5xx codes mean the *server* failed; 4xx codes are client errors.

@@ -1,0 +1,78 @@
+- q: Why do we use two stages (vector search, then rerank)?
+  type: single
+  options:
+    - Vector search is exact but a reranker is rough
+    - Vector search is fast but rough on a huge set, and a reranker is exact but slow, so it only sees a short list
+    - Rerankers are free
+    - It makes the database smaller
+  answer: [1]
+  explain: Stage 1 narrows thousands of chunks to a short list cheaply. Stage 2 spends more effort on that short list.
+- q: What does a cross-encoder reranker read?
+  type: single
+  options:
+    - Only the question
+    - Only the chunk
+    - The question and the chunk together
+    - The whole database
+  answer: [2]
+  explain: Reading both at once makes it more exact than comparing two separate vectors.
+- q: |
+    What does this print?
+    ```python
+    people = [{"p": 1}, {"p": 3}, {"p": 2}]
+    best = sorted(people, key=lambda x: x["p"], reverse=True)[:2]
+    print([x["p"] for x in best])
+    ```
+  type: single
+  options:
+    - "[1, 3]"
+    - "[3, 2]"
+    - "[3, 1]"
+    - "[2, 3]"
+  answer: [1]
+  explain: Sorted best first gives 3, 2, 1. The first two are 3 and 2.
+- q: When should you skip the question rewrite step?
+  type: single
+  options:
+    - When there is no chat history, because the question already stands alone
+    - Always
+    - When the user speaks Hindi
+    - When temperature is 0
+  answer: [0]
+  explain: With no history there is nothing to resolve. Skipping saves a model call.
+- q: Why use RRF to merge the results of several queries?
+  type: single
+  options:
+    - It averages the scores
+    - It uses only the rank positions, so it works even when the lists have different score scales, and ids found by many lists rise
+    - It removes duplicates only
+    - It calls the model again
+  answer: [1]
+  explain: RRF adds 1 / (k + rank) for every list that contains the id.
+- q: What is HyDE?
+  type: single
+  options:
+    - Hiding the document from the model
+    - Embedding a hypothetical answer written by the model, and searching with it
+    - A type of database index
+    - A reranker model
+  answer: [1]
+  explain: A fake answer looks like documentation, so its vector can be closer to the real page than the short question is.
+- q: Why shouldn't you add a reranker score to the vector score?
+  type: single
+  options:
+    - They are on different scales and mean different things
+    - Python cannot add floats
+    - It is too slow
+    - Rerankers return text
+  answer: [0]
+  explain: Use the order given by the reranker. Mixing scales gives meaningless numbers.
+- q: How do you decide whether to add multi-query or HyDE to your RAG?
+  type: single
+  options:
+    - Add all of them, more is better
+    - Measure recall@k or MRR on a test set before and after, and keep what helps enough for its cost
+    - Ask the user
+    - Use the one with the longest name
+  answer: [1]
+  explain: Each trick costs a model call and latency. Only measured gains justify them.

@@ -1,0 +1,62 @@
+- q: What does the GIL do in normal CPython?
+  type: single
+  options:
+    - It lets only one thread run Python code at a time
+    - It makes all code run on every CPU core
+    - It stops processes from running
+    - It locks every variable automatically
+  answer: [0]
+  explain: The GIL allows one thread to run Python bytecode at a time. It does not protect your own data from race conditions.
+- q: Which jobs are I/O-bound (so threads can help)?
+  type: multi
+  options:
+    - Downloading 20 web pages
+    - Calculating the sum of squares up to 100 million
+    - Calling an AI API many times
+    - Resizing thousands of images with pure Python code
+  answer: [0, 2]
+  explain: Downloads and API calls mostly wait. Heavy calculation and pure-Python image work are CPU-bound, so use processes.
+- q: |
+    What is printed?
+    ```python
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=2) as ex:
+        print(list(ex.map(lambda x: x * 2, [1, 2, 3])))
+    ```
+  type: single
+  options: ["`[2, 4, 6]`", "The order can change", "`[1, 2, 3]`", "TypeError"]
+  answer: [0]
+  explain: executor.map returns results in the same order as the inputs, even if the jobs finish in a different order.
+- q: Why can `counter += 1` from many threads give a wrong total?
+  type: single
+  options:
+    - It is really three steps (read, add, write), and threads can mix them up
+    - Python cannot add numbers in threads
+    - The GIL deletes some updates
+    - Integers are not allowed in threads
+  answer: [0]
+  explain: Two threads can read the same old value and both write back old + 1, so one update is lost. Use a Lock.
+- q: You have a heavy calculation and 8 CPU cores. What is the best tool?
+  type: single
+  options: ["`ThreadPoolExecutor`", "`ProcessPoolExecutor`", "A bigger `for` loop", "`time.sleep`"]
+  answer: [1]
+  explain: Each process has its own GIL, so processes can use many cores. Threads would take turns on one core.
+- q: What is the safest way to use a lock?
+  type: single
+  options:
+    - "`with lock:` around the small part that changes shared data"
+    - "`lock.acquire()` at the start of the program and never release it"
+    - Create a new `Lock()` inside every thread
+    - Do not use a lock, the GIL is enough
+  answer: [0]
+  explain: "`with lock:` always releases the lock, even after an error. The lock must be shared by all threads, and the locked part should be small."
+- q: In the producer / consumer pattern, why put `None` into the queue once for each worker?
+  type: single
+  options:
+    - It tells each worker there is no more work, so it can stop
+    - It clears the queue
+    - It speeds up the workers
+    - It starts the workers
+  answer: [0]
+  explain: Each worker stops when it takes one end marker, so you need one marker per worker.

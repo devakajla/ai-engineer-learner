@@ -1,0 +1,58 @@
+- q: |
+    What is printed?
+    ```python
+    a = [1, 2, 3, 4, 5]
+    print(a[1:4])
+    ```
+  type: single
+  options: ["`[2, 3, 4]`", "`[2, 3, 4, 5]`", "`[1, 2, 3, 4]`", "`[1, 2, 3]`"]
+  answer: [0]
+  explain: 'The slice starts at index 1 and stops before index 4.'
+- q: |
+    What is printed?
+    ```python
+    nums = [3, 1, 2]
+    nums = nums.sort()
+    print(nums)
+    ```
+  type: single
+  options: ["`[1, 2, 3]`", "`None`", "`[3, 1, 2]`", "TypeError"]
+  answer: [1]
+  explain: '`sort()` sorts in place and returns `None`, so `nums` becomes `None`.'
+- q: |
+    What is printed?
+    ```python
+    a = [1, 2]
+    b = a
+    b.append(3)
+    print(a)
+    ```
+  type: single
+  options: ["`[1, 2]`", "`[1, 2, 3]`", "`[3]`", "Error"]
+  answer: [1]
+  explain: '`b = a` does not copy. Both names point to the same list.'
+- q: |
+    What is `x`?
+    ```python
+    x = [1, 2]
+    x.append([3, 4])
+    ```
+  type: single
+  options: ["`[1, 2, 3, 4]`", "`[1, 2, [3, 4]]`", "`[[1, 2], [3, 4]]`", "`None`"]
+  answer: [1]
+  explain: '`append` adds one item. Use `extend` to add each element.'
+- q: What does `[10, 20, 30][::-1]` return?
+  type: single
+  options: ["`[30, 20, 10]`", "`[10, 20, 30]`", "`[30]`", "IndexError"]
+  answer: [0]
+  explain: 'A step of -1 walks backwards, which gives a reversed copy.'
+- q: Which of these make a (shallow) copy of list `a`?
+  type: multi
+  options: ["`a.copy()`", "`a[:]`", "`list(a)`", "`b = a`"]
+  answer: [0, 1, 2]
+  explain: '`b = a` only adds another name for the same list.'
+- q: What does `sorted(["pear", "fig", "banana"], key=len)` return?
+  type: single
+  options: ["`['fig', 'pear', 'banana']`", "`['banana', 'fig', 'pear']`", "`['banana', 'pear', 'fig']`", "`['fig', 'banana', 'pear']`"]
+  answer: [0]
+  explain: '`key=len` sorts by length: 3, 4, 6.'

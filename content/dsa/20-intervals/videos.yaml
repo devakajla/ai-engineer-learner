@@ -1,0 +1,7 @@
+intro: {video_id: aH5aeejuJU8, title: "Merge intervals: pattern introduction (DSA Patterns Ep 31)", start: 0, end: 1500}
+segments:
+  - {exercise: 01-merge-intervals, video_id: aH5aeejuJU8, title: "Merge intervals (Ep 31)", start: 1500, end: 2889}
+  - {exercise: 02-insert-interval, video_id: yAopxaHmRn0, title: "Insert interval (Ep 32)", start: 0, end: 1327}
+  - {exercise: 03-interval-intersection, video_id: yoh0p_Ag7Q4, title: "Interval list intersections (Ep 33)", start: 0, end: 2187}
+  - {exercise: 04-can-attend-meetings, video_id: b-qtjXsGfqo, title: "Overlapping intervals (Ep 34)", start: 0, end: 236}
+  - {exercise: 05-min-meeting-rooms, video_id: o-ozvzzFpKA, title: "Minimum meeting rooms (Ep 35)", start: 0, end: 1981}

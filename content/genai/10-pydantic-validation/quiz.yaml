@@ -1,0 +1,81 @@
+- q: |
+    What is printed?
+    ```python
+    from pydantic import BaseModel
+
+    class Item(BaseModel):
+        name: str
+        qty: int
+
+    item = Item(name="pen", qty="3")
+    print(item.qty, type(item.qty).__name__)
+    ```
+  type: single
+  options: ["`3 str`", "`3 int`", "`'3' str`", "A `ValidationError`"]
+  answer: [1]
+  explain: By default Pydantic converts the string "3" into the integer 3, because the meaning is clear.
+- q: |
+    What happens here?
+    ```python
+    Item(name="pen", qty="many")
+    ```
+  type: single
+  options: ["`qty` becomes `0`", "`qty` stays the string `many`", "A `ValidationError`", "A `KeyError`"]
+  answer: [2]
+  explain: "'many' cannot be turned into an int, so Pydantic raises ValidationError, and its message names the field qty."
+- q: |
+    What is printed?
+    ```python
+    from pydantic import BaseModel, Field
+
+    class Ticket(BaseModel):
+        priority: int = Field(ge=1, le=5)
+
+    try:
+        Ticket(priority=7)
+        print("ok")
+    except Exception as e:
+        print(type(e).__name__)
+    ```
+  type: single
+  options: ["`ok`", "`ValidationError`", "`ValueError`", "`TypeError`"]
+  answer: [1]
+  explain: 7 is bigger than le=5, so validation fails and Pydantic raises ValidationError.
+- q: |
+    What is printed?
+    ```python
+    from pydantic import BaseModel
+
+    class T(BaseModel):
+        title: str
+        tags: list[str] = []
+
+    print(T(title="x").tags)
+    ```
+  type: single
+  options: ["`[]`", "`None`", "A `ValidationError`", "`['x']`"]
+  answer: [0]
+  explain: A field with a default is optional. When it is missing, the default is used.
+- q: You call `Ticket.model_validate_json("hello")`. Which error do you get?
+  type: single
+  options: ["`json.JSONDecodeError`", "`pydantic.ValidationError`", "`KeyError`", "No error, it returns None"]
+  answer: [1]
+  explain: model_validate_json reports bad JSON as a ValidationError too, so one except clause covers bad JSON and bad fields.
+- q: The model's JSON failed validation. What is the best next step?
+  type: single
+  options:
+    - Crash the app
+    - Ignore the error and use the data anyway
+    - Send the bad reply and the error message back to the model, and ask for a fix (a few tries at most)
+    - Retry the same messages forever
+  answer: [2]
+  explain: The model can fix its own mistake when it sees the error. Cap the tries, and fail clearly at the end.
+- q: Which of these are true about JSON mode plus Pydantic?
+  type: multi
+  options:
+    - JSON mode guarantees valid JSON syntax
+    - Pydantic checks keys, types and ranges
+    - You still need Pydantic after JSON mode
+    - Pydantic makes the model faster
+  answer: [0, 1, 2]
+  explain: JSON mode is about syntax, Pydantic is about meaning. They work together. Pydantic does not affect model speed.

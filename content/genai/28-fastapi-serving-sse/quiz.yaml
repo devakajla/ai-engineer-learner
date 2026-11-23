@@ -1,0 +1,82 @@
+- q: What does streaming improve?
+  type: single
+  options:
+    - The total time to finish the whole answer
+    - The time until the user sees the first words, so the app feels faster
+    - The accuracy of the model
+    - The cost per token
+  answer: [1]
+  explain: The model still needs the same time to finish. The user just sees the answer grow from the first second.
+- q: Which fits an LLM token stream best?
+  type: single
+  options:
+    - Polling every second
+    - SSE (server-sent events)
+    - FTP
+    - Email
+  answer: [1]
+  explain: SSE is a one-way stream over normal HTTP. WebSockets are for real two-way traffic.
+- q: |
+    What does `format_sse("a\nb", "x")` return?
+    ```python
+    def format_sse(data, event=None):
+        parts = []
+        if event:
+            parts.append("event: " + event)
+        for line in data.split("\n"):
+            parts.append("data: " + line)
+        return "\n".join(parts) + "\n\n"
+    ```
+  type: single
+  options:
+    - "'event: x\\ndata: a\\ndata: b\\n\\n'"
+    - "'event: x\\ndata: a\\nb\\n\\n'"
+    - "'data: a b\\n\\n'"
+    - "'event: x\\n\\n'"
+  answer: [0]
+  explain: A line break is not allowed inside a data line, so each line of the text gets its own data line. The blank line at the end closes the event.
+- q: The model fails after 50 tokens were already sent. What can you do?
+  type: single
+  options:
+    - Return HTTP 500
+    - Send an error event inside the stream and do not send done
+    - Send done and hope
+    - Nothing is possible
+  answer: [1]
+  explain: The 200 status is already sent. The error has to travel inside the stream.
+- q: Your stream arrives all at once at the end. What is the most likely cause?
+  type: single
+  options:
+    - The model is slow
+    - A proxy or middleware buffers the response
+    - The API key is wrong
+    - SSE does not work with Python
+  answer: [1]
+  explain: nginx, a CDN or compression can collect the response. Turn buffering off for that route, for example with X-Accel-Buffering no.
+- q: Which checks must happen before the stream starts?
+  type: multi
+  options:
+    - Authentication
+    - Input validation
+    - Rate limit and budget
+    - The first token of the answer
+  answer: [0, 1, 2]
+  explain: After the first byte you can only send events, not a clean status code. Do all the checks first.
+- q: Why handle `delta.content is None` and empty `choices` in a chunk helper?
+  type: single
+  options:
+    - Providers send such chunks (first, last, usage-only), and the code must not crash or send "None" as text
+    - It makes the model faster
+    - Python requires it
+    - It reduces the cost
+  answer: [0]
+  explain: A small helper that always returns text or an empty text keeps the rest of the code simple.
+- q: Where should the Groq API key live in a web app?
+  type: single
+  options:
+    - In the browser JavaScript
+    - On your server only. The browser calls your server
+    - In the URL
+    - In the page title
+  answer: [1]
+  explain: A key in the browser can be copied by anyone. Your server calls the provider.

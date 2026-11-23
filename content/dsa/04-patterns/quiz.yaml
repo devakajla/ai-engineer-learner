@@ -1,0 +1,44 @@
+- q: |
+    What is the output?
+    ```python
+    print("ab" * 3)
+    ```
+  type: single
+  options: ["`ababab`", "`ab3`", "`aaabbb`", "Error"]
+  answer: [0]
+  explain: 'String times a number repeats the whole string.'
+- q: |
+    What is the output?
+    ```python
+    print(len(" " * 2 + "*" * 3))
+    ```
+  type: single
+  options: ["`5`", "`6`", "`3`", "`2`"]
+  answer: [0]
+  explain: '2 spaces plus 3 stars is 5 characters.'
+- q: In a pyramid of `n` rows, how many stars are on row `i` (starting at 1)?
+  type: single
+  options: ["`2 * i - 1`", "`i`", "`2 * i`", "`n - i`"]
+  answer: [0]
+  explain: 'Row 1 has 1, row 2 has 3, row 3 has 5: odd numbers.'
+- q: |
+    What is the output?
+    ```python
+    row = ""
+    for j in range(1, 4):
+        row += str(j)
+    print(row)
+    ```
+  type: single
+  options: ["`123`", "`6`", "`1 2 3`", "Error"]
+  answer: [0]
+  explain: 'Strings are joined end to end: "1", "12", "123".'
+- q: |
+    What does this print?
+    ```python
+    print("-".join(["a", "b", "c"]))
+    ```
+  type: single
+  options: ["`a-b-c`", "`abc-`", "`-a-b-c`", "`[a-b-c]`"]
+  answer: [0]
+  explain: 'The separator goes between the items only.'

@@ -1,0 +1,78 @@
+- q: How does pytest decide which functions are tests?
+  type: single
+  options:
+    - Files named `test_*.py` and functions named `test_*`
+    - Every function in the project
+    - Functions with the word `check` in them
+    - Only the functions that use `assert`
+  answer: [0]
+  explain: pytest finds files that start with test_ and functions that start with test_. Other names are ignored.
+- q: What is the correct way to test that `divide(1, 0)` raises `ValueError`?
+  type: single
+  options:
+    - "`with pytest.raises(ValueError): divide(1, 0)`"
+    - "`assert divide(1, 0) == ValueError`"
+    - "`try: divide(1, 0)` with no `except`"
+    - "`assert divide(1, 0) is None`"
+  answer: [0]
+  explain: pytest.raises passes only if the error happens inside the block, and fails if it does not.
+- q: |
+    How many tests does pytest run?
+    ```python
+    @pytest.mark.parametrize("n", [1, 2, 3, 4])
+    def test_positive(n):
+        assert n > 0
+    ```
+  type: single
+  options: ["1", "4", "0", "2"]
+  answer: [1]
+  explain: parametrize runs the same function once for each value, and reports each run separately.
+- q: |
+    What happens with these tests?
+    ```python
+    @pytest.fixture
+    def items():
+        return []
+
+    def test_a(items):
+        items.append(1)
+        assert len(items) == 1
+
+    def test_b(items):
+        assert len(items) == 0
+    ```
+  type: single
+  options:
+    - Both pass, because each test gets a new list
+    - "`test_b` fails, because the list is shared"
+    - "`test_a` fails"
+    - pytest raises an error about the fixture
+  answer: [0]
+  explain: A fixture runs again for each test, so every test gets a fresh list. Tests must not affect each other.
+- q: Which are good reasons to pass a clock, a mailer or a database into your code, instead of creating it inside?
+  type: multi
+  options:
+    - You can pass a fake in tests, so there is no real waiting, email or database
+    - The tests become fast and repeatable
+    - It makes Python faster
+    - The code is easier to change later
+  answer: [0, 1, 3]
+  explain: This is dependency injection. It does not change the speed of Python, but it makes code testable and flexible.
+- q: Your code reads `os.environ["APP_MODE"]`. How do you set it for one test only?
+  type: single
+  options:
+    - "`monkeypatch.setenv(\"APP_MODE\", \"prod\")`"
+    - "Set it in your terminal before running all tests"
+    - "`os.environ.clear()`"
+    - "Edit the code to use a different name"
+  answer: [0]
+  explain: monkeypatch changes the variable during the test and puts everything back afterwards.
+- q: Which statements about good tests are true?
+  type: multi
+  options:
+    - They should run fast and not use the real network
+    - They should depend on the order they run in
+    - A test with no `assert` proves nothing
+    - A failed action should be checked for side effects, for example no email was sent
+  answer: [0, 2, 3]
+  explain: Tests must be independent of each other. The other three are good habits.

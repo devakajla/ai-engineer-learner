@@ -1,0 +1,46 @@
+- q: |
+    What is `u.username`?
+    ```python
+    class U(BaseModel):
+        username: str
+
+        @field_validator("username")
+        @classmethod
+        def clean(cls, v):
+            v.lower()
+
+    u = U(username="DEV")
+    ```
+  type: single
+  options: ["`'dev'`", "`'DEV'`", "`None`", "ValidationError"]
+  answer: [2]
+  explain: The validator doesn't return anything, so the field value becomes None. Always return the value.
+- q: Where should "password and password_confirm must match" go?
+  type: single
+  options: ["A `Field(...)` constraint", "A `@field_validator`", "A `@model_validator(mode=\"after\")`", "The route function"]
+  answer: [2]
+  explain: Cross-field rules need the whole model — a model validator in after mode.
+- q: Which `model_dump` call is right for a PATCH update?
+  type: single
+  options: ["`model_dump()`", "`model_dump(exclude_none=True)`", "`model_dump(exclude_unset=True)`", "`model_dump(by_alias=True)`"]
+  answer: [2]
+  explain: exclude_unset keeps only fields the client sent, even if they were sent as null.
+- q: 'With `model_config = ConfigDict(strict=True)` and a field `age: int`, what does `{"age": "30"}` give?'
+  type: single
+  options: ["age = 30", "ValidationError", "age = '30'", "age = None"]
+  answer: [1]
+  explain: Strict mode disables coercion, so a string is not accepted for an int field.
+- q: 'Which settings let a model parse `{"orderId": 1}` into `order_id` AND accept `Order(order_id=1)` in Python?'
+  type: multi
+  options: ["`alias_generator=to_camel`", "`populate_by_name=True`", "`extra=\"forbid\"`", "`from_attributes=True`"]
+  answer: [0, 1]
+  explain: The alias generator maps camelCase input; populate_by_name also allows the Python field name.
+- q: You get a raw JSON list of products from an external API. What's a clean way to validate it in one call?
+  type: single
+  options:
+    - '`json.loads` then loop with `Product(**item)`'
+    - "`TypeAdapter(list[Product]).validate_json(raw)`"
+    - "`Product.model_validate(raw)`"
+    - Validate only the first item
+  answer: [1]
+  explain: TypeAdapter validates arbitrary types — here a list of models — directly from JSON.

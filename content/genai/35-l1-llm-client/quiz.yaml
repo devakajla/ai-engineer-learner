@@ -1,0 +1,69 @@
+- q: Why do we wrap the API call in one function instead of calling it everywhere?
+  type: single
+  options:
+    - It makes the model smarter
+    - Settings, retries and cost tracking live in one place and are easy to change and test
+    - The API only allows one call per file
+    - It removes the need for an API key
+  answer: [1]
+  explain: One wrapper means one place for settings, retries, logging and cost. Copies in many places drift apart.
+- q: In `chat`, when should the function wait between retries?
+  type: single
+  options:
+    - After every try, including the last failed one
+    - After each failed try except the last one
+    - Never
+    - Only before the first try
+  answer: [1]
+  explain: Waiting after the last failed try wastes time, because no more tries follow. Wait only if another try is coming.
+- q: What does `call_cost` report that is not about money?
+  type: single
+  options:
+    - The model name
+    - Whether the answer was cut off (finish_reason is length)
+    - The API key
+    - The temperature
+  answer: [1]
+  explain: It reports usage, cost and a cut_off flag, which is true when finish_reason is "length".
+- q: Why should `safe_ask` check that the prompt fits before it calls the model?
+  type: single
+  options:
+    - To skip a call that would fail anyway and cost time, and give a clear reason
+    - Because the API cannot read long text
+    - To make the answer shorter
+    - To lower the temperature
+  answer: [0]
+  explain: A prompt that does not fit fails with an error. Checking first saves the call and lets you return a clear message.
+- q: |
+    What is printed?
+    ```python
+    def add_tax(price, rate):
+        return round(price * (1 + rate), 2)
+
+    def apply_discount(price, percent):
+        return round(price * (1 - percent / 100), 2)
+
+    print(add_tax(apply_discount(100, 10), 0.2))
+    ```
+  type: single
+  options: ["`108.0`", "`110.0`", "`90.0`", "`120.0`"]
+  answer: [0]
+  explain: The discount gives 90.0. Tax adds 20 percent of 90, which is 18, so the total is 108.0.
+- q: Why do we pass `client` and `sleep` into our functions?
+  type: multi
+  options:
+    - Tests can pass fakes, so they run fast with no internet
+    - It lets us swap the provider or the waiting method later
+    - It makes the model answer faster
+    - It hides the API key
+  answer: [0, 1]
+  explain: Passing dependencies in makes code testable and flexible. It does not change the model speed or hide keys.
+- q: A history list is passed to `chat`. What must `chat` do with it?
+  type: single
+  options:
+    - Add the new messages to it in place
+    - Leave it unchanged and return a new list
+    - Delete it
+    - Sort it
+  answer: [1]
+  explain: Changing the caller's list is a surprise. Return a new history instead.

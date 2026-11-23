@@ -1,0 +1,55 @@
+- q: 'What is wrong with `def route(db = Depends(get_db())): ...`?'
+  type: single
+  options:
+    - Nothing
+    - It calls get_db at import time; you must pass the function itself, `Depends(get_db)`
+    - Depends only accepts classes
+    - get_db must be async
+  answer: [1]
+  explain: Depends needs the callable so FastAPI can call it per request.
+- q: Two dependencies used by one route both depend on `get_db`. How many times is `get_db` called for one request?
+  type: single
+  options: ["Once", "Twice", "Three times", "It depends on the order"]
+  answer: [0]
+  explain: FastAPI caches dependency results within a request (use_cache=True by default).
+- q: |
+    In a `yield` dependency, when does the code after `yield` run?
+    ```python
+    def get_db():
+        db = SessionLocal()
+        try:
+            yield db
+        finally:
+            db.close()
+    ```
+  type: single
+  options: ["Before the route", "After the route has produced the response", "Never", "Only on errors"]
+  answer: [1]
+  explain: Setup runs before the route, the value is injected, and teardown runs after the response.
+- q: How do you make a route use a fake service in tests?
+  type: single
+  options:
+    - Edit the route code
+    - "`app.dependency_overrides[get_task_service] = lambda: FakeService()`"
+    - Set an environment variable
+    - Monkeypatch FastAPI internals
+  answer: [1]
+  explain: dependency_overrides maps the original dependency to a replacement.
+- q: What does `router = APIRouter(dependencies=[Depends(require_api_key)])` do?
+  type: single
+  options:
+    - Injects the API key into every route's parameters
+    - Runs require_api_key for every route on that router (rejecting bad requests)
+    - Only documents the API key
+    - Nothing unless routes also declare it
+  answer: [1]
+  explain: Router-level dependencies run for every route; their return values are ignored.
+- q: Why decorate `get_settings()` with `@lru_cache`?
+  type: multi
+  options:
+    - Settings are read from the environment only once
+    - Tests can still override or clear it
+    - It makes settings mutable
+    - It validates the settings
+  answer: [0, 1]
+  explain: Caching avoids re-reading env/.env per request while keeping the function override-friendly.

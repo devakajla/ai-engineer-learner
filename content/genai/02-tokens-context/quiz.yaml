@@ -1,0 +1,76 @@
+- q: Which sentence about tokens is true?
+  type: single
+  options:
+    - A token is always exactly one word
+    - A token is a small piece of text, often part of a word
+    - A token is one character
+    - A token is one sentence
+  answer: [1]
+  explain: A token can be a whole word, part of a word, a space or a symbol. In English one token is about 4 characters.
+- q: |
+    What is printed?
+    ```python
+    text = "a" * 10
+    print((len(text) + 3) // 4)
+    ```
+  type: single
+  options: ["`2`", "`3`", "`2.5`", "`4`"]
+  answer: [1]
+  explain: len is 10. 10 + 3 = 13. 13 // 4 = 3. This rounds 2.5 up to 3.
+- q: A model has a context window of 4,096 tokens. Your input is 4,000 tokens and you set max output to 200 tokens. What happens?
+  type: single
+  options:
+    - It works, input is under the limit
+    - It does not fit, because 4,000 + 200 is more than 4,096
+    - It works, output does not count
+    - The model drops the last 104 tokens silently
+  answer: [1]
+  explain: The window covers input plus output. 4,200 is over 4,096, so you must send less or ask for a shorter answer.
+- q: Which of these count toward the context window?
+  type: multi
+  options:
+    - Your instructions
+    - The documents you send
+    - Earlier chat messages you send again
+    - The answer the model writes
+  answer: [0, 1, 2, 3]
+  explain: Everything the model reads or writes in one call uses the window.
+- q: |
+    What is printed?
+    ```python
+    def cost(tokens, price_per_million):
+        return tokens / 1_000_000 * price_per_million
+
+    print(cost(500_000, 2))
+    ```
+  type: single
+  options: ["`1.0`", "`0.5`", "`2.0`", "`500000`"]
+  answer: [0]
+  explain: 500,000 / 1,000,000 = 0.5. Then 0.5 * 2 = 1.0.
+- q: Why is "how many r's are in strawberry?" hard for an LLM?
+  type: single
+  options:
+    - The model cannot read English
+    - The model sees tokens, not single letters
+    - The word is too long for the context window
+    - Models are not allowed to count
+  answer: [1]
+  explain: The model works on chunks of text, so letter-level questions are unnatural for it.
+- q: Which of these help lower the cost of LLM calls?
+  type: multi
+  options:
+    - Send less text
+    - Use a smaller model for easy tasks
+    - Set a cap on the answer length (max_completion_tokens)
+    - Always send the full chat history of 100 messages
+  answer: [0, 1, 2]
+  explain: Less input, a cheaper model and a cap on output all reduce cost. Sending long history every time raises it.
+- q: What does the KV cache do?
+  type: single
+  options:
+    - It stores your API key
+    - It keeps notes about text already read, so the model does not re-read everything for each new token
+    - It saves the answer so the next call is free
+    - It limits the output length
+  answer: [1]
+  explain: The KV cache holds the model's notes about the input already processed. It speeds up writing, but it uses memory that grows with the context length.

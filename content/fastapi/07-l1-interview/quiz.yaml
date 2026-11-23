@@ -1,0 +1,81 @@
+- q: A `POST /payments` request times out and the client retries. What makes the retry safe?
+  type: single
+  options:
+    - Switching the call to GET
+    - An idempotency key stored by the server with the result
+    - Returning 500 on every retry
+    - Nothing can be done
+  answer: [1]
+  explain: With an `Idempotency-Key` header the server can detect the retry and return the earlier result instead of charging twice.
+- q: |
+    What status code does this route return on success?
+    ```python
+    @app.post("/tasks")
+    def create_task(task: TaskIn):
+        return task
+    ```
+  type: single
+  options: ["`200`", "`201`", "`204`", "`422`"]
+  answer: [0]
+  explain: FastAPI uses 200 by default. Set `status_code=201` on the decorator for creation.
+- q: 'In `def get(task_id: int, done: bool = False, item: ItemIn = ...)` where does each parameter come from?'
+  type: single
+  options:
+    - All three come from the query string
+    - "`task_id` from the path (if in the URL), `done` from the query, `item` from the body"
+    - Everything comes from the body
+    - "`done` from the path"
+  answer: [1]
+  explain: A name in the path is a path parameter, simple types are query parameters, and a Pydantic model is the request body.
+- q: How do you stop clients from sending an unexpected `is_admin` field in a request body?
+  type: single
+  options:
+    - Hope they won't
+    - "Use `model_config = ConfigDict(extra=\"forbid\")` on the input schema (and do not declare the field)"
+    - Use `response_model`
+    - Return 204
+  answer: [1]
+  explain: Extra fields are ignored by default; `extra="forbid"` turns them into a 422. This guards against mass assignment.
+- q: Why use `payload.model_dump(exclude_unset=True)` in a PATCH route?
+  type: single
+  options:
+    - It makes the response faster
+    - It includes only the fields the client actually sent, so omitted fields stay unchanged
+    - It hides the password
+    - It converts the model to XML
+  answer: [1]
+  explain: Without it, omitted fields would be `None` and overwrite real values.
+- q: Which status codes are right?
+  type: multi
+  options:
+    - "Duplicate email on signup → `409`"
+    - "Delete succeeded, nothing to return → `204`"
+    - "Wrong type in the body → `422`"
+    - "User is logged in but not allowed → `401`"
+  answer: [0, 1, 2]
+  explain: A logged-in user without permission gets 403. 401 means not authenticated.
+- q: Why should a service layer not raise `HTTPException`?
+  type: single
+  options:
+    - It is slower
+    - It couples business logic to HTTP, so it cannot be reused from workers or CLIs
+    - HTTPException cannot be raised in functions
+    - FastAPI forbids it
+  answer: [1]
+  explain: Services raise domain errors; routes translate them into HTTP responses.
+- q: |
+    Both routes exist. Which order is correct?
+    ```python
+    @app.get("/users/{user_id}")
+    ...
+    @app.get("/users/me")
+    ...
+    ```
+  type: single
+  options:
+    - Fine as it is
+    - "`/users/me` must be declared first, otherwise `me` is read as a `user_id`"
+    - Routes are sorted automatically
+    - "`/users/me` can never work"
+  answer: [1]
+  explain: Routes match in declaration order. The parameterised route would catch "me" and fail validation as an int.

@@ -1,0 +1,43 @@
+# FastAPI + backend engineering, learned by building one project: TaskFlow (a task-manager API).
+# Each lesson = theory (FastAPI + the backend concept behind it) -> quiz -> exercises -> project step.
+# The order here IS the learning order. Never rename an existing slug (progress is stored by it).
+title: FastAPI
+levels:
+  - id: l1
+    title: "Level 1 — API foundations"
+    lessons:
+      - {slug: 01-how-the-web-works, title: "How the web works: HTTP & REST"}
+      - {slug: 02-first-app, title: "Your first FastAPI app"}
+      - {slug: 03-path-query-params, title: "Path & query parameters"}
+      - {slug: 04-request-body, title: "Request bodies & Pydantic"}
+      - {slug: 05-responses-errors, title: "Responses, status codes & errors"}
+      - {slug: 25-pydantic-validation, title: "Pydantic validation: validators & unions"}
+      - {slug: 26-forms-files-cookies, title: "Forms, file uploads & cookies"}
+      - {slug: 06-project-structure, title: "Project structure & config"}
+      - {slug: 07-l1-interview, title: "Level 1 interview questions", kind: interview}
+  - id: l2
+    title: "Level 2 — Data & architecture"
+    lessons:
+      - {slug: 08-dependency-injection, title: "Dependency injection"}
+      - {slug: 09-databases, title: "Databases for backend devs"}
+      - {slug: 10-sqlalchemy, title: "SQLAlchemy 2.0 ORM"}
+      - {slug: 11-migrations, title: "Migrations with Alembic"}
+      - {slug: 28-db-patterns, title: "Database patterns: transactions, many-to-many, locking"}
+      - {slug: 12-async, title: "Async endpoints & the event loop"}
+      - {slug: 13-middleware-errors, title: "Middleware, errors & logging"}
+      - {slug: 27-app-lifecycle-docs, title: "App lifecycle, lifespan & API docs"}
+      - {slug: 14-api-design, title: "API design: pagination, filtering, versioning"}
+      - {slug: 15-testing, title: "Testing FastAPI apps"}
+      - {slug: 16-l2-interview, title: "Level 2 interview questions", kind: interview}
+  - id: l3
+    title: "Level 3 — Production backend"
+    lessons:
+      - {slug: 17-auth-concepts, title: "Auth concepts: hashing, sessions, JWT"}
+      - {slug: 18-oauth2-jwt, title: "OAuth2 + JWT login"}
+      - {slug: 19-background-work, title: "Background tasks & queues"}
+      - {slug: 20-caching, title: "Caching with Redis"}
+      - {slug: 21-streaming, title: "Streaming, SSE & WebSockets"}
+      - {slug: 22-security, title: "Rate limiting & API security"}
+      - {slug: 23-docker-deploy, title: "Docker & deployment"}
+      - {slug: 29-llm-backend-patterns, title: "LLM backend patterns"}
+      - {slug: 24-l3-interview, title: "Level 3 interview questions", kind: interview}

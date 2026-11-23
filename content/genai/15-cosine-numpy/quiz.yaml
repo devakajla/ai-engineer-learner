@@ -1,0 +1,86 @@
+- q: What does cosine similarity compare?
+  type: single
+  options:
+    - The direction of two vectors
+    - The length of two vectors
+    - The number of words in two texts
+    - The first number of each vector
+  answer: [0]
+  explain: Cosine similarity ignores length and looks only at direction. Same direction gives 1.
+- q: |
+    What is printed?
+    ```python
+    import numpy as np
+    a = np.array([1, 2, 3])
+    print(a * 2)
+    ```
+  type: single
+  options: ["`[2 4 6]`", "`[1 2 3 1 2 3]`", "`12`", "An error"]
+  answer: [0]
+  explain: A numpy array does the maths on every item at once. A plain list times 2 would repeat the list instead.
+- q: |
+    What is printed?
+    ```python
+    import numpy as np
+    print(float(np.linalg.norm(np.array([3, 4]))))
+    ```
+  type: single
+  options: ["`5.0`", "`7.0`", "`25.0`", "`12.0`"]
+  answer: [0]
+  explain: The norm is the length, sqrt(3*3 + 4*4) = sqrt(25) = 5.0.
+- q: |
+    What is printed?
+    ```python
+    import numpy as np
+    scores = np.array([0.2, 0.9, 0.5, 0.7])
+    print(np.argsort(-scores)[:2])
+    ```
+  type: single
+  options: ["`[1 3]`", "`[0 2]`", "`[0.9 0.7]`", "`[3 1]`"]
+  answer: [0]
+  explain: argsort gives indexes. With the minus sign the biggest comes first, so the order is 1 (0.9), 3 (0.7), 2, 0. The first two are [1 3].
+- q: Which statements about cosine similarity are true?
+  type: multi
+  options:
+    - Two vectors that point the same way score 1, even if one is much longer
+    - Its value is always between -1 and 1
+    - A bigger value means more similar
+    - A bigger value means more distance
+  answer: [0, 1, 2]
+  explain: Cosine similarity is a similarity, so bigger is more similar. Cosine distance (1 minus the similarity) is the one where bigger means farther.
+- q: Why must cosine similarity handle a vector of all zeros specially?
+  type: single
+  options:
+    - Its length is 0, so the formula divides by zero and gives nan
+    - Zero vectors are too long
+    - numpy cannot store zeros
+    - Zeros make the score 1
+  answer: [0]
+  explain: The formula divides by the lengths. A zero vector has length 0. Return 0.0 for that case, so nan does not spread.
+- q: You have `docs` (a matrix, one row per document) and `query` (a vector). What does `docs @ query` give?
+  type: single
+  options:
+    - One dot product per document row
+    - The sum of all numbers
+    - A new matrix
+    - The best document
+  answer: [0]
+  explain: Matrix times vector takes the dot product of each row with the vector. That is one score per document, in one line.
+- q: When do the dot product and cosine similarity give the same ranking?
+  type: single
+  options:
+    - When all vectors are normalized to length 1
+    - Never
+    - Only for two-number vectors
+    - Only when the vectors have different lengths
+  answer: [0]
+  explain: If every length is 1, the two lengths in the cosine formula are both 1, so cosine equals the dot product.
+- q: Why add a minimum score to a search?
+  type: single
+  options:
+    - To make the search faster
+    - So poor matches are dropped, and the app can say "I don't know" when nothing is close
+    - To change the vectors
+    - To lower the dimension
+  answer: [1]
+  explain: A search always returns its top results, even bad ones. A minimum score filters them.

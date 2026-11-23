@@ -1,0 +1,69 @@
+- q: When does the code before `yield` in a `lifespan` function run?
+  type: single
+  options: ["On every request", "Once, when the app starts", "Once, when the app stops", "Only in tests"]
+  answer: [1]
+  explain: The part before `yield` is startup. The part after `yield` is shutdown. Use it for things that live as long as the app, such as a database engine or an HTTP client.
+- q: |
+    A test does this. What happens to the lifespan code?
+    ```python
+    client = TestClient(app)
+    client.get("/visit")
+    ```
+  type: single
+  options:
+    - Startup and shutdown both run
+    - Neither runs, because the client was not used as a context manager (`with`)
+    - Only shutdown runs
+    - It raises an error
+  answer: [1]
+  explain: "`TestClient` runs the lifespan only inside `with TestClient(app) as client:`. This is a common reason for a missing `app.state` value in tests."
+- q: Which is the best place for one shared `httpx.AsyncClient` that all requests reuse?
+  type: single
+  options:
+    - Create a new client inside every route
+    - Create it in the lifespan, keep it in `app.state`, and close it after `yield`
+    - A global variable that is never closed
+    - Inside a Pydantic model
+  answer: [1]
+  explain: One client reuses connections, so it is faster. Closing it after `yield` frees them cleanly when the app stops.
+- q: How do you make a route work but hide it from the API docs?
+  type: single
+  options: ["`deprecated=True`", "`include_in_schema=False`", "`tags=[]`", "`response_model=None`"]
+  answer: [1]
+  explain: "`include_in_schema=False` removes the route from `/openapi.json` and the docs page. The route still works. `deprecated=True` keeps it in the docs but marks it as old."
+- q: Why is it useful to set `operation_id` on routes?
+  type: single
+  options:
+    - It makes the route faster
+    - Code generators that read `/openapi.json` use it to name client functions
+    - It adds authentication
+    - It changes the URL
+  answer: [1]
+  explain: Tools that generate client code (for example for TypeScript) name the functions from `operation_id`. Stable, clear ids give nice names.
+- q: Which statements about `GZipMiddleware` are true?
+  type: multi
+  options:
+    - It compresses big answers for clients that send `Accept-Encoding: gzip`
+    - "`minimum_size` stops it from compressing tiny answers"
+    - It encrypts the answer
+    - Compressing very small answers can cost more than it saves
+  answer: [0, 1, 3]
+  explain: GZip shrinks the data sent. It is not encryption. Tiny answers gain nothing, so set a minimum size.
+- q: What does `TrustedHostMiddleware(allowed_hosts=["api.example.com"])` do?
+  type: single
+  options:
+    - Allows only some client IP addresses
+    - Rejects requests whose `Host` header is not in the list (`400`)
+    - Adds HTTPS
+    - Hides the docs page
+  answer: [1]
+  explain: It checks the `Host` header. This blocks "host header" attacks, where a request pretends to be for a different domain.
+- q: What does `app.mount("/admin", admin_app)` do?
+  type: single
+  options:
+    - Copies the routes of `admin_app` into `app` as they are
+    - Serves a whole separate ASGI app under the path `/admin`, with its own routes and docs
+    - Protects `/admin` with a password
+    - Imports the file `admin_app.py`
+  answer: [1]
+  explain: A mounted app is an independent app under a path prefix. For splitting one API into files, use `APIRouter` and `include_router` instead.

@@ -1,0 +1,79 @@
+- q: Which tool description is best for a model?
+  type: single
+  options:
+    - "processes data"
+    - "Find a customer's orders by email address. Use it for order, delivery or refund questions. Returns at most 5 orders, newest first."
+    - "orders"
+    - "search"
+  answer: [1]
+  explain: It says what the tool does, when to use it and what comes back. The model decides from this text alone.
+- q: A tool returns a 50,000-character web page. What is the main problem?
+  type: single
+  options:
+    - Python cannot store long text
+    - The text goes into the history and is paid for again on every later step, and can crowd out important text
+    - Models cannot read web pages
+    - Nothing, long results are best
+  answer: [1]
+  explain: The history is sent again on each step, so a large result costs tokens again and again.
+- q: |
+    What does this print?
+    ```python
+    def type_ok(value):
+        return isinstance(value, int) and not isinstance(value, bool)
+
+    print(type_ok(5), type_ok(True), type_ok(2.5))
+    ```
+  type: single
+  options:
+    - "True True False"
+    - "True False False"
+    - "True False True"
+    - "False False False"
+  answer: [1]
+  explain: A bool is a kind of int in Python, so the extra bool check is needed. 5 passes, True is refused, 2.5 is not an int.
+- q: Which are good error messages for a tool call that failed?
+  type: multi
+  options:
+    - "error"
+    - "error: unknown tool sub. Available tools: add, div"
+    - "error: missing required argument email"
+    - "failed"
+  answer: [1, 2]
+  explain: Good errors say what went wrong and what would work, so the model can fix its next call.
+- q: A model keeps choosing the wrong one of two similar tools. What should you change FIRST?
+  type: single
+  options:
+    - The model
+    - The system prompt, with a longer warning
+    - The tool descriptions, so each says when to use it (or merge the tools)
+    - The temperature to 2
+  answer: [2]
+  explain: The model decides from the tool text. Overlapping descriptions cause random picks, so fix the descriptions first.
+- q: |
+    What does this print?
+    ```python
+    def shorten(text, limit):
+        if len(text) <= limit:
+            return text
+        return text[:limit] + f" ... ({len(text) - limit} more)"
+
+    print(shorten("Hello there my friend", 5))
+    ```
+  type: single
+  options:
+    - "Hello"
+    - "Hello ... (16 more)"
+    - "Hello ... (5 more)"
+    - "Hello there my friend"
+  answer: [1]
+  explain: The text has 21 characters. The first 5 are kept and 16 are hidden.
+- q: Why should a write tool such as `send_payment` accept a request id?
+  type: single
+  options:
+    - To make it run faster
+    - So a repeated call (from a retry) does the work only once (idempotency)
+    - So the model can see the price
+    - It is required by Python
+  answer: [1]
+  explain: Retries and repeated calls happen. The same id lets the tool detect a duplicate and avoid paying twice.

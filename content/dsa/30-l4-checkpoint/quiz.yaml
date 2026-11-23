@@ -1,0 +1,50 @@
+- q: "Which pattern fits: 'order the courses so every prerequisite comes first'?"
+  type: single
+  options: ["Topological sort", "Binary search", "Sliding window", "Knapsack"]
+  answer: [0]
+  explain: "Dependencies are arrows, and you want a line where all arrows point forward."
+
+- q: "Which pattern fits: 'the k largest items from a stream'?"
+  type: single
+  options: ["Heap", "Two pointers", "Prefix sum", "DFS"]
+  answer: [0]
+  explain: "A heap of size k keeps the top k while items arrive."
+
+- q: "Which pattern fits: 'fewest steps in a maze where every step costs 1'?"
+  type: single
+  options: ["BFS", "DFS", "Dijkstra with negative weights", "Greedy sort"]
+  answer: [0]
+  explain: "BFS reaches cells in order of distance. Dijkstra is only needed when step costs differ."
+
+- q: |
+    What is the output?
+    ```python
+    best = [0] + [99] * 6
+    for a in range(1, 7):
+        for c in [1, 3, 4]:
+            if c <= a:
+                best[a] = min(best[a], best[a - c] + 1)
+    print(best[6])
+    ```
+  type: single
+  options: ["2", "3", "6", "99"]
+  answer: [0]
+  explain: "6 = 3 + 3, so two coins. Greedy would take 4 + 1 + 1."
+
+- q: "Which of these need DP rather than greedy?"
+  type: multi
+  options: ["Fewest coins for amount 6 with coins [1, 3, 4]", "0/1 knapsack", "Most meetings in one room", "Longest increasing subsequence"]
+  answer: [0, 1, 3]
+  explain: "Meeting scheduling is greedy (earliest finish). The others have no safe local choice."
+
+- q: "You save a backtracking result with result.append(path). What goes wrong?"
+  type: single
+  options: ["All saved results change as path changes later", "Nothing, it works", "It raises an error", "The result is sorted"]
+  answer: [0]
+  explain: "path is one shared list. Save a copy: result.append(list(path))."
+
+- q: "Which is the right first step for a DP problem?"
+  type: single
+  options: ["Say in words what dp[i] means", "Write nested loops", "Sort the input", "Add a visited set"]
+  answer: [0]
+  explain: "Without a clear state, the transition and base case cannot be right."

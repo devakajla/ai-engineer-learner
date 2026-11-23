@@ -1,0 +1,59 @@
+- q: What does "multimodal" mean?
+  type: single
+  options:
+    - The model has many versions
+    - The model works with more than one kind of data, such as text and images
+    - The model runs on many computers
+    - The model answers in many languages
+  answer: [1]
+  explain: A modality is a kind of data (text, image, audio, video). Multimodal models handle several.
+- q: How is the `content` of a vision message different from a text message?
+  type: single
+  options:
+    - It is a list of parts, such as a text part and an image part
+    - It is a number
+    - It must be empty
+    - It is a file path
+  answer: [0]
+  explain: 'Each part has a `type`. For an image the part has the type `image_url` and a `url` inside it.'
+- q: Why can an image cost many tokens?
+  type: single
+  options:
+    - Images are cut into patches and every patch becomes tokens in the context
+    - Images are stored in the model
+    - Groq charges extra for JPG files
+    - The model reads the file name many times
+  answer: [0]
+  explain: Image tokens count as input tokens, so large images cost money and time.
+- q: |
+    What does this print?
+    ```python
+    import base64
+    print(base64.b64encode(b"hi").decode())
+    ```
+  type: single
+  options:
+    - hi
+    - aGk=
+    - b'aGk='
+    - 6869
+  answer: [1]
+  explain: Base64 of the bytes `hi` is `aGk=`. `.decode()` turns the bytes result into a normal string.
+- q: Which are known weak points of vision models?
+  type: multi
+  options:
+    - Reading very small text
+    - Counting objects exactly
+    - Understanding that a photo exists
+    - Numbers read from charts
+  answer: [0, 1, 3]
+  explain: They are good at the general content and weaker at fine details and exact numbers.
+- q: When is OCR or a PDF text layer better than a vision model?
+  type: single
+  options:
+    - When the document is clean text, because it is cheaper, faster and exact
+    - Never
+    - Only for photos of faces
+    - Only for audio files
+  answer: [0]
+  explain: If the text is already available as text, reading pixels is wasted effort.

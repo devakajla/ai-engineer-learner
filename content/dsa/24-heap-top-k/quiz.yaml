@@ -1,0 +1,49 @@
+- q: "Which heap do you use to keep the K largest numbers of a stream?"
+  type: single
+  options: ["A min-heap of size K", "A max-heap of size K", "A min-heap of size n", "A sorted list"]
+  answer: [0]
+  explain: "The smallest of the K kept numbers sits at the top. When a new number comes, the smallest is popped if the size passes K."
+
+- q: |
+    What is the output?
+    ```python
+    import heapq
+    h = []
+    for x in [5, 1, 4]:
+        heapq.heappush(h, -x)
+    print(-heapq.heappop(h))
+    ```
+  type: single
+  options: ["1", "4", "5", "-5"]
+  answer: [2]
+  explain: "Pushing negatives turns the min-heap into a max-heap: -5 is the smallest, and negating again gives 5."
+
+- q: "What does h[0] give you for a heapq heap?"
+  type: single
+  options: ["The smallest item", "The biggest item", "The first item pushed", "The median"]
+  answer: [0]
+  explain: "heapq keeps the smallest item at index 0. The rest of the list is not fully sorted."
+
+- q: "Top K frequent words: what do you push so the heap gives highest count first and alphabetical order on ties?"
+  type: single
+  options: ["(-count, word)", "(count, word)", "(word, count)", "(-word, count)"]
+  answer: [0]
+  explain: "A min-heap pops the smallest tuple: the most negative count first, then the smallest word."
+
+- q: "Which problems fit a heap?"
+  type: multi
+  options: ["K closest points", "Merge K sorted lists", "Reverse a string", "Running median"]
+  answer: [0, 1, 3]
+  explain: "These need the best next item again and again. Reversing a string needs no heap."
+
+- q: "Cost of keeping the K largest of n numbers with a size-K heap?"
+  type: single
+  options: ["O(n log k)", "O(n)", "O(n log n)", "O(k)"]
+  answer: [0]
+  explain: "n pushes, each at most log k because the heap never passes k + 1 items."
+
+- q: "In the two-heap median method, what is in the max-heap?"
+  type: single
+  options: ["The smaller half of the numbers", "The bigger half of the numbers", "Only the median", "All the numbers"]
+  answer: [0]
+  explain: "The max-heap holds the small half so its top is the biggest of the small half, next to the median."

@@ -1,0 +1,47 @@
+- q: |
+    What is the output?
+    ```python
+    print(17 // 5, 17 % 5)
+    ```
+  type: single
+  options: ["`3 2`", "`3.4 2`", "`2 3`", "`3 3`"]
+  answer: [0]
+  explain: '17 = 3 * 5 + 2.'
+- q: |
+    What is the output?
+    ```python
+    n = 905
+    print(n % 10, n // 10)
+    ```
+  type: single
+  options: ["`5 90`", "`0 90`", "`5 905`", "`9 5`"]
+  answer: [0]
+  explain: 'Last digit is 5. Removing it leaves 90.'
+- q: What does `-7 // 2` give?
+  type: single
+  options: ["`-4`", "`-3`", "`-3.5`", "`3`"]
+  answer: [0]
+  explain: '`//` rounds down toward negative infinity: -3.5 becomes -4.'
+- q: |
+    What is the output?
+    ```python
+    n, count = 4096, 0
+    while n > 0:
+        n //= 10
+        count += 1
+    print(count)
+    ```
+  type: single
+  options: ["`4`", "`3`", "`5`", "Infinite loop"]
+  answer: [0]
+  explain: 'The loop removes one digit per round. 4096 has 4 digits.'
+- q: Which tests that `b` is divisible by `a`?
+  type: single
+  options: ["`b % a == 0`", "`b // a == 0`", "`a % b == 0`", "`b / a == 0`"]
+  answer: [0]
+  explain: 'Divisible means remainder zero.'
+- q: Why can a divisor search stop at `i * i <= n`?
+  type: single
+  options: ["Divisors come in pairs, one of them is at most the square root", "Bigger numbers are never divisors", "Python limits loops", "It is faster only for even numbers"]
+  answer: [0]
+  explain: 'If `i` divides `n`, so does `n // i`. One of the two is at most sqrt(n).'

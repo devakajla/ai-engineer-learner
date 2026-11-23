@@ -1,0 +1,80 @@
+- q: |
+    What happens here?
+    ```python
+    import asyncio
+
+    async def hello():
+        return "hi"
+
+    async def main():
+        hello()
+
+    asyncio.run(main())
+    ```
+  type: single
+  options:
+    - "`hello()` runs and returns `'hi'`, which is thrown away"
+    - A coroutine object is created but never runs (Python warns)
+    - SyntaxError
+    - It runs in a new thread
+  answer: [1]
+  explain: Calling an async function only makes a coroutine object. Without await, the body never runs.
+- q: |
+    What is printed (roughly how long does it take)?
+    ```python
+    async def job(n):
+        await asyncio.sleep(1)
+        return n
+
+    async def main():
+        print(await asyncio.gather(job(1), job(2), job(3)))
+    ```
+  type: single
+  options:
+    - "`[1, 2, 3]` after about 1 second"
+    - "`[1, 2, 3]` after about 3 seconds"
+    - "`[3, 2, 1]` after about 1 second"
+    - An error
+  answer: [0]
+  explain: gather runs the jobs at the same time, so the waits overlap. Results come back in the order the jobs were given.
+- q: What does `time.sleep(5)` inside an `async def` function do?
+  type: single
+  options:
+    - Waits 5 seconds and lets other tasks run
+    - Blocks the whole event loop for 5 seconds
+    - Raises an error
+    - Is the same as `await asyncio.sleep(5)`
+  answer: [1]
+  explain: time.sleep is blocking. All tasks share one thread, so every task freezes. Use await asyncio.sleep.
+- q: You must call an API 500 times, but it allows only 10 requests at once. What do you use?
+  type: single
+  options:
+    - "`asyncio.Semaphore(10)` with `async with`"
+    - "`time.sleep(10)`"
+    - A `for` loop with `gather` on all 500 at once
+    - Nothing, asyncio limits it for you
+  answer: [0]
+  explain: A semaphore gives out a fixed number of tickets, so at most 10 tasks run the call at the same time.
+- q: Which statements are true?
+  type: multi
+  options:
+    - "`await` can be used only inside an `async def` function"
+    - "`gather(..., return_exceptions=True)` puts errors into the result list"
+    - A CPU-heavy loop inside a coroutine lets other tasks run
+    - "`asyncio.to_thread` runs blocking code without blocking the loop"
+  answer: [0, 1, 3]
+  explain: A CPU-heavy loop has no await, so it blocks the loop until it finishes.
+- q: What do you use to read an async generator?
+  type: single
+  options: ["A normal `for` loop", "`async for`", "`await for`", "`yield from`"]
+  answer: [1]
+  explain: An async generator is read with async for, inside an async def function.
+- q: What does `asyncio.timeout(0.5)` do when the block takes 2 seconds?
+  type: single
+  options:
+    - It raises `TimeoutError` and cancels the waiting work
+    - It waits the full 2 seconds and then raises
+    - It returns `None`
+    - It skips the block
+  answer: [0]
+  explain: The task is cancelled after 0.5 seconds and TimeoutError is raised.

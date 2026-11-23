@@ -1,0 +1,49 @@
+- q: "Why must you save node.next before changing node.next?"
+  type: single
+  options: ["Otherwise the rest of the list is lost", "Python requires it", "To make the list sorted", "To avoid a cycle error message"]
+  answer: [0]
+  explain: "Overwriting .next removes your only link to the remaining nodes."
+
+- q: |
+    What is the output?
+    ```python
+    slow = fast = head   # list: 1 -> 2 -> 3 -> 4 -> 5
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    print(slow.val)
+    ```
+  type: single
+  options: ["2", "3", "4", "5"]
+  answer: [1]
+  explain: "slow moves 1 then 2 steps while fast moves to node 3 then node 5. Slow ends at 3, the middle."
+
+- q: "For a list of even length 1 -> 2 -> 3 -> 4, where does the slow/fast loop above stop (slow)?"
+  type: single
+  options: ["Node 2", "Node 3", "Node 4", "None"]
+  answer: [1]
+  explain: "slow goes to 2, then 3, and fast becomes None. It returns the second middle."
+
+- q: "After slow and fast meet in a cycle, how do you find the cycle start?"
+  type: single
+  options: ["Start one pointer at head; move both 1 step at a time; they meet at the start", "Move fast two steps again", "Count the list length", "Reverse the list"]
+  answer: [0]
+  explain: "The distance from head to the start equals the distance from the meeting node to the start, going around the loop."
+
+- q: "What does a dummy node help with?"
+  type: single
+  options: ["The head is no longer a special case when deleting or inserting", "It makes the list faster", "It sorts the list", "It removes cycles"]
+  answer: [0]
+  explain: "The dummy sits before the head, so every real node has a previous node."
+
+- q: "Which three variables do you need to reverse a list in place?"
+  type: single
+  options: ["prev, cur, nxt", "head, tail, size", "slow, fast, mid", "left, right, mid"]
+  answer: [0]
+  explain: "nxt saves the next node, cur.next is turned to prev, then both move forward."
+
+- q: "Rotate right by k on a list of length n. What is the effective k?"
+  type: single
+  options: ["k % n", "k - n", "n - k", "k // n"]
+  answer: [0]
+  explain: "Rotating by n gives the same list, so only the remainder matters."

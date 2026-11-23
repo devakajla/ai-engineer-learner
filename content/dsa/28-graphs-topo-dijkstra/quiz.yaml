@@ -1,0 +1,50 @@
+- q: "In Kahn's algorithm, which nodes go into the queue first?"
+  type: single
+  options: ["Nodes with indegree 0", "Nodes with the most edges", "Nodes with outdegree 0", "A random node"]
+  answer: [0]
+  explain: "A node with indegree 0 has no prerequisite left, so it can be taken first."
+
+- q: "How does Kahn's algorithm show that a cycle exists?"
+  type: single
+  options: ["Fewer than n nodes are taken", "The queue grows forever", "An indegree becomes negative", "It raises an error"]
+  answer: [0]
+  explain: "Nodes in a cycle never reach indegree 0, so they never leave the queue."
+
+- q: "When is Dijkstra NOT correct?"
+  type: single
+  options: ["When some edge weights are negative", "When the graph is directed", "When there are cycles", "When weights are integers"]
+  answer: [0]
+  explain: "Dijkstra assumes a popped distance is final. A negative edge can later make it smaller."
+
+- q: |
+    What is the output?
+    ```python
+    import heapq
+    h = []
+    heapq.heappush(h, (5, "a"))
+    heapq.heappush(h, (2, "b"))
+    heapq.heappush(h, (9, "c"))
+    print(heapq.heappop(h))
+    ```
+  type: single
+  options: ["(2, 'b')", "(9, 'c')", "(5, 'a')", "2"]
+  answer: [0]
+  explain: "A heap pops the smallest tuple first, and tuples compare by their first item."
+
+- q: "Which problems use the Dijkstra shape with a changed cost rule?"
+  type: multi
+  options: ["Swim in rising water (max along the path)", "Max probability path (product)", "Counting shortest paths", "Sorting an array"]
+  answer: [0, 1, 2]
+  explain: "Only the way you combine and compare costs changes. Sorting is not a path problem."
+
+- q: "Why can a bipartite check start from node 0 only be wrong?"
+  type: single
+  options: ["The graph may be disconnected", "Node 0 may not exist", "BFS cannot colour", "Colours are random"]
+  answer: [0]
+  explain: "Other components never get visited, so an odd cycle there is missed."
+
+- q: "Cheapest flight with at most k stops: why copy the distance list each round?"
+  type: single
+  options: ["So one round uses only one more flight", "To save memory", "To sort the flights", "Python needs it"]
+  answer: [0]
+  explain: "Updating in place lets one round chain several edges and break the stop limit."

@@ -1,0 +1,38 @@
+- q: What does `7 / 2` evaluate to?
+  type: single
+  options: ["`3`", "`3.5`", "`4`", "`3.0`"]
+  answer: [1]
+  explain: '`/` is true division and always returns a float.'
+- q: What does `-7 // 2` evaluate to?
+  type: single
+  options: ["`-3`", "`-4`", "`-3.5`", "`3`"]
+  answer: [1]
+  explain: Floor division rounds towards negative infinity. floor(-3.5) is -4.
+- q: Which expressions evaluate to `True`?
+  type: multi
+  options:
+    - "`0.1 + 0.2 == 0.3`"
+    - "`round(2.5) == 2`"
+    - "`int(3.99) == 3`"
+    - "`4 / 2 == 2`"
+  answer: [1, 2, 3]
+  explain: 0.1 + 0.2 is 0.30000000000000004. round(2.5) is 2 (banker's rounding). int truncates. 2.0 == 2 is True even though the types differ.
+- q: What happens with `int("3.5")`?
+  type: single
+  options: ["Returns 3", "Returns 4", "Raises ValueError", "Returns 3.5"]
+  answer: [2]
+  explain: '`int()` only parses integer strings. Use `int(float("3.5"))` if you really mean it.'
+- q: You store prices in an e-commerce backend. What is the best choice?
+  type: single
+  options:
+    - "`float` rupees"
+    - Integer paise (or `Decimal`)
+    - "`str` like `'19.99'` and convert when needed"
+    - "`round()` every float after each operation"
+  answer: [1]
+  explain: Floats can't represent most decimals exactly. Integers of the smallest unit (or Decimal) are exact.
+- q: What does `divmod(17, 5)` return?
+  type: single
+  options: ["`(3, 2)`", "`(2, 3)`", "`3.4`", "`(3.4, 2)`"]
+  answer: [0]
+  explain: '`divmod(a, b)` returns `(a // b, a % b)` = `(3, 2)`.'

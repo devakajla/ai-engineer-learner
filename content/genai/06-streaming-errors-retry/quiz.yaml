@@ -1,0 +1,77 @@
+- q: What is the main benefit of streaming?
+  type: single
+  options:
+    - The whole answer is much cheaper
+    - The first words appear quickly, so the app feels faster
+    - The model becomes smarter
+    - You do not need an API key
+  answer: [1]
+  explain: Streaming shows text as it is written. Total time and cost stay about the same, but the wait for the first words is short.
+- q: Which errors should you retry?
+  type: multi
+  options:
+    - 429 rate limit
+    - 500 server error
+    - 401 wrong API key
+    - A connection timeout
+  answer: [0, 1, 3]
+  explain: Busy servers, rate limits and network problems can go away by themselves. A wrong key stays wrong, so retrying is useless.
+- q: |
+    What is printed?
+    ```python
+    pieces = ["Hel", None, "lo", None, "!"]
+    kept = []
+    for p in pieces:
+        if p is not None:
+            kept.append(p)
+    print("".join(kept))
+    ```
+  type: single
+  options: ["`Hello!`", "`Hel lo !`", "`HelNonelo!`", "An error"]
+  answer: [0]
+  explain: None pieces are skipped, and join glues the rest with no separator.
+- q: |
+    What is printed?
+    ```python
+    print([min(1 * 2**i, 5) for i in range(5)])
+    ```
+  type: single
+  options: ["`[1, 2, 4, 8, 16]`", "`[1, 2, 4, 5, 5]`", "`[2, 4, 5, 5, 5]`", "`[1, 2, 3, 4, 5]`"]
+  answer: [1]
+  explain: 2**i gives 1, 2, 4, 8, 16. min with 5 caps the last two at 5.
+- q: Why add jitter (a small random amount) to retry waits?
+  type: single
+  options:
+    - To make the model answer better
+    - So that many clients do not all retry at the same moment
+    - To avoid timeouts
+    - To change the temperature
+  answer: [1]
+  explain: Without jitter, many clients that failed together would retry together and overload the server again.
+- q: |
+    What does this print?
+    ```python
+    def first_int(texts):
+        last_error = None
+        for text in texts:
+            try:
+                return int(text)
+            except ValueError as e:
+                last_error = e
+        raise last_error
+
+    print(first_int(["a", "5", "6"]))
+    ```
+  type: single
+  options: ["`5`", "`6`", "`a`", "A ValueError"]
+  answer: [0]
+  explain: "'a' fails and is remembered. '5' works, so the function returns 5 right away."
+- q: Why set a timeout on API calls?
+  type: single
+  options:
+    - So the model uses fewer tokens
+    - So a stuck call cannot block your app forever
+    - Because the API requires it
+    - To make answers longer
+  answer: [1]
+  explain: A timeout is how long you wait before giving up. Without it, a dead connection can freeze your program.

@@ -1,0 +1,77 @@
+- q: What is the trade-off of approximate nearest neighbour (ANN) search compared with exact search?
+  type: single
+  options:
+    - It is much faster, but may miss a true neighbour sometimes
+    - It is slower but always right
+    - It needs no memory
+    - It only works for text
+  answer: [0]
+  explain: An ANN index skips most vectors, so it is fast. The price is a small chance of missing a true neighbour. Recall@k measures that chance.
+- q: |
+    What is printed?
+    ```python
+    truth = ["a", "b", "c", "d"]
+    found = ["a", "c", "x", "d"]
+    hits = [i for i in found if i in truth]
+    print(len(hits) / len(truth))
+    ```
+  type: single
+  options: ["`0.75`", "`0.25`", "`1.0`", "`3`"]
+  answer: [0]
+  explain: Three of the four true neighbours (a, c, d) were found. The recall is 3 / 4 = 0.75.
+- q: |
+    What is printed?
+    ```python
+    n_vectors = 2_000_000
+    dim = 384
+    print(n_vectors * dim * 4 / 1_000_000)
+    ```
+  type: single
+  options: ["`3072.0`", "`768.0`", "`1536.0`", "`3.072`"]
+  answer: [0]
+  explain: 2,000,000 * 384 * 4 = 3,072,000,000 bytes. Divided by a million gives 3072.0 MB, about 3 GB, before the index overhead.
+- q: You post-filter an ANN result of the top 10 with a strict filter, and only 1 result matches. What is the problem?
+  type: single
+  options:
+    - Filtering after the search can leave fewer than k results
+    - The filter is too weak
+    - ANN cannot return 10 results
+    - Post-filtering is always faster and better
+  answer: [0]
+  explain: The best matches that fit the filter may be ranked below the top 10. Ask for more candidates, or use a database with filter-aware search.
+- q: Which of these are good reasons to pick pgvector?
+  type: multi
+  options:
+    - You already run PostgreSQL
+    - You want vectors, joins and transactions in one system
+    - You have a few million vectors
+    - You need to avoid every other piece of software, at any scale, forever
+  answer: [0, 1, 2]
+  explain: pgvector fits when Postgres is already there, and up to a few million vectors it is usually enough. Saying "at any scale, forever" is not a reason, because very large or filter-heavy workloads can need a dedicated database.
+- q: In pgvector, `embedding <=> query` is which kind of value?
+  type: single
+  options:
+    - A cosine distance, where smaller is closer
+    - A cosine similarity, where bigger is closer
+    - The number of matching words
+    - A boolean
+  answer: [0]
+  explain: The <=> operator gives the cosine distance. The similarity is 1 minus the distance. The <-> operator gives the Euclidean distance.
+- q: Which statement about HNSW is true?
+  type: single
+  options:
+    - It is a graph-based ANN index that is fast and accurate but uses a lot of memory
+    - It is a keyword-search formula
+    - It guarantees exact results
+    - It compresses vectors to one number
+  answer: [0]
+  explain: HNSW links each vector to its neighbours in layers, so a search can jump toward the query. It is popular, and its graph takes memory.
+- q: You change your embedding model. What must you do?
+  type: single
+  options:
+    - Re-embed all documents and rebuild the index
+    - Nothing, the old vectors still work
+    - Only re-embed the questions
+    - Change the metadata
+  answer: [0]
+  explain: Vectors from different models live in different spaces. Keep the source text so that you can re-embed everything.

@@ -1,0 +1,47 @@
+# The order here IS the learning order. Never rename an existing slug (progress is stored by it).
+title: Python
+levels:
+  - id: l1
+    title: "Level 1 — Foundations (fast-track)"
+    lessons:
+      - {slug: 01-intro-setup, title: "Intro & setup"}
+      - {slug: 02-variables-types, title: "Variables & data types"}
+      - {slug: 03-numbers-casting, title: "Numbers & casting"}
+      - {slug: 04-strings, title: "Strings & f-strings"}
+      - {slug: 05-booleans-operators, title: "Booleans & operators"}
+      - {slug: 06-conditionals, title: "if / elif / else & match"}
+      - {slug: 07-loops, title: "Loops: while, for, range"}
+      - {slug: 08-lists, title: "Lists"}
+      - {slug: 09-tuples, title: "Tuples & unpacking"}
+      - {slug: 10-sets, title: "Sets"}
+      - {slug: 11-dicts, title: "Dictionaries"}
+      - {slug: 12-comprehensions, title: "Comprehensions"}
+      - {slug: 13-functions, title: "Functions, args & scope"}
+      - {slug: 14-modules, title: "Modules & imports"}
+      - {slug: 15-files, title: "Files & pathlib"}
+      - {slug: 16-exceptions-basics, title: "Exceptions basics"}
+      - {slug: 17-l1-interview, title: "Level 1 interview questions", kind: interview}
+  - id: l2
+    title: "Level 2 — Core Python"
+    lessons:
+      - {slug: 18-data-model, title: "Data model: references & copies"}
+      - {slug: 19-classes, title: "Classes & objects"}
+      - {slug: 20-oop-deep, title: "OOP deep: dunders, dataclasses, ABCs"}
+      - {slug: 21-error-handling, title: "Error handling deep"}
+      - {slug: 22-iterators-generators, title: "Iterators & generators"}
+      - {slug: 23-closures-decorators, title: "Closures & decorators"}
+      - {slug: 24-context-managers, title: "Context managers"}
+      - {slug: 25-functional-tools, title: "lambda, itertools, functools"}
+      - {slug: 26-stdlib, title: "Stdlib essentials"}
+      - {slug: 27-type-hints, title: "Type hints"}
+      - {slug: 28-pydantic, title: "Pydantic"}
+      - {slug: 29-l2-interview, title: "Level 2 interview questions", kind: interview}
+  - id: l3
+    title: "Level 3 — Advanced"
+    lessons:
+      - {slug: 30-concurrency, title: "Concurrency & the GIL"}
+      - {slug: 31-asyncio, title: "asyncio in depth"}
+      - {slug: 32-packaging, title: "Packaging with uv"}
+      - {slug: 33-testing, title: "Testing with pytest"}
+      - {slug: 34-performance, title: "Performance & profiling"}
+      - {slug: 35-l3-interview, title: "Level 3 interview questions", kind: interview}

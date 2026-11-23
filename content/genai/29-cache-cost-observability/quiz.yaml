@@ -1,0 +1,82 @@
+- q: Which values must be part of an LLM cache key?
+  type: multi
+  options:
+    - The model name
+    - The messages (including the system prompt)
+    - The temperature
+    - The time of day the request was made
+  answer: [0, 1, 2]
+  explain: Anything that changes the answer must be in the key. The clock time does not change the answer, so it must not be in the key (it would make every request different).
+- q: When should you NOT use an exact cache?
+  type: multi
+  options:
+    - Temperature is above 0 and you want varied answers
+    - The prompt holds one user's private data and the cache is shared
+    - The facts change every few minutes and there is no TTL
+    - The request is the same FAQ question at temperature 0
+  answer: [0, 1, 2]
+  explain: The last one is the good use of a cache. The first three give wrong, private or stale results.
+- q: |
+    What does this print?
+    ```python
+    def let_in(times, now, limit=2, window=10):
+        recent = [t for t in times if now - window < t <= now]
+        if len(recent) < limit:
+            return True
+        return False
+
+    print(let_in([0, 3], 5), let_in([0, 3], 11))
+    ```
+  type: single
+  options:
+    - "False True"
+    - "True True"
+    - "False False"
+    - "True False"
+  answer: [0]
+  explain: At time 5 both earlier times are in the window, so it is full. At time 11 the window is (1, 11], so only 3 remains and there is room.
+- q: What is the difference between the provider's 429 and your own rate limit?
+  type: single
+  options:
+    - There is none
+    - The provider limits you (handle with backoff). Your limit protects your budget and servers from your users
+    - Your limit is set by Groq
+    - The provider limit is only for images
+  answer: [1]
+  explain: Two different limits. You retry the first one with backoff. You enforce the second one on your users.
+- q: Average latency is 1.2 s and p95 is 9 s. What does it mean?
+  type: single
+  options:
+    - Everyone waits 1.2 s
+    - About 1 user in 20 waits 9 s or more, which the average hides
+    - The server is broken for everyone
+    - The p95 is a typo
+  answer: [1]
+  explain: Percentiles show the slow tail. The average hides it.
+- q: Why return the 429 before calling the model?
+  type: single
+  options:
+    - A blocked request must not cost money, so do the check first
+    - Models cannot read 429
+    - It is faster to write
+    - It is required by Python
+  answer: [0]
+  explain: The whole point of the limit is to save money and capacity. Calling the model first defeats it.
+- q: What is routing as a cost lever?
+  type: single
+  options:
+    - Sending easy tasks to a cheaper, faster model and hard ones to a stronger model
+    - Choosing the shortest URL
+    - Sending all traffic to one server
+    - Skipping the system prompt
+  answer: [0]
+  explain: Many tasks (classify, extract, rewrite) do not need the biggest model.
+- q: A cached entry for a popular question expires, and 500 requests arrive at that moment. What is this problem called?
+  type: single
+  options:
+    - Cache stampede
+    - Cache hit
+    - Overfitting
+    - Backoff
+  answer: [0]
+  explain: Many misses at once all call the model. A lock, or refreshing the entry before it expires, prevents it.

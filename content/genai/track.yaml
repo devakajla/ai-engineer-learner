@@ -1,0 +1,62 @@
+# The order here IS the learning order. Never rename an existing slug (progress is stored by it).
+# Prerequisites: Python Level 1. Lessons use only Python L1 ideas (functions, dicts, loops, try/except) plus earlier GenAI lessons.
+# Project: DevDocs Copilot (see the project steps). Exercises are offline: they use a fake client, never the network.
+title: GenAI
+levels:
+  - id: l1
+    title: "Level 1 — LLM basics with Groq"
+    lessons:
+      - {slug: 01-ai-llm-basics, title: "AI, ML, GenAI and LLMs"}
+      - {slug: 02-tokens-context, title: "Tokens and the context window"}
+      - {slug: 32-training-stages, title: "How an LLM is trained, and why it makes things up"}
+      - {slug: 03-first-groq-call, title: "Setup and your first Groq call"}
+      - {slug: 04-messages-roles, title: "Messages and roles"}
+      - {slug: 05-parameters, title: "Parameters: temperature, token limits and more"}
+      - {slug: 33-model-choice, title: "Choosing a model: open vs closed, size, speed and cost"}
+      - {slug: 06-streaming-errors-retry, title: "Streaming, errors, timeouts and retries"}
+      - {slug: 34-reasoning-thinking, title: "Reasoning models and thinking output"}
+      - {slug: 35-l1-llm-client, title: "Level 1 project: build your own llm.py"}
+  - id: l2
+    title: "Level 2 — Prompting and structured output"
+    lessons:
+      - {slug: 07-prompt-patterns, title: "Prompt patterns"}
+      - {slug: 08-prompt-templates, title: "Prompt templates in code"}
+      - {slug: 09-json-output, title: "JSON output"}
+      - {slug: 10-pydantic-validation, title: "Pydantic validation and retry"}
+      - {slug: 11-tool-calling, title: "Tool / function calling"}
+      - {slug: 36-l2-assistant, title: "Level 2 project: one assistant function"}
+      - {slug: 12-chat-memory, title: "Chat memory"}
+      - {slug: 37-injection-and-eval, title: "Prompt injection and a mini eval"}
+      - {slug: 13-l2-interview, title: "Level 2 interview questions", kind: interview}
+  - id: l3
+    title: "Level 3 — Embeddings and vector search"
+    lessons:
+      - {slug: 14-embeddings-idea, title: "The idea of embeddings"}
+      - {slug: 15-cosine-numpy, title: "Cosine similarity with numpy"}
+      - {slug: 16-chunking, title: "Chunking"}
+      - {slug: 17-chroma, title: "A vector database with Chroma"}
+      - {slug: 38-multimodal-awareness, title: "Awareness: beyond text (images, audio, video)"}
+      - {slug: 18-hybrid-search, title: "Keyword search (BM25) and hybrid search"}
+      - {slug: 19-vector-db-landscape, title: "Vector DB landscape: pgvector, Qdrant, Pinecone"}
+      - {slug: 20-l3-interview, title: "Level 3 interview questions", kind: interview}
+  - id: l4
+    title: "Level 4 — RAG"
+    lessons:
+      - {slug: 21-rag-pipeline, title: "The RAG pipeline end to end"}
+      - {slug: 22-grounded-citations, title: "Grounded answers and citations"}
+      - {slug: 23-rerank-rewrite, title: "Reranking and query rewriting"}
+      - {slug: 39-rag-ingestion, title: "RAG ingestion: parsing, cleaning and incremental updates"}
+      - {slug: 40-rag-access-freshness, title: "RAG for real users: access control, tenants and freshness"}
+      - {slug: 24-rag-failures, title: "RAG failure modes"}
+      - {slug: 25-evaluation, title: "Evaluating RAG"}
+      - {slug: 41-llm-judge-golden, title: "LLM as judge, golden sets, and RAG vs long context"}
+      - {slug: 42-rag-awareness, title: "RAG beyond the basics: parent-child, contextual chunks, GraphRAG, agentic RAG"}
+      - {slug: 26-l4-interview, title: "Level 4 interview questions", kind: interview}
+  - id: l5
+    title: "Level 5 — Agents and production"
+    lessons:
+      - {slug: 27-agent-loop, title: "The agent loop"}
+      - {slug: 28-fastapi-serving-sse, title: "Serving with FastAPI and streaming (SSE)"}
+      - {slug: 29-cache-cost-observability, title: "Caching, cost, rate limits and observability"}
+      - {slug: 30-guardrails, title: "Guardrails and safety"}
+      - {slug: 31-l5-interview, title: "Level 5 interview questions", kind: interview}

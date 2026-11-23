@@ -1,0 +1,72 @@
+- q: Which question is vector search most likely to get wrong, and keyword search most likely to get right?
+  type: single
+  options:
+    - What does error code 429 mean?
+    - How do I get rid of a todo item?
+    - Explain authentication in simple words
+    - Is there a way to remove things?
+  answer: [0]
+  explain: An exact code like 429 is a rare exact word. Keyword search finds it directly. The embedding may blur it. The other questions need meaning, which vector search handles better.
+- q: In BM25, what does a high idf mean for a word?
+  type: single
+  options:
+    - The word is rare across the documents, so it is informative
+    - The word appears many times in one document
+    - The word is long
+    - The word appears in every document
+  answer: [0]
+  explain: idf is high when few documents contain the word. A word in every document has a low idf.
+- q: |
+    What is printed?
+    ```python
+    import math
+    print(round(math.log(1 + (4 - 1 + 0.5) / (1 + 0.5)), 4))
+    ```
+  type: single
+  options: ["`1.204`", "`0.5878`", "`2.3333`", "`3.3333`"]
+  answer: [0]
+  explain: (4 - 1 + 0.5) / (1 + 0.5) = 3.5 / 1.5 = 2.3333. Adding 1 gives 3.3333, and the natural log of that is 1.204. Python prints 1.204, not 1.2040.
+- q: |
+    What is printed?
+    ```python
+    text = 'Use `DELETE /tasks/{id}`.'
+    words = [w.strip(".,;:!?()\"'`") for w in text.lower().split()]
+    print(words)
+    ```
+  type: single
+  options: ["`['use', 'delete', '/tasks/{id}']`", "`['use', 'delete /tasks/{id}']`", "`['Use', 'DELETE', '/tasks/{id}']`", "`['use', '`delete', '/tasks/{id}`.']`"]
+  answer: [0]
+  explain: Lowercase, split on spaces, then strip punctuation and backticks from both ends of each word. The inside of /tasks/{id} stays.
+- q: Why can't you simply add a cosine score (0 to 1) and a BM25 score (0 to 15)?
+  type: single
+  options:
+    - They have different scales, so the bigger scale wins by accident
+    - BM25 scores are negative
+    - Cosine can't be added
+    - Python does not allow it
+  answer: [0]
+  explain: The numbers mean different things and live on different scales. Normalize them, or use rank-based fusion (RRF).
+- q: |
+    What is the RRF score of an item that is rank 1 in one list and rank 3 in another, with k = 60?
+  type: single
+  options: ["`1/61 + 1/63`", "`1/60 + 1/62`", "`1/(61 + 63)`", "`2/60`"]
+  answer: [0]
+  explain: The formula is the sum of 1/(k + rank) over the lists, with ranks starting at 1. That is 1/61 + 1/63.
+- q: Why take 20 candidates from each search when you only want the final top 5?
+  type: single
+  options:
+    - So the fusion has enough overlap and choice to find the best results
+    - Because 20 is required by BM25
+    - To make the search slower on purpose
+    - Because RRF needs exactly 20
+  answer: [0]
+  explain: An item ranked 8th by one search and 2nd by the other can deserve the top. If each side returned only 5, that item would never appear.
+- q: In hybrid search, why leave documents with a keyword score of 0 out of the keyword ranking?
+  type: single
+  options:
+    - They would get a rank and add to their fused score although the keyword search found nothing
+    - Zero cannot be sorted
+    - Python rejects them
+    - They are always wrong
+  answer: [0]
+  explain: A rank means "the keyword search found this". Zero-score documents were not found, so they should not get any keyword credit.

@@ -1,0 +1,76 @@
+- q: You are extracting a date and a name from an email. Which temperature fits best?
+  type: single
+  options: ["`0`", "`0.9`", "`1.5`", "`2`"]
+  answer: [0]
+  explain: Extraction needs steady, exact output. A low temperature makes the model pick the most likely tokens.
+- q: What does a high temperature do?
+  type: single
+  options:
+    - Makes the model pick less likely tokens more often, so answers vary more
+    - Makes the answer longer
+    - Makes the call faster
+    - Makes the model know more facts
+  answer: [0]
+  explain: Temperature only changes how the next token is picked. It does not change length, speed or knowledge.
+- q: A response comes back with `finish_reason == "length"`. What happened?
+  type: single
+  options:
+    - The answer was cut off at max_completion_tokens
+    - The prompt was too short
+    - The model finished normally
+    - The key was wrong
+  answer: [0]
+  explain: "'length' means the output limit was reached, so the answer may stop in the middle of a sentence."
+- q: |
+    What is printed?
+    ```python
+    def clamp(x, low, high):
+        if x < low:
+            return low
+        if x > high:
+            return high
+        return x
+
+    print(clamp(3, 0, 2), clamp(-1, 0, 2), clamp(1.5, 0, 2))
+    ```
+  type: single
+  options: ["`2 0 1.5`", "`3 -1 1.5`", "`2 0 2`", "`0 2 1.5`"]
+  answer: [0]
+  explain: 3 is above the high limit so it becomes 2. -1 is below the low limit so it becomes 0. 1.5 is inside the range.
+- q: |
+    What does this call do?
+    ```python
+    params = {"temperature": 0, "stop": "END"}
+    client.chat.completions.create(model=m, messages=msgs, **params)
+    ```
+  type: single
+  options:
+    - It sends a single argument called params
+    - It sends temperature=0 and stop="END" as named arguments
+    - It raises an error, because ** is not allowed
+    - It ignores the dictionary
+  answer: [1]
+  explain: "`**params` spreads each key and value of the dictionary into named arguments."
+- q: Which statements are true?
+  type: multi
+  options:
+    - Change temperature or top_p, not both
+    - seed guarantees the exact same answer every time
+    - stop ends the answer at a given text
+    - max_completion_tokens limits the answer, not the input
+  answer: [0, 2, 3]
+  explain: seed is best effort only. The other three are correct.
+- q: Which name should you use for the answer-length limit in new Groq code?
+  type: single
+  options: ["`max_completion_tokens`", "`max_length`", "`limit`", "`answer_size`"]
+  answer: [0]
+  explain: "`max_completion_tokens` is the current name. The older `max_tokens` is deprecated."
+- q: 'With top_k=2 and chances {"blue": 0.6, "clear": 0.2, "grey": 0.15, "falling": 0.05}, which words can the model draw?'
+  type: single
+  options:
+    - 'Only "blue"'
+    - '"blue" and "clear"'
+    - '"blue", "clear" and "grey"'
+    - All four words
+  answer: [1]
+  explain: top_k keeps only the k most likely words. With k=2 those are "blue" and "clear".

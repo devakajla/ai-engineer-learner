@@ -1,0 +1,55 @@
+- q: |
+    Where does FastAPI read each parameter from?
+    ```python
+    @app.put("/tasks/{task_id}")
+    def update(task_id: int, payload: TaskCreate, notify: bool = False): ...
+    ```
+  type: single
+  options:
+    - task_id → query, payload → body, notify → path
+    - task_id → path, payload → body, notify → query
+    - all three from the body
+    - task_id → path, payload → query, notify → body
+  answer: [1]
+  explain: Names in the path come from the path; Pydantic models from the body; simple types from the query.
+- q: '`TaskCreate` has `title: str = Field(min_length=1)`. A client sends `{"title": ""}`. What happens?'
+  type: single
+  options: ["The task is created with an empty title", "`422` with `loc: [\"body\", \"title\"]`", "`400 Bad Request`", "`500` error"]
+  answer: [1]
+  explain: The constraint fails during validation, so FastAPI returns 422 pointing at the exact field.
+- q: Which statements about Pydantic models are true?
+  type: multi
+  options:
+    - A field without a default value is required
+    - By default, unknown extra fields in the input are ignored
+    - "`model_dump()` returns a dict"
+    - Pydantic never converts types; `\"5\"` is always rejected for an int field
+  answer: [0, 1, 2]
+  explain: Pydantic is lax by default and converts "5" to 5 unless you enable strict mode.
+- q: Why should `TaskCreate` NOT contain `id` or `owner_id`?
+  type: single
+  options:
+    - Pydantic can't handle ints
+    - Those are server-controlled; accepting them lets clients set values they shouldn't (mass assignment)
+    - It makes the JSON too big
+    - FastAPI forbids fields named id
+  answer: [1]
+  explain: Input schemas should only contain fields the client is allowed to set.
+- q: 'A nested validation error is reported with `loc: ["body", "items", 1, "quantity"]`. What does it point to?'
+  type: single
+  options:
+    - The first item's quantity
+    - The second item's quantity
+    - A query parameter called items
+    - The whole body
+  answer: [1]
+  explain: List indexes in `loc` are 0-based, so 1 is the second item.
+- q: How do you make a model reject unknown keys such as a typo `"titel"`?
+  type: single
+  options:
+    - '`model_config = ConfigDict(extra="forbid")`'
+    - "`Field(strict=True)` on every field"
+    - Add an `if` in the route
+    - It's impossible in Pydantic v2
+  answer: [0]
+  explain: '`extra="forbid"` turns unknown fields into validation errors.'

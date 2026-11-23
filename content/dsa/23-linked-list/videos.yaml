@@ -1,0 +1,8 @@
+intro: {video_id: NSh5oNElD84, title: "Linked list basics (DSA Patterns Ep 19)", start: 0, end: 2033}
+segments:
+  - {exercise: 02-middle-node, video_id: IxxlDYwMrZ8, title: "Slow and fast pointer: introduction (Ep 17)", start: 0, end: 1000}
+  - {exercise: 03-has-cycle, video_id: IxxlDYwMrZ8, title: "Slow and fast pointer: cycle (Ep 17)", start: 1000, end: 1998}
+  - {exercise: 04-cycle-start, video_id: p8efFVGuqyI, title: "Start of cycle (Ep 25)", start: 0, end: 1024}
+  - {exercise: 05-reverse-list, video_id: 7gOCx1vbx0k, title: "Linked list reversal (Ep 43)", start: 0, end: 3143}
+  - {exercise: 12-rotate-list, video_id: 5IV8CgWnf04, title: "Rotate a linked list (Ep 46)", start: 0, end: 2374}
+  - {exercise: 13-reverse-k-group, video_id: BdpT6_jotcM, title: "Reverse nodes in k group (Ep 45)", start: 0, end: 3144}

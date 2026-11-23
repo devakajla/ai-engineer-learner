@@ -1,0 +1,2 @@
+def invert(d):
+    pass

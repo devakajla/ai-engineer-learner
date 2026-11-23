@@ -1,0 +1,86 @@
+- q: Which are valid stop reasons for an agent loop?
+  type: multi
+  options:
+    - The model answered with no tool call
+    - A maximum number of steps was reached
+    - The same tool call repeated too many times
+    - The tool returned a long text
+  answer: [0, 1, 2]
+  explain: A long tool result is not a stop reason. It is a reason to shorten the result.
+- q: |
+    What is the total input of the agent over all steps?
+    ```python
+    base = 100
+    additions = [50, 50, 50]
+    history = base
+    total = 0
+    for added in additions:
+        total += history
+        history += added
+    print(total)
+    ```
+  type: single
+  options:
+    - "450"
+    - "300"
+    - "150"
+    - "600"
+  answer: [0]
+  explain: Step inputs are 100, 150 and 200. The sum is 450. The history is sent again on every step.
+- q: The model fails after the stream has started. What is the right way to tell the client?
+  type: single
+  options:
+    - Change the HTTP status to 500
+    - Send an error event inside the stream and do not send done
+    - Send nothing
+    - Restart the server
+  answer: [1]
+  explain: The 200 status was already sent with the first byte.
+- q: Your LLM bill doubled. What is the first step?
+  type: single
+  options:
+    - Switch to the cheapest model
+    - Look at the logs to see where the cost comes from (feature, user, model, tokens), and check for loops or retries
+    - Remove the cache
+    - Raise the temperature
+  answer: [1]
+  explain: Find the source first. A bug is often the cause, and it is cheaper to fix than a redesign.
+- q: Which is the best protection for a refund tool in a support agent?
+  type: single
+  options:
+    - A system prompt line "do not refund by mistake"
+    - Allow-list, validated arguments, ownership check by the real user id, and human approval
+    - A bigger model
+    - A longer prompt
+  answer: [1]
+  explain: Controls in code and a human approval cannot be argued with. A prompt rule can.
+- q: |
+    What does this return?
+    ```python
+    import json
+    def parse(text):
+        try:
+            data = json.loads(text)
+        except json.JSONDecodeError:
+            return "bad"
+        return "ok" if isinstance(data, dict) else "bad"
+
+    print(parse('{"a": 1}'), parse("[1]"), parse("{a: 1}"))
+    ```
+  type: single
+  options:
+    - "ok bad bad"
+    - "ok ok bad"
+    - "ok bad ok"
+    - "bad bad bad"
+  answer: [0]
+  explain: 'A JSON object is a dict. A JSON list is valid JSON but not a dict. The text with an unquoted key is not valid JSON.'
+- q: Why prefer native tool calling over the ReAct text format when the model supports it?
+  type: single
+  options:
+    - It returns structured calls (name and JSON arguments), so there is less text parsing to get wrong
+    - It is always cheaper
+    - ReAct cannot call tools
+    - It needs no tool descriptions
+  answer: [0]
+  explain: Text formats need parsing and error handling. Native calls are structured by the API.

@@ -1,0 +1,39 @@
+- q: Which values are **falsy**?
+  type: multi
+  options: ['`"0"`', "`0.0`", "`[]`", "`None`", '`" "`', "`{}`"]
+  answer: [1, 2, 3, 5]
+  explain: 'Non-empty strings (even `"0"` and `" "`) are truthy. Zero numbers, None and empty containers are falsy.'
+- q: What does `"" or "guest"` evaluate to?
+  type: single
+  options: ["`True`", '`""`', '`"guest"`', "`False`"]
+  answer: [2]
+  explain: '`or` returns the first truthy operand, or the last operand if none is truthy. `""` is falsy, so it returns `"guest"`.'
+- q: What does `0 and 1/0` evaluate to?
+  type: single
+  options: ["ZeroDivisionError", "`0`", "`False`", "`None`"]
+  answer: [1]
+  explain: '`and` stops at the first falsy operand and returns it. `1/0` is never evaluated.'
+- q: |
+    What is printed?
+    ```python
+    name = "c"
+    print(name == "a" or "b")
+    ```
+  type: single
+  options: ["`False`", "`True`", '`b`', "SyntaxError"]
+  answer: [2]
+  explain: 'It parses as `(name == "a") or "b"` → `False or "b"` → `"b"`. Use `name in ("a", "b")`.'
+- q: What does `True or False and False` evaluate to?
+  type: single
+  options: ["`True`", "`False`"]
+  answer: [0]
+  explain: '`and` binds tighter than `or`: `True or (False and False)` → `True`.'
+- q: Which expressions are `True`?
+  type: multi
+  options:
+    - "`1 < 3 > 2`"
+    - '`"Z" < "a"`'
+    - "`-2 ** 2 == 4`"
+    - '`"k" in {"k": 1}`'
+  answer: [0, 1, 3]
+  explain: '`-2 ** 2` is `-(2 ** 2)` = -4. Uppercase letters have smaller code points. `in` on a dict checks keys.'

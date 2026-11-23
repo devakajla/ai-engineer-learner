@@ -1,0 +1,64 @@
+- q: Your app sends the model "My name is Dev." in one call. In a second call, with no history, you ask "What is my name?". What can the model do?
+  type: single
+  options:
+    - Answer "Dev", it remembers
+    - It cannot know, because each call is independent
+    - It looks up your name on the server
+    - It remembers for one minute
+  answer: [1]
+  explain: The model is stateless. To make it "remember", your code must send the earlier messages again.
+- q: Which role should hold the rules and personality for the whole chat?
+  type: single
+  options: ["`user`", "`assistant`", "`system`", "`tool`"]
+  answer: [2]
+  explain: The system message sets the rules and goes first. The user and assistant roles are the turns of the chat.
+- q: |
+    What is printed?
+    ```python
+    history = [{"role": "user", "content": "Hi"}]
+    new_history = history + [{"role": "assistant", "content": "Hello!"}]
+    print(len(history), len(new_history))
+    ```
+  type: single
+  options: ["`1 1`", "`1 2`", "`2 2`", "`2 1`"]
+  answer: [1]
+  explain: "`history + [x]` makes a new list. The old list still has 1 item and the new one has 2."
+- q: |
+    What is printed?
+    ```python
+    history = [1, 2]
+    history.append(3)
+    other = history + [4]
+    print(history, other)
+    ```
+  type: single
+  options: ["`[1, 2] [1, 2, 3, 4]`", "`[1, 2, 3] [1, 2, 3, 4]`", "`[1, 2, 3, 4] [1, 2, 3, 4]`", "`[1, 2, 3] [4]`"]
+  answer: [1]
+  explain: append changes history to [1, 2, 3]. history + [4] builds a new list and leaves history alone.
+- q: Which of these make a long chat more expensive on every new turn?
+  type: multi
+  options:
+    - The full history is sent again as input tokens
+    - The system message is sent again
+    - The model remembers more and so charges more
+    - The new answer also uses tokens
+  answer: [0, 1, 3]
+  explain: Every call pays for everything it sends (system plus history) and everything it writes. The model does not remember anything by itself.
+- q: In what order should a messages list be?
+  type: single
+  options:
+    - user messages first, system last
+    - system first, then the turns in time order
+    - assistant messages first
+    - Any order, the model sorts them
+  answer: [1]
+  explain: Put the system message first, then user and assistant turns in the order they happened.
+- q: After the model replies, what must your chat code do before the next call?
+  type: single
+  options:
+    - Nothing, the API stores it
+    - Add the user message and the assistant reply to the history
+    - Delete the system message
+    - Restart the client
+  answer: [1]
+  explain: The API stores nothing. Your history list is the only memory the next call will have.

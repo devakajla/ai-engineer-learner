@@ -1,0 +1,12 @@
+[project]
+name = "devdocs-copilot"
+version = "0.1.0"
+description = "Answers questions about API docs, with sources"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "groq>=1.0",
+    "pydantic>=2.7",
+    "numpy>=1.26",
+    "fastembed>=0.3",
+]

@@ -1,0 +1,75 @@
+- q: What is the main reason to store vectors in a vector database instead of embedding all documents for every question?
+  type: single
+  options:
+    - Embed each chunk once, then search the stored vectors quickly
+    - The model refuses to embed twice
+    - Vectors take no space
+    - It makes the model smarter
+  answer: [0]
+  explain: Embedding is the slow part. Store the vectors once, and each question only needs one new embedding plus a fast search.
+- q: |
+    You create a Chroma collection without setting `"hnsw:space"`. Which statement is true?
+  type: single
+  options:
+    - The default distance is not cosine, so set it on purpose when you want cosine
+    - The default is always cosine
+    - Collections have no distance
+    - It raises an error
+  answer: [0]
+  explain: The default space in Chroma is squared Euclidean distance (l2). Set cosine explicitly if you want it.
+- q: |
+    What is printed?
+    ```python
+    result = {"ids": [["a", "c"]], "distances": [[0.0, 0.2]]}
+    print(result["ids"][0][1], 1 - result["distances"][0][1])
+    ```
+  type: single
+  options: ["`c 0.8`", "`a 1.0`", "`c 0.2`", "`['a', 'c'] 0.8`"]
+  answer: [0]
+  explain: Results are lists inside lists. [0] picks the first query, [1] the second hit. The score is 1 minus the distance, 0.8.
+- q: Which of these are valid metadata values in Chroma?
+  type: multi
+  options:
+    - A string like "tasks.md"
+    - An integer like 3
+    - An empty string ""
+    - None
+    - A list like ["a", "b"]
+  answer: [0, 1, 2]
+  explain: Metadata values must be str, int, float or bool. None and lists are not allowed. An empty string is a normal string.
+- q: You want to search only chunks where source is "tasks.md" AND heading is "Delete". Which `where` is correct?
+  type: single
+  options:
+    - '{"$and": [{"source": "tasks.md"}, {"heading": "Delete"}]}'
+    - '{"source": "tasks.md", "heading": "Delete"}'
+    - '{}'
+    - '["source", "heading"]'
+  answer: [0]
+  explain: Two conditions need $and. Two keys in one dictionary and an empty dictionary are both errors.
+- q: Why use `upsert` and stable ids (like "tasks.md:0") instead of random ids?
+  type: single
+  options:
+    - Running the ingest again updates the same chunks and does not create duplicates
+    - Random ids are not allowed
+    - upsert is faster than anything else
+    - Stable ids make the embedding better
+  answer: [0]
+  explain: With a stable id, a second run replaces the old chunk. Random ids would add the same chunk again and again.
+- q: A file changed and now has fewer sections. You only upsert the new chunks. What can go wrong?
+  type: single
+  options:
+    - Chunks of the removed sections stay in the index and can still be returned
+    - Chroma crashes
+    - All other files are deleted
+    - The embeddings become zero
+  answer: [0]
+  explain: Upsert does not remove chunks that no longer exist. Delete the old chunks of that source first (delete by where source), then upsert.
+- q: Why can you index the same document twice without making duplicates?
+  type: single
+  options:
+    - Chroma deletes old data automatically
+    - The chunk ids are the same, and `upsert` replaces items with the same id
+    - Chroma ignores the second call
+    - Documents are hashed by the model
+  answer: [1]
+  explain: Upsert means insert or update by id. Stable ids make indexing safe to repeat.

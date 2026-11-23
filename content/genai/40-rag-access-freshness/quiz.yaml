@@ -1,0 +1,79 @@
+- q: Where must access control for RAG be enforced?
+  type: single
+  options:
+    - In the system prompt ("do not reveal secrets")
+    - In code, before the chunks reach the prompt
+    - In the model's answer after it is written
+    - Nowhere, the model decides
+  answer: [1]
+  explain: The model repeats what it sees. A chunk the user may not read must never be in the prompt.
+- q: Where should the `tenant` of a request come from?
+  type: single
+  options:
+    - A field in the request body
+    - What the user writes in the question
+    - The verified login (token) on the server
+    - The model's guess
+  answer: [2]
+  explain: Anything the user controls can be faked. The tenant comes from authentication.
+- q: What is the risk of a post-filter without over-fetching?
+  type: single
+  options:
+    - It is too fast
+    - The top k hits may be all removed, so the user gets few or no results
+    - It changes the vectors
+    - It deletes data
+  answer: [1]
+  explain: Ask for more than k (for example k * 5), filter, then cut to k.
+- q: |
+    What does this print?
+    ```python
+    from datetime import date
+    a = date.fromisoformat("2026-11-23")
+    b = date.fromisoformat("2026-11-13")
+    print((a - b).days)
+    ```
+  type: single
+  options:
+    - "10"
+    - "-10"
+    - "2026"
+    - Error
+  answer: [0]
+  explain: Subtracting two dates gives a timedelta. Its `.days` is the number of days between them.
+- q: Which multi-tenant design gives the strongest separation inside one system?
+  type: single
+  options:
+    - One shared index with an optional filter
+    - A separate index (collection) per tenant
+    - Storing the tenant in the prompt
+    - No tenant at all
+  answer: [1]
+  explain: Separate indexes cannot mix by mistake, but cost more to manage. Separate deployments are stronger still.
+- q: Why must a cache of answers include the user's access scope in its key?
+  type: single
+  options:
+    - To make it faster
+    - Otherwise an answer built from user A's allowed chunks could be served to user B
+    - Caches need long keys
+    - It is required by Python
+  answer: [1]
+  explain: A cached answer can contain data that only some users may see.
+- q: "`any(g in user_groups for g in chunk_groups)` is True when:"
+  type: single
+  options:
+    - All chunk groups are in the user's groups
+    - At least one chunk group is in the user's groups
+    - The lists are equal
+    - Both lists are empty
+  answer: [1]
+  explain: any is true when at least one item of the loop is true.
+- q: A document is deleted at the source. What must you do?
+  type: single
+  options:
+    - Nothing, it will expire
+    - Delete its chunks and vectors from the index (and caches), or it can still appear in answers
+    - Tell the model to ignore it
+    - Re-embed the others
+  answer: [1]
+  explain: An index does not know that the source changed. Stale chunks keep being found.

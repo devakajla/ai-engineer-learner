@@ -1,0 +1,52 @@
+- q: |
+    What is the output?
+    ```python
+    print("hello"[1:4])
+    ```
+  type: single
+  options: ["`ell`", "`hell`", "`ello`", "`el`"]
+  answer: [0]
+  explain: 'Indexes 1, 2, 3 are e, l, l. Stop 4 is excluded.'
+- q: |
+    What is the output?
+    ```python
+    print("abc"[::-1])
+    ```
+  type: single
+  options: ["`cba`", "`abc`", "`bca`", "Error"]
+  answer: [0]
+  explain: 'Step -1 reads the string backwards.'
+- q: |
+    What is the output?
+    ```python
+    s = "Hi"
+    s.upper()
+    print(s)
+    ```
+  type: single
+  options: ["`Hi`", "`HI`", "`hi`", "`None`"]
+  answer: [0]
+  explain: '`upper()` returns a new string; `s` is unchanged because strings are immutable.'
+- q: |
+    What is the output?
+    ```python
+    print("a b  c".split())
+    ```
+  type: single
+  options: ["`['a', 'b', 'c']`", "`['a', 'b', '', 'c']`", "`['a b  c']`", "`['a', ' ', 'b']`"]
+  answer: [0]
+  explain: '`split()` with no argument ignores repeated spaces.'
+- q: |
+    What is the output?
+    ```python
+    print(chr(ord("a") + 3))
+    ```
+  type: single
+  options: ["`d`", "`c`", "`100`", "`a3`"]
+  answer: [0]
+  explain: '`ord("a")` is 97; plus 3 is 100; `chr(100)` is "d".'
+- q: What does `"banana".find("x")` return?
+  type: single
+  options: ["`-1`", "`0`", "`None`", "It raises an error"]
+  answer: [0]
+  explain: '`find` returns -1 when nothing is found. (`index` raises an error instead.)'

@@ -1,0 +1,22 @@
+from typing import Any, Protocol
+
+from app.db.models import Task
+
+
+class TaskRepository(Protocol):
+    """What the service needs from storage. Any class with these async methods fits."""
+
+    async def list(
+        self,
+        *,
+        done: bool | None = None,
+        priority: str | None = None,
+        q: str | None = None,
+        sort: str = "-id",
+        limit: int = 20,
+        offset: int = 0,
+    ) -> tuple[list[Task], int]: ...
+    async def get(self, task_id: int) -> Task | None: ...
+    async def add(self, data: dict[str, Any]) -> Task: ...
+    async def update(self, task_id: int, changes: dict[str, Any]) -> Task | None: ...
+    async def delete(self, task_id: int) -> bool: ...

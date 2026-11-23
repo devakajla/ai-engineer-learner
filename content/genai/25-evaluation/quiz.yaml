@@ -1,0 +1,82 @@
+- q: Why evaluate retrieval and generation separately?
+  type: single
+  options:
+    - It is required by the API
+    - The fix is different. A poor search needs retrieval changes, not a new prompt
+    - Generation cannot be measured
+    - Retrieval costs more
+  answer: [1]
+  explain: If the right chunk is not found, no prompt can help. Separate numbers show which stage to fix.
+- q: |
+    What is recall@3 here?
+    ```python
+    expected = ["a", "b"]
+    retrieved = ["x", "a", "y", "b"]
+    ```
+  type: single
+  options:
+    - "0.5"
+    - "1.0"
+    - "0.25"
+    - "0.75"
+  answer: [0]
+  explain: In the top 3 (x, a, y) only "a" is found. 1 of 2 expected gives 0.5. "b" is at position 4.
+- q: |
+    What is the reciprocal rank?
+    ```python
+    expected = ["a"]
+    retrieved = ["x", "y", "a"]
+    ```
+  type: single
+  options:
+    - "1.0"
+    - "0.5"
+    - "0.333..."
+    - "0"
+  answer: [2]
+  explain: The first right chunk is at rank 3, so the score is 1/3.
+- q: If you raise `k` from 3 to 10, what usually happens?
+  type: single
+  options:
+    - Recall goes up and precision goes down
+    - Both go up
+    - Both go down
+    - Recall goes down and precision goes up
+  answer: [0]
+  explain: More results find more right chunks, but a bigger share of the results is noise.
+- q: Which belong in a good retrieval test set?
+  type: multi
+  options:
+    - Questions with different wording than the docs
+    - Questions with exact names or codes
+    - Questions that have no answer in the docs
+    - Only questions copied word for word from the docs
+  answer: [0, 1, 2]
+  explain: Easy copied questions make the numbers look good and hide real problems. Unanswerable questions test "I don't know".
+- q: What is faithfulness?
+  type: single
+  options:
+    - How fast the answer is
+    - Whether every claim in the answer is supported by the retrieved chunks
+    - How long the answer is
+    - Whether the answer is polite
+  answer: [1]
+  explain: An unfaithful answer states things the context does not support, which is a hallucination.
+- q: Why is a very small test set risky?
+  type: single
+  options:
+    - It is too slow
+    - A single question changes the score a lot, so small differences are noise
+    - It cannot use recall
+    - Models refuse small sets
+  answer: [1]
+  explain: With 20 questions, one question moves recall by 5 points. Grow the set over time.
+- q: What should you do with a real question that the system answered wrongly in production?
+  type: single
+  options:
+    - Ignore it
+    - Add it to the test set, so the failure is checked on every change
+    - Delete the log
+    - Retrain the embedding model
+  answer: [1]
+  explain: Each real failure becomes a permanent regression test.
