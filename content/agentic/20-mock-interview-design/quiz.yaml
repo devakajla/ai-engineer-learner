@@ -1,0 +1,72 @@
+- q: What should you do first in a system design interview?
+  type: single
+  options:
+  - Draw the architecture
+  - Ask about users, data, scale and limits, and confirm the requirements
+  - Choose the database
+  - Describe your favourite tools
+  answer:
+  - 1
+  explain: Requirements decide which parts you need. Drawing first often produces a design for the wrong problem.
+- q: A token bucket has capacity 3 and rate 1 per second. Five requests arrive at the same instant on a full bucket. How many are allowed?
+  type: single
+  options:
+  - '5'
+  - '3'
+  - '1'
+  - '0'
+  answer:
+  - 1
+  explain: A full bucket allows a burst up to its capacity. The other two are refused until tokens refill.
+- q: Why do you filter by the user's permissions during retrieval and not in the prompt?
+  type: single
+  options:
+  - Filtering is faster to write
+  - Forbidden text must never reach the model, because the model cannot be trusted to hide what it has seen
+  - The prompt has no space
+  - Vector databases cannot return text
+  answer:
+  - 1
+  explain: Filter before the prompt. A model that has seen a secret chunk may repeat it.
+- q: A support agent can refund money. Which safeguards are good? (pick all)
+  type: multi
+  options:
+  - A refund limit enforced in the tool, not in the prompt
+  - An idempotency key so a retry cannot pay twice
+  - Human approval above the limit
+  - Telling the model in the prompt to be careful, and nothing else
+  answer:
+  - 0
+  - 1
+  - 2
+  explain: Limits must be enforced in code. Prompts alone can be talked around.
+- q: Hash sharding sends tenant X to shard `md5(X) % 4`. You change to 5 shards. What happens, and what do real systems use to reduce the problem?
+  type: single
+  options:
+  - Nothing changes
+  - Many tenants move to a different shard; consistent hashing or a lookup table reduces the movement
+  - All tenants go to shard 0
+  - The hash stops working
+  answer:
+  - 1
+  explain: The modulo changes for most tenants. Consistent hashing or a tenant-to-shard table moves far fewer.
+- q: p95 latency is 4 seconds and the average is 900 ms. Why does p95 matter more for users?
+  type: single
+  options:
+  - It is easier to compute
+  - Slow requests are the ones users remember, and the average hides them
+  - The average is always wrong
+  - p95 includes the error rate
+  answer:
+  - 1
+  explain: p95 shows the slow tail. One in twenty requests takes at least that long.
+- q: For a data-analysis agent that writes SQL, which is the strongest protection against a destructive query?
+  type: single
+  options:
+  - A prompt that says never delete
+  - A read-only database account and a sandbox with row and time limits
+  - A bigger model
+  - A longer schema in the prompt
+  answer:
+  - 1
+  explain: Permissions in the system stop the harm even if the model is fooled.

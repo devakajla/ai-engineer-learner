@@ -1,0 +1,73 @@
+- q: What does the model see about a `@tool` function?
+  type: single
+  options:
+    - The full source code of the function
+    - Its name, its description (docstring) and the argument schema from the type hints
+    - Only its name
+    - Only the return value
+  answer: [1]
+  explain: LangChain builds a JSON schema from the name, docstring and type hints. A weak docstring means a hard-to-use tool.
+- q: |
+    What is wrong with this loop step?
+    ```python
+    ai = bound.invoke(messages)
+    messages.extend(run_tool_calls(ai, tools))
+    ```
+  type: single
+  options:
+    - Nothing, it is correct
+    - The AIMessage with the tool calls was not added to messages first
+    - run_tool_calls must be called twice
+    - bound.invoke needs a string, not a list
+  answer: [1]
+  explain: The tool results must follow the AIMessage that asked for them. Add `messages.append(ai)` before the tool messages.
+- q: What must a `ToolMessage` carry so the model can match it to its request?
+  type: single
+  options:
+    - The tool name only
+    - The same `tool_call_id` as the call
+    - The user's name
+    - The model name
+  answer: [1]
+  explain: Each tool call has an id. The ToolMessage answers that id.
+- q: A tool raises an error. What is the best thing for the agent loop to do?
+  type: single
+  options:
+    - Crash, so the bug is seen at once
+    - Hide the call and go on
+    - Return "Error: ..." as the ToolMessage so the model can read it and try again
+    - Call the same tool in an endless loop
+  answer: [2]
+  explain: The model can often fix a bad argument when it sees the error. A crash loses the whole run.
+- q: |
+    What does this retriever return for `search("tea")` if the documents are "Tea grows in Assam", "Coffee in Karnataka" and "Tea needs rain", and k is 1?
+    ```python
+    # score = number of query words found in the document, ties keep the original order
+    ```
+  type: single
+  options:
+    - Only "Tea grows in Assam"
+    - Only "Tea needs rain"
+    - Both tea documents
+    - All three documents
+  answer: [0]
+  explain: Both tea documents score 1 and the coffee one scores 0. With k=1 the first of the tied documents wins.
+- q: |
+    In `{"context": retriever | format_docs, "question": RunnablePassthrough()} | prompt`, what does `RunnablePassthrough()` do?
+  type: single
+  options:
+    - It retrieves documents
+    - It sends the original question on unchanged
+    - It formats the context
+    - It stops the chain
+  answer: [1]
+  explain: Both branches get the same question. One makes the context, the other keeps the question text for the prompt.
+- q: Which statements about SDK versus LangChain are true? (pick all)
+  type: multi
+  options:
+    - LangChain makes it easier to swap one model provider for another
+    - For a single plain model call the SDK alone is usually simpler
+    - LangChain removes the need to understand the agent loop
+    - LangChain adds layers that can be harder to debug
+  answer: [0, 1, 3]
+  explain: LangChain helps with swapping and reuse, but it adds layers. It does not replace understanding the loop it runs for you.

@@ -284,26 +284,6 @@ Playlist-backed problems come first in each lesson (video segment shown on the e
 | [ ] | `dsa/19-kadane/14-longest-mountain` | Longest mountain | M | two-streaks | |
 | [ ] | `dsa/19-kadane/15-profit-many-trades` | Best time to buy and sell (many trades) | E | collect-rises | |
 
-### 19 · Kadane's algorithm
-
-| Done | ID | Title | Diff | Pattern | Solved on |
-| --- | --- | --- | --- | --- | --- |
-| [ ] | `dsa/19-kadane/01-max-subarray` | Maximum subarray sum | M | kadane | |
-| [ ] | `dsa/19-kadane/02-max-product-subarray` | Maximum product subarray | M | kadane-max-min | |
-| [ ] | `dsa/19-kadane/03-max-subarray-one-deletion` | Maximum subarray sum with one deletion | H | kadane-two-states | |
-| [ ] | `dsa/19-kadane/04-max-circular-subarray` | Maximum circular subarray sum | M | kadane-circular | |
-| [ ] | `dsa/19-kadane/05-best-time-to-buy-sell` | Best time to buy and sell (one trade) | E | running-min | |
-| [ ] | `dsa/19-kadane/06-min-subarray-sum` | Minimum subarray sum | E | kadane | |
-| [ ] | `dsa/19-kadane/07-max-absolute-subarray` | Maximum absolute subarray sum | M | kadane-both | |
-| [ ] | `dsa/19-kadane/08-longest-turbulent` | Longest turbulent subarray | M | kadane-streak | |
-| [ ] | `dsa/19-kadane/09-max-len-positive-product` | Longest subarray with a positive product | M | kadane-signs | |
-| [ ] | `dsa/19-kadane/10-best-sightseeing-pair` | Best sightseeing pair | M | best-so-far | |
-| [ ] | `dsa/19-kadane/11-max-increasing-sum` | Maximum ascending subarray sum | E | kadane-streak | |
-| [ ] | `dsa/19-kadane/12-longest-increasing-run` | Longest increasing run | E | kadane-streak | |
-| [ ] | `dsa/19-kadane/13-max-sum-at-least-k` | Maximum subarray sum with length at least k | M | prefix-min | |
-| [ ] | `dsa/19-kadane/14-longest-mountain` | Longest mountain | M | two-streaks | |
-| [ ] | `dsa/19-kadane/15-profit-many-trades` | Best time to buy and sell (many trades) | E | collect-rises | |
-
 ### 20 · Intervals
 
 | Done | ID | Title | Diff | Pattern | Solved on |

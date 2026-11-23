@@ -189,7 +189,7 @@ export default function Home() {
       ) : (
         rm.state === "running" && (
           <section className="card all-done">
-            <h2>Done for today.</h2>
+            <h2>{rm.tasks.length === 0 ? "Rest day." : "Done for today."}</h2>
             <p className="muted">
               {rm.streak > 0 ? `Streak: ${rm.streak} ${rm.streak === 1 ? "day" : "days"}. ` : ""}
               {tomorrow && `Tomorrow (${niceDate(tomorrow.date)}): ${tomorrow.tasks.map((t) => t.title).join(", ")}.`}

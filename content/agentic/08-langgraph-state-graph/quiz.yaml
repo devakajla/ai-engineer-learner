@@ -1,0 +1,70 @@
+- q: What should a LangGraph node return?
+  type: single
+  options:
+    - The whole state, always
+    - Only the keys it wants to change
+    - A string with the next node's name
+    - Nothing, it must edit the state in place
+  answer: [1]
+  explain: A node returns a dict of updates. LangGraph merges it into the state using the reducers.
+- q: |
+    The state is `{"a": 0, "b": []}` where `b` has the `add` reducer and `a` has none. Node 1 returns `{"a": 1, "b": ["x"]}`, then node 2 returns `{"a": 2, "b": ["y"]}`. What is the final state?
+  type: single
+  options:
+    - "{'a': 2, 'b': ['y']}"
+    - "{'a': 2, 'b': ['x', 'y']}"
+    - "{'a': 3, 'b': ['x', 'y']}"
+    - "{'a': 1, 'b': ['x']}"
+  answer: [1]
+  explain: Without a reducer `a` is replaced (last value, 2). The `add` reducer appends to `b`.
+- q: What is the job of the function in `add_conditional_edges("classify", pick_route, {...})`?
+  type: single
+  options:
+    - It runs the next node
+    - It returns a label, and the mapping turns the label into the next node
+    - It changes the state
+    - It compiles the graph
+  answer: [1]
+  explain: The function only chooses. The dict maps its label to a node name (or END).
+- q: |
+    What is wrong with this node for a state `messages: Annotated[list, add_messages]`?
+    ```python
+    def call_model(state):
+        reply = model.invoke(state["messages"])
+        return {"messages": reply}
+    ```
+  type: single
+  options:
+    - Nothing
+    - 'It should return a list, as {"messages": [reply]}'
+    - It must not call the model
+    - It must return the whole state
+  answer: [1]
+  explain: The reducer takes new messages as a list. Return a list with the one reply.
+- q: A graph has a loop whose exit condition is never true. What happens?
+  type: single
+  options:
+    - It runs forever and costs money with no stop
+    - LangGraph raises GraphRecursionError after the recursion limit (25 steps by default)
+    - It silently returns the first state
+    - It is rejected when you call compile()
+  answer: [1]
+  explain: The recursion limit is a safety net. You should still add your own counter or stop condition.
+- q: Which of these are good reasons to choose a graph over a plain `while` loop? (pick all)
+  type: multi
+  options:
+    - You want to save progress and resume later
+    - You want a human to approve a step
+    - The flow is two fixed steps with no branches
+    - You want to stream each step and see the flow as a picture
+  answer: [0, 1, 3]
+  explain: Checkpoints, human approval and streaming are what LangGraph adds. For two fixed steps plain code is simpler.
+- q: What do `START` and `END` mean in a graph?
+  type: single
+  options:
+    - Two nodes that you must write yourself
+    - Special points: where a run begins and where it finishes
+    - Two reducers
+    - Names of state keys
+  answer: [1]
+  explain: They are special markers. Edges go from START to the first node, and the last node goes to END.

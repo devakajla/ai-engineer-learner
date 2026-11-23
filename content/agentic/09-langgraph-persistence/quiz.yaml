@@ -1,0 +1,72 @@
+- q: What identifies one conversation for the checkpointer?
+  type: single
+  options:
+    - The model name
+    - The thread_id in the config
+    - The first message
+    - The name of the start node
+  answer: [1]
+  explain: Calls with the same thread_id continue the same saved state. A new id starts a new conversation.
+- q: |
+    A chat app compiled with a checkpointer. On the second call you do this. What happens?
+    ```python
+    app.invoke({"messages": [HumanMessage("Who am I?")]}, {"configurable": {"thread_id": "a"}})
+    ```
+  type: single
+  options:
+    - The model sees only "Who am I?", because you sent only that
+    - The model sees the earlier messages of thread "a" plus the new one
+    - LangGraph raises an error because the history is missing
+    - The thread is deleted
+  answer: [1]
+  explain: The saved state is loaded, and the add_messages reducer adds the new message to it.
+- q: Which stream mode would you use to show the model's answer as it is typed?
+  type: single
+  options:
+    - '"values"'
+    - '"updates"'
+    - '"messages"'
+    - '"debug"'
+  answer: [2]
+  explain: '"messages" gives the model text in small pieces. "updates" gives one item per node, not per token.'
+- q: Why is `InMemorySaver` not good for a real app?
+  type: single
+  options:
+    - It cannot store messages
+    - It is gone when the program stops
+    - It needs a paid licence
+    - It does not support thread ids
+  answer: [1]
+  explain: It keeps state in RAM. After a restart every conversation is lost. Use a database saver in production.
+- q: |
+    What does this do?
+    ```python
+    forked = app.update_state(snapshot.config, {"n": 10})
+    app.invoke(None, forked)
+    ```
+  type: single
+  options:
+    - Deletes the old history
+    - Writes a changed state as a new checkpoint and runs forward from it
+    - Replays the run with the same state
+    - Starts a new thread
+  answer: [1]
+  explain: update_state makes a new checkpoint with the change (a fork). invoke(None, config) continues from it. The old history stays.
+- q: What is the difference between a checkpointer and a store (long-term memory)?
+  type: single
+  options:
+    - There is none
+    - A checkpointer keeps the state of one thread; a store keeps facts that last across threads
+    - A store is faster
+    - A checkpointer is only for tools
+  answer: [1]
+  explain: Short-term memory is the thread state. Long-term memory (like user preferences) lives across threads.
+- q: Which of these are mistakes? (pick all)
+  type: multi
+  options:
+    - Using one thread_id for every user
+    - Sending only the new message on each call
+    - Never deleting threads that hold personal data
+    - Calling get_state to read the saved messages
+  answer: [0, 2]
+  explain: One shared id mixes users. Personal data needs a delete path. Sending only the new message and reading state are correct.

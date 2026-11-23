@@ -1,7 +1,8 @@
 # The order here IS the learning order. Never rename an existing slug (progress is stored by it).
 # Prerequisites: Python Level 1, GenAI Levels 1-2 (tool calling) and GenAI lesson 27 (the agent loop).
 # Study order in week 6: agentic 01, then GenAI 27, then agentic 02-05. Exercises are offline: they use a fake client, never the network.
-# Frameworks (LangChain, LangGraph) come in the next levels. This level uses plain Python only.
+# Level A1 uses plain Python only. A2 is LangChain + LangGraph (week 7), A3 is advanced agents (week 8), A4 is production, capstone and mock interviews (week 9).
+# All lessons 01-20 are written. Project steps 21 (lesson 12), 23 (lesson 16) and 26 (lesson 18) continue DevDocs Copilot (see CLAUDE.md for the step list).
 title: Agentic AI
 levels:
   - id: a1
@@ -12,3 +13,27 @@ levels:
       - {slug: 03-workflow-patterns, title: "Workflow patterns: chain, route, orchestrate, improve"}
       - {slug: 04-react-plan-reflect, title: "ReAct, plan-and-execute and reflection"}
       - {slug: 05-failure-modes-frameworks, title: "Why agents fail, and a map of frameworks"}
+  - id: a2
+    title: "Level A2 — LangChain and LangGraph"
+    lessons:
+      - {slug: 06-langchain-basics, title: "LangChain basics: models, prompts, parsers and LCEL"}
+      - {slug: 07-langchain-tools-retrievers, title: "LangChain tools and retrievers, and SDK vs LangChain"}
+      - {slug: 08-langgraph-state-graph, title: "LangGraph: state, nodes, edges, reducers and routing"}
+      - {slug: 09-langgraph-persistence, title: "LangGraph: checkpointer, persistence, streaming and time travel"}
+      - {slug: 10-langgraph-human-in-loop, title: "LangGraph: human-in-the-loop, interrupts, parallel branches and subgraphs"}
+  - id: a3
+    title: "Level A3 — Advanced agents"
+    lessons:
+      - {slug: 11-memory-context-engineering, title: "Agent memory and context engineering"}
+      - {slug: 12-agentic-rag-langgraph, title: "Agentic RAG in LangGraph"}
+      - {slug: 13-multi-agent, title: "Multi-agent systems: supervisor, handoff, and when not to"}
+      - {slug: 14-mcp, title: "MCP: a small server and a client"}
+      - {slug: 15-agent-safety, title: "Agent safety: injection through tools, step limits, cost caps, validation"}
+  - id: a4
+    title: "Level A4 — Production, capstone and interview"
+    lessons:
+      - {slug: 16-agent-eval-tracing, title: "Agent evaluation and tracing (Langfuse, LangSmith)"}
+      - {slug: 17-llm-system-design, title: "LLM system design: RAG at scale, multi-tenant, latency, cost, safety"}
+      - {slug: 18-capstone-agent, title: "Capstone: an agent with RAG, tools, tracing and evals"}
+      - {slug: 19-mock-interview-concepts, title: "Mock interview 1: concepts", kind: interview}
+      - {slug: 20-mock-interview-design, title: "Mock interview 2: system design", kind: interview}

@@ -13,8 +13,9 @@ One place for methods, built-ins and patterns, with short theory and runnable ex
 | [comprehensions-and-sorting.md](comprehensions-and-sorting.md) | list comprehensions, `sorted(key=)`, grids, records | `python/12`, `dsa/11` |
 | [functions-and-patterns.md](functions-and-patterns.md) | defaults, early return, and the recurring problem patterns | `python/13`, `dsa/01-05, 12` |
 | [heap-and-deque.md](heap-and-deque.md) | `heapq` push/pop/heapify/nlargest, `deque` queue | `dsa/24`, `dsa/27` |
-| [genai-groq.md](genai-groq.md) | `Groq` client, messages and roles, settings, streaming, errors and retries, tokens and cost, prompt patterns, templates, JSON, Pydantic checks, tool calling, chat memory | `genai/02-12` |
+| [genai-groq.md](genai-groq.md) | `Groq` client, messages and roles, settings, streaming, errors and retries, tokens and cost, prompt patterns, templates, JSON, Pydantic checks, tool calling, chat memory, agent loop, SSE, cache and cost, guardrails, agentic patterns, fine-tuning, quantization | `genai/02-12, 27-30, 43-44` |
 | [genai-retrieval.md](genai-retrieval.md) | embeddings, numpy and cosine similarity, chunking, Chroma, BM25, reciprocal rank fusion, retrieval metrics | `genai/14-20` |
+| [agentic-langchain-langgraph.md](agentic-langchain-langgraph.md) | LangChain LCEL and tools, LangGraph state, persistence, human-in-the-loop, memory, agentic RAG, multi-agent, MCP, agent safety, tracing and evals, system design, capstone, mock interviews | `agentic/06-20` |
 
 ## Entry format
 

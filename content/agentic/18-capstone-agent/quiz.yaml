@@ -1,0 +1,65 @@
+- q: Why build plain RAG and a baseline score BEFORE adding agent features?
+  type: single
+  options:
+    - Plain RAG is faster to demo
+    - Without a baseline you cannot tell whether a later change improved anything
+    - Agents cannot work without RAG
+    - The framework requires it
+  answer: [1]
+  explain: Improvement is a comparison. The baseline is the number everything else is compared with.
+- q: |
+    `route_question` gets the reply "I think it is about tasks". What does it return?
+  type: single
+  options:
+    - '"tasks"'
+    - '"docs", the safe default, because the reply is not one clean word'
+    - '"chat"'
+    - It raises an error
+  answer: [1]
+  explain: Strict parsing. An unclear reply falls back to the harmless route, which is searching the docs.
+- q: The TaskFlow tool raises an error while answering. What should the capstone do?
+  type: single
+  options:
+    - Ask the model to guess the answer anyway
+    - Give a polite failure message, keep the error in the trace, and make no more model calls
+    - Retry for ever
+    - Delete the trace
+  answer: [1]
+  explain: A made-up answer is worse than an honest failure. The error span stays in the trace for debugging.
+- q: Why is the tool output wrapped as untrusted data before it goes to the model?
+  type: single
+  options:
+    - To save tokens
+    - Because it may contain instructions from an attacker (indirect prompt injection)
+    - Because tools return XML
+    - To make the answer shorter
+  answer: [1]
+  explain: Tool output is outside text. The wrapper and a system rule tell the model to treat it as data only.
+- q: Which cases belong in the capstone eval set? (pick all)
+  type: multi
+  options:
+    - Docs questions with a known fact
+    - Task questions that need the TaskFlow tool
+    - Questions the docs cannot answer, where the right answer is "I could not find this"
+    - A document chunk that contains "ignore previous instructions"
+  answer: [0, 1, 2, 3]
+  explain: A good set covers normal cases, tools, refusals and attacks.
+- q: Which README content impresses an interviewer most?
+  type: single
+  options:
+    - A long list of libraries
+    - The report numbers before and after an improvement, and the trade-offs of three design decisions
+    - A logo
+    - Screenshots only
+  answer: [1]
+  explain: Numbers and trade-offs show that you measure and decide with evidence.
+- q: |
+    The report says `p95 latency: 3100 ms` and the average is 1200 ms. What does that tell you?
+  type: single
+  options:
+    - Nothing, the average is enough
+    - A few slow requests exist, and users remember those
+    - The model is broken
+    - The cache is too big
+  answer: [1]
+  explain: p95 shows the slow tail. 95 percent of requests finish within 3100 ms.

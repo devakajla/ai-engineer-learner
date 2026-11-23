@@ -1,0 +1,68 @@
+- q: |
+    What does this return?
+    ```python
+    request_cost(1000, 500, 0.5, 1.5)   # prices are dollars per million tokens
+    ```
+  type: single
+  options:
+    - "0.00125"
+    - "1.25"
+    - "0.125"
+    - "1250"
+  answer: [0]
+  explain: (1000 x 0.5 + 500 x 1.5) / 1,000,000 = 1250 / 1,000,000 = 0.00125 dollars.
+- q: Why does a 6-step agent cost more than 6 times a single model call?
+  type: single
+  options:
+    - Agents use a bigger model
+    - Each step re-sends the growing history, so input tokens grow at every step
+    - Tools cost money
+    - Streaming doubles the price
+  answer: [1]
+  explain: Input tokens are billed again on every call, and the history grows with every step.
+- q: A response cache has a 30 percent hit rate. What is saved?
+  type: single
+  options:
+    - Exactly 30 percent, always
+    - About 30 percent of the model calls, minus the small cost of the cache lookups
+    - Nothing, caches never help
+    - 70 percent
+  answer: [1]
+  explain: Hits skip the model call, but every request still pays for a lookup, so the saving is slightly below the hit rate.
+- q: |
+    A pipeline runs auth (20 ms), then vector and keyword search in parallel (80 ms and 50 ms), then the LLM (900 ms). What is the total latency?
+  type: single
+  options:
+    - 1050 ms
+    - 1000 ms
+    - 1100 ms
+    - 900 ms
+  answer: [1]
+  explain: Groups add up, and inside a parallel group only the slowest counts. 20 + 80 + 900 = 1000 ms.
+- q: Which change makes the request faster in the pipeline above?
+  type: single
+  options:
+    - Speed up the keyword search from 50 to 10 ms
+    - Stream the answer and use a faster model for the 900 ms step
+    - Add more logging
+    - Move auth after the LLM
+  answer: [1]
+  explain: Only the critical path matters. The keyword search is hidden inside the slower vector search.
+- q: Which statements about multi-tenant design are true? (pick all)
+  type: multi
+  options:
+    - Every record carries a tenant id and every query filters on it, enforced in one place
+    - A cache shared between tenants is safe if it is fast
+    - Large or regulated tenants may get their own index
+    - Limits and cost should be metered per tenant
+  answer: [0, 2, 3]
+  explain: Isolation must be systematic. A cache shared across tenants can leak answers.
+- q: In a design interview, which should come FIRST?
+  type: single
+  options:
+    - Picking the vector database
+    - Clarifying the requirements and doing rough numbers
+    - Drawing the Kubernetes cluster
+    - Choosing the model
+  answer: [1]
+  explain: Requirements and numbers decide which parts you need. Tools come after.

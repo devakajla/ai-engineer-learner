@@ -1,0 +1,71 @@
+- q: What is the main difference between plain RAG and agentic RAG?
+  type: single
+  options:
+    - Agentic RAG uses a bigger embedding model
+    - Agentic RAG adds decisions (grade, rewrite, retry, give up) to the pipeline
+    - Agentic RAG does not use documents
+    - Plain RAG cannot cite sources
+  answer: [1]
+  explain: Plain RAG is a fixed line. Agentic RAG looks at what it found and chooses the next step.
+- q: A grader model answers "maybe" for a chunk. What does `reply.strip().lower().startswith("yes")` give?
+  type: single
+  options:
+    - "True"
+    - "False"
+    - An error
+    - "None"
+  answer: [1]
+  explain: Only a clear "yes" keeps a chunk. A wrong chunk in the prompt does more harm than a missing one.
+- q: |
+    What does `decide_next` return here?
+    ```python
+    state = {"relevant": [], "tries": 2, "max_tries": 2}
+    ```
+  type: single
+  options:
+    - '"answer"'
+    - '"rewrite"'
+    - '"give_up"'
+    - '"retrieve"'
+  answer: [2]
+  explain: No relevant chunks and no tries left, so the honest exit is give_up.
+- q: Which two things protect an agentic RAG graph from looping forever? (pick two)
+  type: multi
+  options:
+    - A try counter in the state with a give_up exit
+    - LangGraph's recursion_limit
+    - A higher temperature
+    - A longer system prompt
+  answer: [0, 1]
+  explain: max_tries ends the loop in a friendly way. recursion_limit raises GraphRecursionError as a last wall.
+- q: Why is "I could not find this in the documents" a good answer?
+  type: single
+  options:
+    - It is cheaper than any other answer
+    - It avoids a confident made-up answer and builds trust
+    - It always means the index is broken
+    - Users prefer short answers
+  answer: [1]
+  explain: A system that admits it does not know is safer and more trusted than one that guesses.
+- q: |
+    The stream of `stream_mode="updates"` gave these node names. What happened?
+    ```python
+    ['retrieve', 'grade', 'rewrite', 'retrieve', 'grade', 'answer']
+    ```
+  type: single
+  options:
+    - The first search found nothing relevant, the question was rewritten, the second search worked
+    - The graph crashed and restarted
+    - The answer was cached
+    - The grader was skipped
+  answer: [0]
+  explain: grade then rewrite means no relevant chunks. The second retrieve and grade then led to the answer.
+- q: When should you NOT add agentic steps to your RAG system?
+  type: single
+  options:
+    - When your eval set shows plain RAG already works well and latency matters
+    - When you use LangGraph
+    - When you have more than 3 documents
+    - Never, more steps are always better
+  answer: [0]
+  explain: Each step adds model calls, latency and failure points. Add one only when an eval shows it fixes real failures.

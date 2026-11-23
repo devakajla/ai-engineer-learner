@@ -1,0 +1,69 @@
+- q: A user starts a NEW thread next week and the assistant should still know their name. Which memory do you need?
+  type: single
+  options:
+    - Short-term memory (the checkpointer of the old thread)
+    - Long-term memory (a per-user store)
+    - A bigger context window
+    - A lower temperature
+  answer: [1]
+  explain: The checkpointer is per thread. Facts that must survive across threads go in a store keyed by user.
+- q: Name the four moves of context engineering.
+  type: single
+  options:
+    - Write, select, compress, isolate
+    - Read, copy, paste, delete
+    - Train, tune, test, deploy
+    - Prompt, embed, rank, cite
+  answer: [0]
+  explain: Write (save outside the prompt), select (pick the relevant), compress (shorten) and isolate (small separate contexts).
+- q: |
+    What does this print?
+    ```python
+    words = set("strong tea please".split())
+    fact = "Dev likes strong tea"
+    print(len(words & set(fact.lower().split())))
+    ```
+  type: single
+  options:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+  answer: [2]
+  explain: The shared words are "strong" and "tea". `&` keeps what both sets contain.
+- q: The model returns `Sure! ["likes tea"]` when you asked for a JSON list of facts. What is a good way to read it?
+  type: single
+  options:
+    - json.loads the whole reply and let it crash
+    - Cut from the first "[" to the last "]", parse in try/except, and return [] on any problem
+    - Save the whole reply as one fact
+    - Ask the model again forever
+  answer: [1]
+  explain: Models add words around JSON. Cut, parse safely and fall back to saving nothing. A wrong memory is worse than none.
+- q: When you compress a chat, which part do you summarise?
+  type: single
+  options:
+    - The newest messages
+    - The older messages, keeping the last few word for word
+    - Only the system prompt
+    - Everything including the new question
+  answer: [1]
+  explain: The newest messages are what the user is asking about now, so they stay exact. Older ones become a short summary.
+- q: Over the budget, which messages does `build_context` drop first?
+  type: single
+  options:
+    - The system prompt
+    - The new question
+    - The oldest history messages
+    - The recalled facts, always
+  answer: [2]
+  explain: The system prompt and the question are never dropped. Old history is the least useful part.
+- q: Which are real risks of long-term agent memory? (pick all)
+  type: multi
+  options:
+    - A wrong fact is saved and repeated for months
+    - Personal data is stored without a way to delete it
+    - An attacker plants a fact through a tool result (memory poisoning)
+    - The model forgets how to speak English
+  answer: [0, 1, 2]
+  explain: Validate what you save, let users see and delete it, and track where each fact came from.

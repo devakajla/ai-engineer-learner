@@ -5,10 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 import { hm, Mark, niceDate, taskHref, TrackTag } from "@/components/PlanBits";
 import { api, Roadmap, RoadmapDay, RoadmapTask } from "@/lib/api";
 
-type DayState = "done" | "part" | "missed" | "today" | "future";
+type DayState = "done" | "part" | "missed" | "today" | "future" | "off";
 
 function dayState(d: RoadmapDay, today: string): DayState {
   const done = d.tasks.filter((t) => t.done).length;
+  if (d.tasks.length === 0) return "off"; // rest day (Sunday)
   if (d.date > today) return "future";
   if (done === d.tasks.length) return "done";
   if (d.date === today) return "today";
@@ -25,10 +26,10 @@ export default function PlanPage() {
   const weeks = useMemo(() => {
     if (!rm) return [];
     const out: { n: number; days: RoadmapDay[] }[] = [];
-    // Week 1 = Mon 23 Nov. Day 1 (Sun 22 Nov) is the orientation day, shown before week 1.
+    // The plan starts on a Monday, so every 7 days is one week.
     rm.days.forEach((d, i) => {
-      const w = i === 0 ? 0 : Math.floor((i - 1) / 7) + 1;
-      (out[w] ??= { n: w, days: [] }).days.push(d);
+      const w = Math.floor(i / 7);
+      (out[w] ??= { n: w + 1, days: [] }).days.push(d);
     });
     return out;
   }, [rm]);
@@ -53,8 +54,10 @@ export default function PlanPage() {
 
   const todayWeek = weeks.findIndex((w) => w.days.some((d) => d.date === rm.today));
   const totalMinutes = rm.days.reduce((n, d) => n + d.tasks.reduce((a, t) => a + t.minutes, 0), 0);
-  // Heatmap: columns are weeks (Mon..Sun rows); the first day (a Sunday) sits in its own first column.
-  const cells = rm.days.map((d, i) => ({ d, col: i === 0 ? 0 : Math.floor((i - 1) / 7) + 1, row: (new Date(d.date + "T00:00:00").getDay() + 6) % 7 }));
+  // Heatmap: columns are weeks, rows are Mon..Sun. The first column starts on the weekday of the first day.
+  const rowOf = (date: string) => (new Date(date + "T00:00:00").getDay() + 6) % 7;
+  const firstRow = rm.days.length ? rowOf(rm.days[0].date) : 0;
+  const cells = rm.days.map((d, i) => ({ d, col: Math.floor((i + firstRow) / 7), row: rowOf(d.date) }));
 
   return (
     <main className="plan-page">
@@ -109,12 +112,12 @@ export default function PlanPage() {
           return (
             <details key={w.n} open={i === todayWeek} className="week">
               <summary>
-                <strong>{w.n === 0 ? "Day 1" : `Week ${w.n}`}</strong>
+                <strong>Week {w.n}</strong>
                 <span className="muted"> · {niceDate(w.days[0].date)} to {niceDate(w.days[w.days.length - 1].date)}</span>
                 <span className="week-topics">{main.join(" + ")}</span>
                 <span className="muted push-right">{tasks.filter((t) => t.done).length}/{tasks.length}</span>
               </summary>
-              {w.days.map((d) => (
+              {w.days.filter((d) => d.tasks.length > 0).map((d) => (
                 <div key={d.date} className={`plan-day ${d.date === rm.today ? "is-today" : ""}`}>
                   <div className="plan-day-date">
                     {niceDate(d.date)}

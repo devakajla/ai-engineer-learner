@@ -1,0 +1,74 @@
+- q: What is a Runnable in LangChain?
+  type: single
+  options:
+    - Any piece (prompt, model, parser, or your own function) that has invoke, batch and stream
+    - A model that runs on your own computer
+    - A tool that a model can call
+    - A saved chat history
+  answer: [0]
+  explain: Because every piece shares the same methods, you can join them with the | sign.
+- q: |
+    What does this print?
+    ```python
+    step = RunnableLambda(lambda x: x + 1) | RunnableLambda(lambda x: x * 10)
+    print(step.invoke(2))
+    ```
+  type: single
+  options:
+    - "30"
+    - "21"
+    - "12"
+    - "3"
+  answer: [0]
+  explain: The first step gives 2 + 1 = 3. The output goes into the second step, 3 * 10 = 30.
+- q: In `prompt | model | StrOutputParser()`, what is the job of `StrOutputParser`?
+  type: single
+  options:
+    - It checks that the prompt has all its variables
+    - It turns the model's AIMessage into a plain string
+    - It sends the request to the server
+    - It retries when the model fails
+  answer: [1]
+  explain: The model returns an AIMessage object. The parser takes its text so the rest of your code gets a string.
+- q: |
+    You want a prompt that shows the JSON shape `{"a": 1}` to the model. How do you write it inside a prompt template?
+  type: single
+  options:
+    - '{"a": 1}'
+    - '{{"a": 1}}'
+    - '\{"a": 1\}'
+    - '[{"a": 1}]'
+  answer: [1]
+  explain: A single brace starts a variable. Doubled braces give a real brace in the final text.
+- q: |
+    What does this print?
+    ```python
+    both = RunnableParallel({"upper": RunnableLambda(str.upper), "length": RunnableLambda(len)})
+    print(both.invoke("abc"))
+    ```
+  type: single
+  options:
+    - "{'upper': 'ABC', 'length': 3}"
+    - "['ABC', 3]"
+    - "'ABC'"
+    - "It raises an error"
+  answer: [0]
+  explain: A parallel Runnable gives the same input to every branch and returns a dict with one key per branch.
+- q: Which of these are good reasons to use LangChain? (pick all that apply)
+  type: multi
+  options:
+    - You may swap the model provider by changing one line
+    - You want shared retry, fallback and tracing for many calls
+    - You have one plain model call with a clear prompt
+    - Your team already uses it
+  answer: [0, 1, 3]
+  explain: LangChain pays off with reuse, swapping and shared tools. For a single plain call, the SDK alone is simpler.
+- q: What does `chain.with_fallbacks([backup])` do?
+  type: single
+  options:
+    - Runs chain and backup at the same time and returns both
+    - Runs backup only if chain raises an error
+    - Retries chain three times
+    - Cancels chain after a timeout
+  answer: [1]
+  explain: The main chain is tried first. If it raises, LangChain runs the backup with the same input.

@@ -1,0 +1,65 @@
+- q: What is an "agent" in these systems?
+  type: single
+  options:
+    - A special kind of model that only OpenAI makes
+    - A system prompt, maybe some tools, and a loop that calls the model
+    - A database
+    - A browser plugin
+  answer: [1]
+  explain: There is no magic. A multi-agent system splits prompts, tools and context between several such loops.
+- q: In the supervisor pattern, what does the supervisor do?
+  type: single
+  options:
+    - It does all the work itself
+    - It picks the next worker, or FINISH, but does not do the work
+    - It trains the workers
+    - It stores the memory
+  answer: [1]
+  explain: The supervisor only routes. Workers do the work and return control to it.
+- q: |
+    The supervisor replies "the researcher please". What should `parse_choice` return and why?
+  type: single
+  options:
+    - '"researcher", because it is close enough'
+    - None, because a guess could send the work to the wrong agent
+    - '"FINISH"'
+    - It should crash
+  answer: [1]
+  explain: Strict parsing is safer. An unknown reply ends the run or triggers a retry, it is never guessed.
+- q: |
+    What does a node returning `Command(goto="writer", update={"notes": "..."})` do?
+  type: single
+  options:
+    - Deletes the writer node
+    - Updates the state and sends control to the writer node, with no edge needed
+    - Starts a new thread
+    - Calls the writer as a tool
+  answer: [1]
+  explain: This is a handoff. goto is the next node and update changes the state in the same step.
+- q: Which of these is a good reason to split into several agents? (pick all)
+  type: multi
+  options:
+    - One part needs payment permissions and the others must not have them
+    - Parts have very different tools and contexts
+    - You want the system to look impressive
+    - Parts can run in parallel
+  answer: [0, 1, 3]
+  explain: Different permissions, tools or contexts, and parallel work are real reasons. Looking impressive is not.
+- q: Why does a supervisor loop need a `max_steps` limit?
+  type: single
+  options:
+    - To make the answer shorter
+    - A supervisor that never says FINISH would run and bill for ever; it is also a cost cap
+    - Because LangGraph requires it
+    - To make the workers faster
+  answer: [1]
+  explain: Each step is at least two model calls. A step cap stops runaway loops and limits cost.
+- q: A team of 4 agents scores the same as one agent with good tools but costs 8 times more tokens. What do you do?
+  type: single
+  options:
+    - Keep the team, it is more modern
+    - Use the single agent
+    - Add more agents
+    - Switch the model
+  answer: [1]
+  explain: Measure against a single-agent baseline. If a team gives no gain, it only adds cost, latency and failure points.

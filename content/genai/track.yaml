@@ -59,4 +59,6 @@ levels:
       - {slug: 28-fastapi-serving-sse, title: "Serving with FastAPI and streaming (SSE)"}
       - {slug: 29-cache-cost-observability, title: "Caching, cost, rate limits and observability"}
       - {slug: 30-guardrails, title: "Guardrails and safety"}
+      - {slug: 43-fine-tuning-awareness, title: "Awareness: fine-tuning, LoRA and QLoRA"}
+      - {slug: 44-quantization-local-models, title: "Awareness: quantization, Ollama and vLLM"}
       - {slug: 31-l5-interview, title: "Level 5 interview questions", kind: interview}

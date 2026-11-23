@@ -1,0 +1,6 @@
+def model_memory_gb(params_billion, bits):
+    ...
+
+
+def fits_on_gpu(params_billion, bits, gpu_gb, overhead=1.2):
+    ...

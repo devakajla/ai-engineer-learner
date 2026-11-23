@@ -1,0 +1,6 @@
+def next_node(edges, node, state):
+    ...
+
+
+def run_graph(nodes, edges, start, state, max_steps=20):
+    ...

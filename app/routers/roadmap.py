@@ -135,11 +135,13 @@ def task_out(task: dict, facts: Facts) -> dict:
 
 
 def streaks(days: list[dict], today: str, facts: Facts) -> tuple[int, int]:
-    """(current, best). A day counts when all its tasks are done. Today may still be open."""
+    """(current, best). A day counts when all its tasks are done. Today may still be open. Rest days are skipped."""
     run = best = 0
     for d in days:
         if d["date"] > today:
             break
+        if not d["tasks"]:
+            continue  # a rest day (Sunday) neither adds to the streak nor breaks it
         if all(is_done(t, facts) for t in d["tasks"]):
             run += 1
             best = max(best, run)

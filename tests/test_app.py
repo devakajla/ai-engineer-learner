@@ -295,6 +295,9 @@ def test_streak_counts_complete_days_and_ignores_open_today():
     assert streaks(days, "2026-01-02", Facts({"a"}, {}, {}, set())) == (1, 1)  # today open: streak stays
     assert streaks(days, "2026-01-03", Facts({"a"}, {}, {}, set())) == (0, 1)  # day 2 missed: streak breaks
     assert streaks(days, "2026-01-04", Facts({"a", "b", "c", "d"}, {}, {}, set())) == (4, 4)
+    rest = [day("2026-01-01", "a"), {"date": "2026-01-02", "tasks": []}, day("2026-01-03", "c")]
+    assert streaks(rest, "2026-01-03", Facts({"a", "c"}, {}, {}, set())) == (2, 2)  # a rest day keeps the streak
+    assert streaks(rest, "2026-01-03", Facts({"c"}, {}, {}, set())) == (1, 1)  # day 1 missed: streak restarts after it
 
 
 def test_roadmap_tick_review_task_and_refuse_gated_task(client):

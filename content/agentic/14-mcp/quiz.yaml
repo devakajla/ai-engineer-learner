@@ -1,0 +1,69 @@
+- q: What problem does MCP solve?
+  type: single
+  options:
+    - It makes models faster
+    - It gives AI apps one standard way to find and call tools from any provider
+    - It replaces embeddings
+    - It stores chat history
+  answer: [1]
+  explain: Write a tool once as an MCP server, and any MCP client can discover and use it.
+- q: Which of these is a notification (no answer expected)?
+  type: single
+  options:
+    - '{"jsonrpc": "2.0", "id": 1, "method": "tools/list"}'
+    - '{"jsonrpc": "2.0", "method": "notifications/initialized"}'
+    - '{"jsonrpc": "2.0", "id": 1, "result": {}}'
+    - '{"jsonrpc": "2.0", "id": 1, "error": {"code": -1, "message": "x"}}'
+  answer: [1]
+  explain: A notification has a method and no id. Nobody waits for a reply.
+- q: What is the correct order at the start of an MCP session?
+  type: single
+  options:
+    - tools/list, initialize, initialized
+    - initialize, the initialized notification, then tools/list
+    - tools/call, then initialize
+    - initialized, initialize, tools/list
+  answer: [1]
+  explain: Say hello (initialize), tell the server you are ready (initialized), then ask for the tools.
+- q: A tool function raises an exception while handling `tools/call`. What does a good server return?
+  type: single
+  options:
+    - A JSON-RPC error with code -32601
+    - A normal result with isError true and the error text, so the model can read it and retry
+    - Nothing
+    - It crashes the server
+  answer: [1]
+  explain: Tool failures are results the model can see. Protocol errors are for unknown methods and unknown tools.
+- q: |
+    In the Python SDK, where does the tool's `inputSchema` and description come from?
+    ```python
+    @server.tool()
+    def add(a: int, b: int) -> int:
+        """Add two numbers."""
+    ```
+  type: single
+  options:
+    - You must write the JSON by hand
+    - From the type hints and the docstring
+    - From the function name only
+    - From a config file
+  answer: [1]
+  explain: The SDK reads the hints and the docstring. That is why clear hints and docstrings matter, since the model reads them.
+- q: Which are real security risks with MCP servers? (pick all)
+  type: multi
+  options:
+    - A tool description or result that contains hidden instructions (prompt injection)
+    - A server with a powerful tool and no approval step
+    - Using a server from an unknown author without review
+    - JSON is a slow format
+  answer: [0, 1, 2]
+  explain: Tool text goes into the model's prompt, so it can attack. Least privilege, approval and trusted servers reduce the risk.
+- q: When is a plain Python function a better choice than an MCP server?
+  type: single
+  options:
+    - Never
+    - One app, a few tools, no sharing across apps or teams
+    - When you need many clients to share a tool
+    - When tools come from a third party
+  answer: [1]
+  explain: MCP adds a protocol layer. It pays off when tools are shared or come from other teams.

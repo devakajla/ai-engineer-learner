@@ -203,3 +203,22 @@ steps = [line.split(". ", 1)[1] for line in text.splitlines() if line[:1].isdigi
 if used.get("steps", 0) >= limits["max_steps"]: stop   # budget: check before EVERY step
 ```
 **Gotcha:** an agent is slower, costlier and less predictable than a workflow, so start with one call and climb only when a test shows the need. Tool results go into the history on every later step, so truncate them. Never trust the model's format: clean, validate, and keep a default. Every loop (improve, plan, agent) needs a hard limit.
+
+## Fine-tuning (genai 43)
+```python
+lora_params = rank * (d_in + d_out)               # per adapted matrix: 8 * (4096 + 4096) -> 65536
+line = {"messages": [{"role": "user", "content": q}, {"role": "assistant", "content": a}]}   # one JSONL training example
+bucket = int(hashlib.md5(text.encode()).hexdigest(), 16) % 100 ; split = "valid" if bucket < 10 else "train"
+```
+**Theory:** fine-tuning changes weights with your examples. Use it for **style, format and narrow skills**, not for facts. The ladder is **prompt, then RAG, then fine-tune**. LoRA freezes the model and trains small low-rank matrices. QLoRA does the same on a 4-bit base model. Training data is JSONL, one chat example per line. Format details differ by provider and tool, so check the docs.
+**Gotcha:** a stable hash split keeps an example in the same split when the data grows. Compare with a prompted baseline and test for forgetting. Remove private data before training.
+
+## Quantization and local models (genai 44)
+```python
+gigabytes = billions * bits / 8                    # weights only: 7 * 4 / 8 -> 3.5. Add about 20% or more for KV cache and runtime
+q = round(x / scale) ; x_back = q * scale          # symmetric int8: scale = max(abs(values)) / 127
+base_url = "http://localhost:11434/v1"             # Ollama, OpenAI-compatible (from memory, check the docs)
+```
+**Theory:** quantization stores weights in fewer bits. 8-bit is nearly free, 4-bit is usually fine, 3 or 2 bits hurts. Ollama and llama.cpp run models locally. vLLM serves many users (continuous batching, paged attention). Ollama and vLLM offer an OpenAI-compatible API, so switching is mostly a base URL change.
+**Gotcha:** the rounding error is the cost of the saved memory, and outliers make it worse. Test the quantized model on **your own** eval set. Keep model calls in one function so the base URL is one setting.
+

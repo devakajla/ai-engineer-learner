@@ -1,0 +1,6 @@
+def new_bucket(rate_per_second, capacity, now=0.0):
+    ...
+
+
+def allow(bucket, now, cost=1):
+    ...

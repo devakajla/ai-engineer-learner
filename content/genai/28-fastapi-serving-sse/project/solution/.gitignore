@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.env
+
+.chroma/
+manifest.json
+access.json
+last_results.json

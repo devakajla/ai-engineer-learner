@@ -1,0 +1,6 @@
+def save_fact(store, user_id, fact):
+    ...
+
+
+def recall(store, user_id, query, k=3):
+    ...

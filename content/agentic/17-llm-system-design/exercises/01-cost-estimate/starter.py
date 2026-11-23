@@ -1,0 +1,6 @@
+def request_cost(input_tokens, output_tokens, price_in, price_out):
+    ...
+
+
+def monthly_cost(requests_per_day, input_tokens, output_tokens, price_in, price_out, days=30):
+    ...

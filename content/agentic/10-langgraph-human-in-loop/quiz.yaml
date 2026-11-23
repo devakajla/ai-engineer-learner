@@ -1,0 +1,75 @@
+- q: What does `interrupt(value)` do inside a node?
+  type: single
+  options:
+    - Raises an exception that ends the program
+    - Stops the run, saves the state and gives the value to the caller until you resume
+    - Skips the node
+    - Starts a new thread
+  answer: [1]
+  explain: The run waits. Later `Command(resume=answer)` continues, and `interrupt(...)` returns that answer.
+- q: What do you need so that a paused graph can be resumed?
+  type: multi
+  options:
+    - A checkpointer
+    - A thread_id in the config
+    - A second model
+    - A subgraph
+  answer: [0, 1]
+  explain: The saved state lives in the checkpointer. The thread_id says which saved run to continue.
+- q: |
+    This node pays before it asks. What goes wrong?
+    ```python
+    def pay_node(state):
+        send_payment(state["amount"])
+        ok = interrupt("Was that right?")
+        return {"paid": ok}
+    ```
+  type: single
+  options:
+    - Nothing, it is a good design
+    - The node starts again from the top on resume, so the payment happens twice
+    - interrupt cannot return a value
+    - Payments are not allowed in graphs
+  answer: [1]
+  explain: On resume the whole node runs again. Put side effects after the interrupt (and only on approval), or in a later node.
+- q: |
+    What does this return for 3 items?
+    ```python
+    def fan_out(state):
+        return [Send("worker", {"item": i}) for i in state["items"]]
+    ```
+  type: single
+  options:
+    - One worker run for the whole list
+    - Three runs of the worker, one per item, each with its own small input
+    - An error, Send needs a reducer
+    - Three different nodes
+  answer: [1]
+  explain: Each Send starts one copy of the worker. The number of copies is only known at run time.
+- q: Why does the key that collects the workers' results need a reducer, such as `Annotated[list, add]`?
+  type: single
+  options:
+    - Reducers make the graph faster
+    - Several branches write the same key in the same step, and LangGraph needs a rule to combine them
+    - It is only for style
+    - Without it the workers run one after another
+  answer: [1]
+  explain: Without a reducer, parallel writes to one key conflict. `add` appends every result to the list.
+- q: When is it a good idea to compile a graph and use it as a node of another graph?
+  type: single
+  options:
+    - Never, it is slower
+    - To keep a big flow readable and to test parts alone
+    - Only to save memory
+    - Only for streaming
+  answer: [1]
+  explain: A subgraph is one step from the parent's view. It keeps the top graph short and each part testable.
+- q: Which actions should a human approve before an agent runs them? (pick all)
+  type: multi
+  options:
+    - Sending an email to a customer
+    - Reading a public web page
+    - Deleting a database table
+    - Paying an invoice
+  answer: [0, 2, 3]
+  explain: Irreversible actions or ones that cost money or reach other people need approval. Read-only steps should not.

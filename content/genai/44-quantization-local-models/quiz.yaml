@@ -1,0 +1,68 @@
+- q: |
+    How much memory do the weights of a 7B model need in 4-bit?
+    ```python
+    params_billion * bits / 8
+    ```
+  type: single
+  options:
+    - 14 GB
+    - 7 GB
+    - 3.5 GB
+    - 28 GB
+  answer: [2]
+  explain: 7 x 4 / 8 = 3.5 GB. In 16-bit it is 14 GB, in 8-bit 7 GB. The KV cache and runtime need extra room.
+- q: What is quantization?
+  type: single
+  options:
+    - Storing the model weights with fewer bits to save memory, at a small cost in quality
+    - Splitting the model across many servers
+    - Adding more layers
+    - Translating the model to another language
+  answer: [0]
+  explain: Fewer bits per weight means a smaller and often faster model, with a small rounding error.
+- q: |
+    You quantize [12.7, -12.7, 0.0, 3.0] to int8 with symmetric scaling. What is the quantized list?
+  type: single
+  options:
+    - "[127, -127, 0, 30]"
+    - "[12, -12, 0, 3]"
+    - "[100, -100, 0, 24]"
+    - "[1, -1, 0, 0]"
+  answer: [0]
+  explain: scale = 12.7 / 127 = 0.1, so each value is divided by 0.1 and rounded.
+- q: Why does one huge outlier value hurt int8 quantization?
+  type: single
+  options:
+    - It makes the scale large, so small values all round to nearly the same few numbers
+    - Outliers are not allowed in lists
+    - It makes the model bigger
+    - It changes the tokenizer
+  answer: [0]
+  explain: The scale comes from the biggest absolute value. A large scale means coarse steps for the small values. Real methods use one scale per small group.
+- q: Which statement about Ollama and vLLM is correct?
+  type: single
+  options:
+    - Ollama is for easy local use, vLLM is a high-throughput GPU server for many users
+    - They cannot be used with an OpenAI-style API
+    - vLLM only runs on phones
+    - Ollama is a vector database
+  answer: [0]
+  explain: Ollama suits laptops and development. vLLM uses continuous batching and paged attention to serve many users on GPUs.
+- q: Which are good reasons to self-host a model? (pick all)
+  type: multi
+  options:
+    - Data must not leave your network
+    - You have a fine-tuned open model
+    - You make five requests a day and want the cheapest option
+    - High, steady traffic where owning the GPU is cheaper
+  answer: [0, 1, 3]
+  explain: Privacy, own models and high steady volume favour self-hosting. A few requests a day is cheaper on a hosted API.
+- q: A 4-bit 13B model and a 16-bit 3B model need about the same memory. How do you decide which is better for your task?
+  type: single
+  options:
+    - Always pick the 16-bit model
+    - Run both on your own eval set and compare quality, speed and cost
+    - Always pick the bigger model
+    - Pick the one with the nicer name
+  answer: [1]
+  explain: A bigger quantized model often wins, but only your own eval set tells you for your task.

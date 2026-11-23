@@ -16,6 +16,8 @@ DEFAULT_PROJECT_DIR = str(Path.home() / "Projects" / "taskflow")
 # Tracks whose project is not TaskFlow: (project name, default folder).
 TRACK_PROJECTS = {
     "genai": ("DevDocs Copilot", str(Path.home() / "Projects" / "devdocs-copilot")),
+    # The Agentic AI track continues the same project, in the same folder.
+    "agentic": ("DevDocs Copilot", str(Path.home() / "Projects" / "devdocs-copilot")),
 }
 
 

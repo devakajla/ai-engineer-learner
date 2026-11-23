@@ -1,0 +1,67 @@
+- q: Which is the best way to start an interview answer?
+  type: single
+  options:
+    - With the history of the topic
+    - With a one-line answer, then the reason and an example or trade-off
+    - With "it depends" and nothing more
+    - With a long list of tools
+  answer: [1]
+  explain: Answer first, then why, then an example or a trade-off. It shows you can communicate clearly.
+- q: A user asks why a model hallucinates. Which answer is best?
+  type: single
+  options:
+    - Because the model is lying
+    - It is trained to produce plausible text, not true text, so without good context it still produces something fluent. Retrieval, citations and "say you don't know" rules help
+    - Because of a bug in Python
+    - Because temperature is 0
+  answer: [1]
+  explain: This explains the cause and names mitigations.
+- q: |
+    What does this reducer do with the new message?
+    ```python
+    merge_messages([{"id": "1", "text": "a"}], [{"id": "1", "text": "A"}])
+    ```
+  type: single
+  options:
+    - Appends it, so there are two messages
+    - Replaces the old message with the same id, at the same position
+    - Raises an error
+    - Drops the new message
+  answer: [1]
+  explain: This is how add_messages treats ids. A new message with a known id replaces the old one in place.
+- q: An agent has max_steps 4 and the steps cost [0.4, 0.4, 0.4, 0.4] with a max cost of 1.0. How many steps run, and why does it stop?
+  type: single
+  options:
+    - 4 steps, it is done
+    - 2 steps, the third would push the spend over the budget (the check comes before the step)
+    - 3 steps, because max_steps is 4
+    - 0 steps
+  answer: [1]
+  explain: After two steps the spend is 0.8. Another 0.4 would make 1.2 which is over 1.0, so the run stops with max_cost.
+- q: Which is a good answer to "Fine-tune, RAG or prompt?"
+  type: single
+  options:
+    - Always fine-tune, it is the most powerful
+    - Prompt first, RAG for private or changing knowledge, fine-tune for style or a narrow skill when you have clean examples and can beat a baseline
+    - Always RAG
+    - Always use the biggest model
+  answer: [1]
+  explain: This is the usual ladder, and it shows you decide with evidence.
+- q: How should access control work in a RAG system? (pick all that are good practice)
+  type: multi
+  options:
+    - Store permissions as metadata and filter during retrieval
+    - Ask the model not to reveal secret chunks
+    - Make sure forbidden text never reaches the prompt
+    - Test it with cases from a user who must not see a document
+  answer: [0, 2, 3]
+  explain: Filter before the prompt. The model cannot be trusted to hide text it has seen.
+- q: When you do not know an answer in an interview, what is the best move?
+  type: single
+  options:
+    - Make something up confidently
+    - Say what you do know, say how you would find out, and move on
+    - Stay silent
+    - Change the subject
+  answer: [1]
+  explain: Honest reasoning shows maturity. Guessing wrongly with confidence is worse than admitting a gap.

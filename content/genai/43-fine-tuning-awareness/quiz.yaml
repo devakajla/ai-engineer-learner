@@ -1,0 +1,67 @@
+- q: Your company wants the model to know its current price list, which changes every week. What do you choose?
+  type: single
+  options:
+    - Fine-tune every week
+    - RAG over the price list
+    - A bigger model
+    - A lower temperature
+  answer: [1]
+  explain: Facts that change belong in a store you search at question time. Weights are slow and costly to update.
+- q: What does LoRA do?
+  type: single
+  options:
+    - Trains every weight of the model
+    - Freezes the model and trains two small low-rank matrices next to each layer
+    - Makes the model smaller by deleting layers
+    - Replaces the tokenizer
+  answer: [1]
+  explain: The update is B times A, with a small rank, so very few numbers are trained.
+- q: |
+    How many numbers does LoRA train for one 4096 x 4096 layer with rank 8?
+    ```python
+    rank * (d_in + d_out)
+    ```
+  type: single
+  options:
+    - "65536"
+    - "16777216"
+    - "32768"
+    - "8192"
+  answer: [0]
+  explain: 8 * (4096 + 4096) = 65536. The full matrix has 16777216 numbers, so LoRA trains about 0.39%.
+- q: What is QLoRA?
+  type: single
+  options:
+    - LoRA on a quantized (for example 4-bit) base model, to save memory
+    - A way to search documents quickly
+    - A new tokenizer
+    - Training with only quantum computers
+  answer: [0]
+  explain: Quantizing the frozen base weights cuts memory, so large models can be tuned on one GPU.
+- q: Which statements about training data are true? (pick all)
+  type: multi
+  options:
+    - A few hundred clean, consistent examples can beat thousands of messy ones
+    - You should evaluate on the same examples you trained on
+    - The last message of an SFT example should be from the assistant
+    - Private data should be removed before training
+  answer: [0, 2, 3]
+  explain: Quality matters most. Evaluating on training examples hides overfitting.
+- q: Why split the data with a hash of each example instead of a random shuffle?
+  type: single
+  options:
+    - Hashes are faster
+    - The split stays the same when new data is added, and no example lands in both sets
+    - Shuffles are not allowed in Python
+    - A hash makes the data smaller
+  answer: [1]
+  explain: A stable split means old examples do not jump between train and validation when the file grows.
+- q: After fine-tuning, the tuned model scores the same as the base model with a good prompt. What does this tell you?
+  type: single
+  options:
+    - Fine-tuning always works, so train longer
+    - The fine-tune added no value for this task, so the cheaper prompt is enough
+    - The validation set is wrong
+    - The model must be quantized
+  answer: [1]
+  explain: Without a gain over the prompted baseline, fine-tuning only added cost and risk.

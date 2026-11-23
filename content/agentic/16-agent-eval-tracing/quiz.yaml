@@ -1,0 +1,68 @@
+- q: What is a span?
+  type: single
+  options:
+    - The whole record of one request
+    - One step inside a trace, such as a model call or a tool call, with timing and attributes
+    - A kind of prompt
+    - A vector in a database
+  answer: [1]
+  explain: A trace holds many spans. Each span has a name, a kind, a duration and extras such as tokens and errors.
+- q: A tool raises an exception inside `traced_call`. What should happen?
+  type: single
+  options:
+    - The error is swallowed so the agent goes on
+    - A span with the error is recorded, and the error is raised again
+    - Nothing is recorded
+    - The trace is deleted
+  answer: [1]
+  explain: A trace that hides errors is useless. Record the span, then re-raise so the caller still sees the failure.
+- q: |
+    What does this return?
+    ```python
+    trajectory_match(["calc", "search"], ["search", "calc"], "in_order")
+    ```
+  type: single
+  options:
+    - "True"
+    - "False"
+    - An error
+    - "None"
+  answer: [1]
+  explain: In "in_order" mode the expected tools must appear in that order. Here calc comes before search.
+- q: Why check the trajectory and not only the final answer?
+  type: single
+  options:
+    - Trajectories are shorter to read
+    - An agent can get a right answer by luck or from memory without using the right tools, and that breaks later
+    - The final answer is never useful
+    - It is required by LangGraph
+  answer: [1]
+  explain: The path shows if the agent used the right tools and how many steps it wasted.
+- q: |
+    `step_efficiency(["a", "b", "c", "d"], ["a", "b"])` gives 0.5. What does that mean?
+  type: single
+  options:
+    - The agent took twice as many steps as needed
+    - The agent is 50 percent accurate
+    - The agent used half the tokens
+    - Two tools failed
+  answer: [0]
+  explain: expected steps divided by actual steps. 2 / 4 is 0.5, so the agent used twice the steps it needed.
+- q: Baseline pass rate is 0.8 and the new run is 0.8, but one case that passed before now fails and another failing case now passes. What should a regression gate do?
+  type: single
+  options:
+    - Pass, the rate is the same
+    - Block, because a previously passing case regressed
+    - Delete the case
+    - Ignore the case that now passes
+  answer: [1]
+  explain: Averages hide regressions. Any case that passed before and fails now should be looked at before release.
+- q: Which are good practices for an agent eval set? (pick all)
+  type: multi
+  options:
+    - Build cases from real user questions and past failures
+    - Include questions the documents cannot answer
+    - Change the cases every week so the agent cannot memorise them
+    - Version the set so scores can be compared over time
+  answer: [0, 1, 3]
+  explain: A fixed, versioned set from real cases lets you compare runs. Changing it often makes scores meaningless.

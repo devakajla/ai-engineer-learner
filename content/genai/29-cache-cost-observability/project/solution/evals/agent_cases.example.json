@@ -1,0 +1,4 @@
+[
+  {"id": "delete", "input": "how do I delete a task", "must_contain": ["delete"], "expected_tools": ["retrieve"]},
+  {"id": "login", "input": "how do I log in", "must_contain": ["token"], "expected_tools": ["retrieve"]}
+]
