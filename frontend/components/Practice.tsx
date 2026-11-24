@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { api, Exercise, Lesson, RunResult, streamReview } from "@/lib/api";
 import { useResolvedTheme } from "@/lib/prefs";
+import { TRIAL_STARTER } from "@/lib/trial";
 import FailureCards from "./FailureCards";
 import Icon from "./Icon";
 import Markdown from "./Markdown";
@@ -173,6 +174,22 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
           }
         >
           <Icon name="sparkle" size={13} /> Ask Claude for a hint
+        </button>
+        <button
+          className="btn"
+          title="Copy this code into the trial room: run it freely and get a comment-only plan"
+          onClick={() => {
+            const old = localStorage.getItem("trial.code");
+            if (old && old !== TRIAL_STARTER && !confirm("Replace the code in the trial room?")) return;
+            localStorage.setItem(
+              "trial.code",
+              `# PROBLEM: exercise "${ex.title}". Write what you are stuck on here.\n\n${code}\n`,
+            );
+            localStorage.setItem("trial.from", window.location.pathname + window.location.search);
+            window.location.href = "/trial";
+          }}
+        >
+          <Icon name="play" size={13} /> Try in trial room
         </button>
       </div>
 

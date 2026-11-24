@@ -137,7 +137,70 @@ The plan cannot be moved; if Dev asks to skip or move work, say no and give the 
 Use only the facts given. If the question is about a concept, give a one-line answer and say which lesson covers it
 if you can tell from the plan."""
 
+COACH_RULES = """You are Dev's Python coach in a trial room. Dev is a beginner who can think of the solution but
+cannot turn it into Python code. You get Dev's code, the output of its last run, and a hint level (1 to 3).
+Dev marks the problem in a comment that starts with `# PROBLEM:` (the comment lines right after it belong to it).
+If there is no such comment, work from the error in the last output.
+
+YOUR WHOLE REPLY IS PYTHON COMMENT LINES. Every line starts with `# `. NEVER write a line of code that solves
+the problem or fixes Dev's code. Dev must type the code. Do not rewrite Dev's lines in corrected form.
+
+Write, in this order:
+1. `# IDEA:` one or two lines: what the problem means in plain everyday words.
+2. `# WHAT IS WRONG:` only if Dev's code already has a mistake: say which line and why, in words. Do not give the fix line.
+3. `# STEP 1:`, `# STEP 2:` ... a short plan. Each step says what to do and names the Python tool for it
+   (for example: dictionary lookup, `.items()`, a variable that remembers the best so far).
+4. A last line `TOPIC: <lesson-slug> | <short detail>` (this one line is not a comment, it is for the app). Pick the
+   slug from <topic_list>, the lesson whose idea Dev is missing. Example: `TOPIC: 11-dicts | loop over inner dict`.
+   If nothing fits, use `other`.
+
+Hint level:
+- 1: plan in words. End the plan with one question Dev should answer to himself.
+- 2: also give the exact tool or method name for each step and a tiny example of that tool on DIFFERENT data
+  than Dev's problem, as a comment (for example `# scores = {"a": 3}` then `# for k, v in scores.items(): ...`).
+- 3: make each step more detailed (what goes in, what comes out, what to check), still no solution line.
+
+Simple English, short sentences, at most 80 characters per line, at most 25 lines. No Markdown, no emoji.
+
+<weak_spots> lists what Dev keeps getting wrong (most important first). On those topics use simpler words and one
+extra small step. Mention an earlier mistake only when it helps this problem. Never print the list itself."""
+
+TRIAL_CHAT_RULES = """You are Dev's Python tutor in a trial room. Dev is a beginner who can think of a solution but
+has trouble writing it in Python. Dev asks you questions. You also get Dev's current code, the output of its last run
+and the earlier messages of this chat.
+
+- Answer the question that was asked, in simple English, short sentences. Plain everyday meaning first, then a small example.
+- Examples use DIFFERENT data than Dev's problem and are at most 6 lines, in a ```python block with the output as `# ->`.
+- Do NOT write the solution to Dev's own problem and do NOT rewrite Dev's code in corrected form. You may say which
+  line is wrong and why, and name the tool to use. If Dev asks for the full answer, say no kindly and explain the idea
+  in words; the Coach me button gives a step plan.
+- Use only what a beginner knows (Python basics). If you need something harder, explain it in one line first.
+- At most 150 words unless Dev asks for more. No emoji, no greeting.
+- <weak_spots> lists what Dev keeps getting wrong. On those topics use simpler words and connect to the earlier
+  mistake only when it helps. Never print the list itself.
+- Last line, always: if the question shows Dev is missing a Python idea, write `TOPIC: <lesson-slug> | <short detail>`
+  with the slug from <topic_list> (example: `TOPIC: 06-conditionals | not in vs not`). If it is only a curious or
+  already-understood question, write `TOPIC: none`. This line is for the app, not for Dev."""
+
+DRILL_RULES = """You write practice drills for Dev, a beginner who has read only a little Python. You get the text of the
+lesson Dev is weak on, the exact weak details, and what Dev keeps getting wrong. Reply with ONLY a JSON array of 4
+drills, easy to hard, nothing else. Each drill is an object with these keys:
+- "title": 2 to 5 words.
+- "prompt": Markdown, simple English. Say what the function takes and returns, the rules, and 2 examples with
+  results as `# ->`. Do not give the solution steps.
+- "function_name": the function Dev writes.
+- "starter": the `def` line with a one-line docstring and `pass` as the body. Never any solution lines.
+- "solution": a correct, simple reference solution (never shown to Dev).
+- "calls": 3 to 5 distinct expressions that call the function, each a different case (include one edge case such as
+  empty input). Deterministic only: no input(), files, network, random or time.
+
+Rules: use ONLY Python taught in the given lesson or earlier lessons (no lambda, classes or comprehensions unless the
+lesson teaches them). Drill 1 is tiny and targets the weak detail directly. Each next drill adds one small twist.
+Do not copy a problem from the lesson text. Return values must be plain (numbers, strings, bools, None, lists,
+dicts, tuples) so they print the same every time."""
+
 _VERDICT_RE = re.compile(r"VERDICT:\s*(CORRECT|PARTIAL|INCORRECT)")
+_TOPIC_RE = re.compile(r"^\s*TOPIC:\s*(.+?)\s*$", re.MULTILINE)
 
 
 @dataclass
@@ -242,9 +305,15 @@ async def chat_stream(
     session_id: str | None,
     ai: AISettings,
     images: list[tuple[str, str]] | None = None,
+    profile: str = "",
 ) -> AsyncIterator[str | StreamDone]:
     """`images` is a list of (media_type, base64 data) screenshots attached to this message."""
     system = TUTOR_RULES + "\n" + lesson_context(lesson)
+    if profile:
+        system += (
+            "\n\nWhat Dev keeps getting wrong (most important first). On these topics use simpler words and "
+            "connect to the earlier mistake only when it helps. Never print this list:\n" + profile
+        )
     prompt = _with_images(message, images) if images else message
     async for item in _stream(prompt, _options(system, ai, resume=session_id)):
         yield item
@@ -302,6 +371,84 @@ async def notes_stream(
 async def guide_stream(prompt: str, ai: AISettings, rules: str = GUIDE_RULES) -> AsyncIterator[str | StreamDone]:
     async for item in _stream(prompt, _options(rules, ai)):
         yield item
+
+
+def _weak_block(profile: str, tags: str) -> str:
+    return (
+        f"<topic_list>\n{tags or '(none)'}\n</topic_list>\n\n"
+        f"<weak_spots>\n{profile or '(nothing known yet)'}\n</weak_spots>\n\n"
+    )
+
+
+async def coach_stream(
+    code: str, output: str, attempt: int, ai: AISettings, profile: str = "", tags: str = ""
+) -> AsyncIterator[str | StreamDone]:
+    prompt = (
+        f"{_weak_block(profile, tags)}"
+        f"<hint_level>{max(1, min(attempt, 3))}</hint_level>\n\n"
+        f"<dev_code>\n{code[:20000]}\n</dev_code>\n\n"
+        f"<last_run_output>\n{output[-3000:] or '(not run yet)'}\n</last_run_output>"
+    )
+    async for item in _stream(prompt, _options(COACH_RULES, ai)):
+        yield item
+
+
+async def trial_chat_stream(
+    message: str,
+    code: str,
+    output: str,
+    history: list[tuple[str, str]],
+    ai: AISettings,
+    profile: str = "",
+    tags: str = "",
+) -> AsyncIterator[str | StreamDone]:
+    """Free questions in the trial room. Stateless: the earlier turns come from the browser."""
+    earlier = "\n\n".join(f"{'Dev' if role == 'user' else 'Tutor'}: {text}" for role, text in history[-10:])
+    prompt = (
+        f"{_weak_block(profile, tags)}"
+        f"<dev_code>\n{code[:20000]}\n</dev_code>\n\n"
+        f"<last_run_output>\n{output[-3000:] or '(not run yet)'}\n</last_run_output>\n\n"
+        f"<earlier_chat>\n{earlier[-8000:] or '(none)'}\n</earlier_chat>\n\n"
+        f"<question>\n{message}\n</question>"
+    )
+    async for item in _stream(prompt, _options(TRIAL_CHAT_RULES, ai)):
+        yield item
+
+
+async def generate_drills(lesson: Lesson, details: list[str], profile: str, ai: AISettings) -> str:
+    """One non-streamed call. Returns Claude's reply (a JSON array of drills, see app/services/drills.py)."""
+    prompt = (
+        f"<lesson title=\"{lesson.title}\">\n{lesson.body[:6000]}\n</lesson>\n\n"
+        f"<weak_details>\n{chr(10).join(f'- {d}' for d in details) or '- (none given: cover the core idea of the lesson)'}\n</weak_details>\n\n"
+        f"<weak_spots>\n{profile or '(nothing known yet)'}\n</weak_spots>"
+    )
+    text = ""
+    async for item in _stream(prompt, _options(DRILL_RULES, ai)):
+        if isinstance(item, StreamDone):
+            text = item.text
+    return text
+
+
+def parse_topic(text: str, valid_tags: dict[str, str] | None = None) -> tuple[str, str] | None:
+    """`TOPIC: 11-dicts | loop over inner dict` -> ("11-dicts", "loop over inner dict"). None for `TOPIC: none`.
+
+    A slug that is not in `valid_tags` (or a lesson title) becomes "other" and keeps the text as the detail.
+    """
+    matches = _TOPIC_RE.findall(text)
+    if not matches:
+        return None
+    raw = matches[-1].strip().strip("`")
+    if raw.lower() in {"none", "n/a", ""}:
+        return None
+    tag, _, detail = raw.partition("|")
+    tag, detail = tag.strip().lower(), detail.strip()[:80]
+    tags = valid_tags or {}
+    if tag in tags:
+        return tag, detail
+    by_title = {t.lower(): slug for slug, t in tags.items()}
+    if tag in by_title:
+        return by_title[tag], detail
+    return "other", raw[:80]
 
 
 def parse_verdict(text: str) -> str | None:

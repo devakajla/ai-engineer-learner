@@ -97,6 +97,48 @@ async def run_tests(code: str, exercise_dir: Path, timeout: float = TEST_TIMEOUT
         return await _run([sys.executable, *_PYTEST_ARGS, "test_solution.py"], tmp_path, timeout, hide=tmp)
 
 
+@dataclass
+class ScriptResult:
+    stdout: str
+    stderr: str
+    seconds: float
+    timed_out: bool = False
+
+
+_MAX_OUTPUT_CHARS = 20_000
+
+
+def _cap(text: str) -> str:
+    if len(text) <= _MAX_OUTPUT_CHARS:
+        return text
+    return text[:_MAX_OUTPUT_CHARS] + "\n... (output cut)"
+
+
+async def run_script(code: str, timeout: float = TEST_TIMEOUT_SECONDS) -> ScriptResult:
+    """Run free code once (the trial room). No tests: just show what it prints.
+
+    stdin is closed, so `input()` raises EOFError at once instead of hanging.
+    """
+    with tempfile.TemporaryDirectory(prefix="learner-trial-") as tmp:
+        (Path(tmp) / "main.py").write_text(code)
+        env = {**os.environ, "PYTHONDONTWRITEBYTECODE": "1", "PYTHONUNBUFFERED": "1"}
+        env.pop("VIRTUAL_ENV", None)
+        start = time.perf_counter()
+        proc = await asyncio.create_subprocess_exec(
+            sys.executable, "-I", "main.py", cwd=tmp, env=env,
+            stdin=asyncio.subprocess.DEVNULL, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+        )  # fmt: skip
+        try:
+            out, err = await asyncio.wait_for(proc.communicate(), timeout)
+        except TimeoutError:
+            proc.kill()
+            await proc.wait()
+            return ScriptResult("", f"Timed out after {timeout:.0f}s (infinite loop?)", timeout, timed_out=True)
+        seconds = time.perf_counter() - start
+        stderr = err.decode(errors="replace").replace(tmp, "<trial>")
+        return ScriptResult(_cap(out.decode(errors="replace")), _cap(stderr), seconds)
+
+
 def _uv() -> str | None:
     return shutil.which("uv") or next(
         (p for p in [str(Path.home() / ".local/bin/uv"), "/opt/homebrew/bin/uv"] if Path(p).exists()), None

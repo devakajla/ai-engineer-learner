@@ -14,6 +14,7 @@ from app.db import AsyncSession, SessionLocal, get_session
 from app.models import ChatMessage, ChatSession
 from app.routers.settings import get_ai_settings
 from app.services import claude
+from app.services.profile import build_profile, profile_text
 
 router = APIRouter(prefix="/api/chat")
 
@@ -72,6 +73,7 @@ async def send(owner: str, slug: str, body: ChatIn, session: AsyncSession = Depe
     existing = await session.get(ChatSession, lesson_id)
     resume = existing.sdk_session_id if existing else None
     ai = await get_ai_settings(session, "chat")
+    profile = profile_text(await build_profile(session))
     names = save_images(body.images)
     # Saved chat shows the screenshots as Markdown images; Claude gets the pixels themselves.
     stored = body.message + "".join(f"\n\n![screenshot](/api/chat/image/{n})" for n in names)
@@ -82,7 +84,7 @@ async def send(owner: str, slug: str, body: ChatIn, session: AsyncSession = Depe
         text, new_session_id = "", None
         try:
             async for item in claude.chat_stream(
-                lesson, body.message, resume, ai, [(i.media_type, i.data) for i in body.images]
+                lesson, body.message, resume, ai, [(i.media_type, i.data) for i in body.images], profile
             ):
                 if isinstance(item, claude.StreamDone):
                     text, new_session_id = item.text, item.session_id

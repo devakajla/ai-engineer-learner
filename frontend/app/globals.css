@@ -832,3 +832,51 @@ i.heat-cell { width: 12px; height: 12px; vertical-align: middle; margin-right: 4
 .plan-day-date { flex: none; width: 92px; display: flex; flex-direction: column; font-size: 13px; font-weight: 600; }
 .plan-day-date .muted { font-weight: 400; font-size: 12px; }
 .plan-day .plan-rows { flex: 1; margin: 0; }
+
+/* ============ Trial room ============ */
+.term-err { color: #fca5a5; }
+.weak-list { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.weak-list li { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.trial-chat { display: flex; flex-direction: column; gap: 10px; }
+.trial-chat-log { display: flex; flex-direction: column; gap: 14px; max-height: 420px; overflow-y: auto; }
+.trial-chat-input { display: flex; gap: 8px; align-items: flex-end; }
+.trial-chat-input textarea {
+  flex: 1; resize: vertical; min-height: 44px; padding: 9px 12px; border-radius: 10px; font: inherit; font-size: 14px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+}
+.trial-chat-input textarea:focus { outline: none; border-color: var(--accent); }
+
+/* Trial room layout: editor left, chat right (half and half). */
+.trial {
+  max-width: 1500px; margin: 0 auto; padding: 24px 20px 40px; display: grid; gap: 20px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start;
+}
+.trial-left { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.trial-left h1 { margin: 2px 0 0; font-size: 30px; letter-spacing: -0.02em; }
+.trial-right { position: sticky; top: 16px; height: calc(100vh - var(--top-h) - 56px); min-height: 360px; min-width: 0; }
+.trial-right .trial-chat-log { flex: 1; max-height: none; min-height: 0; }
+@media (max-width: 1000px) {
+  .trial { grid-template-columns: minmax(0, 1fr); }
+  .trial-right { position: static; height: 560px; }
+}
+.trial-head { display: flex; align-items: center; gap: 12px; }
+.trial-head h1 { margin: 0; }
+.weak-list { gap: 14px; }
+.weak-item { display: flex; flex-direction: column; gap: 8px; align-items: stretch !important; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.weak-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.weak-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.weak-main { display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; min-width: 0; }
+.weak-main b { font-size: 14.5px; }
+.weak-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.drill-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.drill {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 8px 12px; cursor: pointer;
+  border-radius: 10px; border: 1px solid var(--border); background: var(--surface); font-size: 14px; color: var(--text);
+}
+.drill:hover { border-color: var(--border-strong); }
+.drill.active { border-color: var(--accent); background: var(--accent-soft); }
+.check-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; }
+.check-list li { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.check-list li.ok svg { color: var(--good); }
+.check-list li.bad svg { color: var(--bad); }
+.push-right { margin-left: auto; }

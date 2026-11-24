@@ -19,9 +19,9 @@ def client(tmp_path, monkeypatch):
     session_local = async_sessionmaker(engine, expire_on_commit=False)
     monkeypatch.setattr(db, "SessionLocal", session_local)
     # Routers that save after streaming imported SessionLocal by name.
-    from app.routers import chat, practice, project
+    from app.routers import chat, practice, project, trial
 
-    for mod in (chat, practice, project):
+    for mod in (chat, practice, project, trial):
         monkeypatch.setattr(mod, "SessionLocal", session_local)
     from app.main import app
 

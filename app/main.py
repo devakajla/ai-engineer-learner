@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import FRONTEND_ORIGINS
 from app.db import init_db
-from app.routers import chat, doubts, lessons, notes, practice, project, quiz, roadmap, settings
+from app.routers import chat, doubts, lessons, notes, practice, project, quiz, roadmap, settings, trial
 
 
 @asynccontextmanager
@@ -32,6 +32,7 @@ app.include_router(settings.router)
 app.include_router(doubts.router)
 app.include_router(notes.router)
 app.include_router(roadmap.router)
+app.include_router(trial.router)
 
 
 @app.get("/api/health")

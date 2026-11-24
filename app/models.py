@@ -100,6 +100,33 @@ class Doubt(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
 
+class WeakSignal(Base):
+    """A sign that Dev is weak on a Python lesson topic: a Coach press or a trial-room chat question."""
+
+    __tablename__ = "weak_signals"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    source: Mapped[str] = mapped_column(String)  # coach | chat
+    tag: Mapped[str] = mapped_column(String, index=True)  # python lesson slug, or "other"
+    detail: Mapped[str] = mapped_column(String, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class Drill(Base):
+    """A mini exercise Claude wrote for a weak topic. `solution` and `expected_json` never leave the server."""
+
+    __tablename__ = "drills"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    tag: Mapped[str] = mapped_column(String, index=True)
+    title: Mapped[str] = mapped_column(String)
+    prompt: Mapped[str] = mapped_column(Text)
+    starter: Mapped[str] = mapped_column(Text)
+    solution: Mapped[str] = mapped_column(Text)
+    calls_json: Mapped[str] = mapped_column(Text)  # list[str], expressions like next_word("I", table)
+    expected_json: Mapped[str] = mapped_column(Text)  # list[str], repr of what the solution returns
+    status: Mapped[str] = mapped_column(String, default="open")  # open | done
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
 class RoadmapDone(Base):
     """A task of content/roadmap.yaml the learner marked done."""
 

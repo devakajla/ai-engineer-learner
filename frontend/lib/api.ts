@@ -223,7 +223,47 @@ const json = (body: unknown): RequestInit => ({
   body: JSON.stringify(body),
 });
 
+export type ScriptResult = { stdout: string; stderr: string; seconds: number; timed_out: boolean };
+
+/** One weak topic = one Python lesson (see app/services/profile.py). */
+export type WeakTopic = {
+  tag: string; // lesson slug, e.g. "11-dicts", or "other"
+  title: string;
+  score: number;
+  coach: number;
+  chat: number;
+  failed: { exercise: string; fails: number; solved: boolean }[];
+  drills_done: number;
+  drills_total: number;
+  details: string[];
+  last: string | null;
+};
+export type TrialDrill = {
+  id: number;
+  tag: string;
+  title: string;
+  prompt: string;
+  starter: string;
+  calls: string[];
+  status: "open" | "done";
+};
+export type DrillCheck = {
+  passed: boolean;
+  results: { call: string; ok: boolean; got: string; want: string | null }[];
+  error: string;
+  status: "open" | "done";
+};
+
 export const api = {
+  trialRun: (code: string) => {
+    const form = new FormData();
+    form.append("code", code);
+    return request<ScriptResult>("/api/trial/run", { method: "POST", body: form });
+  },
+  trialTopics: () => request<WeakTopic[]>("/api/trial/topics"),
+  trialDrills: (tag: string) => request<TrialDrill[]>(`/api/trial/drills?tag=${encodeURIComponent(tag)}`),
+  makeDrills: (tag: string) => request<TrialDrill[]>("/api/trial/drills", json({ tag })),
+  checkDrill: (id: number, code: string) => request<DrillCheck>(`/api/trial/drills/${id}/check`, json({ code })),
   tracks: () => request<TrackSummary[]>("/api/tracks"),
   track: (id: string) => request<TrackDetail>(`/api/tracks/${id}`),
   lesson: (track: string, slug: string) => request<Lesson>(`/api/lessons/${track}/${slug}`),
@@ -274,6 +314,26 @@ export async function streamText(path: string, init: RequestInit | undefined, on
   }
   return full;
 }
+
+/** Coach for the trial room: streams a comment-only plan. `attempt` (1-3) is the hint level. */
+export const streamCoach = (code: string, output: string, attempt: number, onText: (full: string) => void) => {
+  const form = new FormData();
+  form.append("code", code);
+  form.append("output", output);
+  form.append("attempt", String(attempt));
+  return streamText("/api/trial/coach", { method: "POST", body: form }, onText);
+};
+
+export type TrialTurn = { role: "user" | "assistant"; content: string };
+
+/** Free question in the trial room. Claude sees the code and the last output, plus the earlier turns. */
+export const streamTrialChat = (
+  message: string,
+  code: string,
+  output: string,
+  history: TrialTurn[],
+  onText: (full: string) => void,
+) => streamText("/api/trial/chat", json({ message, code, output, history }), onText);
 
 export const streamReview = (submissionId: number, onText: (full: string) => void) =>
   streamText(`/api/practice/review/${submissionId}`, undefined, onText);

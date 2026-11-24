@@ -94,6 +94,11 @@ export default function TopBar() {
           )}
         </Link>
       )}
+      {!offline && (
+        <Link href="/trial" className="btn small ghost model-btn" title="Run any code, get a comment-only plan">
+          <Icon name="play" size={13} /> Trial room
+        </Link>
+      )}
       {!offline && <ReviseMenu />}
       {!offline && <ModelMenu />}
       <ThemeToggle />
