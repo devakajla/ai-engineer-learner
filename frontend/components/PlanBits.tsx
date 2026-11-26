@@ -47,6 +47,9 @@ export function StepList({ task }: { task: RoadmapTask }) {
         } else if (g?.exercises && text.startsWith("Exercises")) {
           status = g.exercises.ok ? "done" : "open";
           note = `${g.exercises.solved}/${g.exercises.total} passed`;
+        } else if (g?.bonus && text.startsWith("Bonus")) {
+          status = g.bonus.solved === g.bonus.total ? "done" : "none";
+          note = `bonus ${g.bonus.solved}/${g.bonus.total}`;
         } else if (g?.project && text.startsWith("Project")) {
           status = g.project.ok ? "done" : "open";
         }

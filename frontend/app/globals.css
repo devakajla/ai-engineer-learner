@@ -468,6 +468,14 @@ h1 { font-size: 34px; line-height: 1.2; letter-spacing: -0.02em; margin: 10px 0 
 .ex-num.solved { background: var(--accent); color: #fff; }
 .ex-prompt h3 { margin: 4px 0 4px; font-size: 18px; }
 .ex-prompt .md { font-size: 15px; color: var(--text-2); }
+.ex-prompt .card-label { display: flex; align-items: center; gap: 8px; }
+.ex-tab .tag { margin-left: 6px; font-size: 10px; }
+.tools-box summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); }
+.tools-box ul { margin: 8px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.tools-box li { font-size: 14px; }
+.tools-box li a { margin-left: 8px; font-size: 12px; }
+.help-card { display: flex; flex-direction: column; gap: 8px; }
+.help-card .card-label { display: flex; align-items: center; }
 .editor-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
 .editor-bar {
   display: flex; align-items: center; justify-content: space-between; padding: 4px 6px 4px 14px;

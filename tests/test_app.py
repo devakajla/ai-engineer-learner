@@ -19,9 +19,10 @@ def client(tmp_path, monkeypatch):
     session_local = async_sessionmaker(engine, expire_on_commit=False)
     monkeypatch.setattr(db, "SessionLocal", session_local)
     # Routers that save after streaming imported SessionLocal by name.
-    from app.routers import chat, practice, project, trial
+    # app.services.profile.save_signal uses db.SessionLocal, patched above.
+    from app.routers import chat, practice, project
 
-    for mod in (chat, practice, project, trial):
+    for mod in (chat, practice, project):
         monkeypatch.setattr(mod, "SessionLocal", session_local)
     from app.main import app
 
@@ -271,6 +272,23 @@ def test_gate_needs_quiz_and_every_exercise():
     # Ticking by hand does not open a gate.
     assert not is_done(task, Facts({"t"}, {}, {}, set()))
     assert gate_of({"id": "r", "gated": False}, Facts(set(), {}, {}, set())) is None
+
+
+def test_soft_gate_needs_only_the_first_exercise():
+    """GenAI / Agentic lesson tasks: exercise 1 is needed, the rest are bonus and never block done."""
+    from app.routers.roadmap import Facts, gate_of, is_done, load_roadmap
+
+    task = {"id": "t", "gated": True, "lesson_id": "genai/x", "quiz": True, "exercise_ids": ["a"], "bonus_ids": ["b", "c"]}
+    facts = Facts(set(), {"genai/x": 80}, {"genai/x": {"a", "b"}}, set())
+    gate = gate_of(task, facts)
+    assert gate["bonus"] == {"solved": 1, "total": 2}
+    assert "ok" not in gate["bonus"]
+    assert is_done(task, facts)
+    assert not is_done(task, Facts(set(), {"genai/x": 80}, {"genai/x": {"b", "c"}}, set()))
+
+    tasks = [t for t in load_roadmap()["tasks"].values() if t.get("track") in ("genai", "agentic") and t.get("exercise_ids")]
+    assert tasks and all(len(t["exercise_ids"]) == 1 for t in tasks), "rerun scripts/build_roadmap.py"
+    assert any(t.get("bonus_ids") for t in tasks)
 
 
 def test_next_tab_points_at_the_first_open_step():

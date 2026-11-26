@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { hm, Mark, niceDate, StepList, taskHref, TrackTag } from "@/components/PlanBits";
 import Icon from "@/components/Icon";
 import Markdown from "@/components/Markdown";
@@ -65,17 +65,32 @@ function Guide({ on, stateKey, overdue }: { on: string | null; stateKey: string;
   const [answer, setAnswer] = useState("");
   const [asking, setAsking] = useState(false);
 
+  const ctrl = useRef<AbortController | null>(null);
+
   const brief = useCallback(
     (fresh = false) => {
+      ctrl.current?.abort(); // only one briefing streams at a time
+      const c = new AbortController();
+      ctrl.current = c;
       setBusy(true);
-      streamGuide(setText, on, fresh)
-        .catch(() => setText("Could not reach Claude. Check that you are logged in to the `claude` CLI."))
-        .finally(() => setBusy(false));
+      setText("");
+      streamGuide((t) => !c.signal.aborted && setText(t), on, fresh, c.signal)
+        .catch((e) => {
+          if (c.signal.aborted || e?.name === "AbortError") return;
+          setText("Could not reach Claude. Check that you are logged in to the `claude` CLI.");
+        })
+        .finally(() => {
+          if (ctrl.current === c) setBusy(false);
+        });
     },
     [on],
   );
   // New briefing when the plan state changes (a task finished, a new day).
-  useEffect(() => brief(), [brief, stateKey]);
+  // Cleanup aborts the stream: React Strict Mode runs this effect twice in dev.
+  useEffect(() => {
+    brief();
+    return () => ctrl.current?.abort();
+  }, [brief, stateKey]);
 
   const ask = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -211,6 +226,7 @@ export default function Home() {
                   <Mark done={false} />
                   <TrackTag task={t} />
                   {href ? <Link href={href}>{t.title}</Link> : <span>{t.title}</span>}
+                  {t.part && t.part[1] > 1 && <span className="muted">part {t.part[0]} of {t.part[1]}</span>}
                   {t.date < rm.today && <span className="pill bad">overdue</span>}
                   <span className="muted push-right">{hm(t.minutes)}</span>
                 </li>
@@ -224,6 +240,7 @@ export default function Home() {
                 <Mark done />
                 <TrackTag task={t} />
                 <span>{t.title}</span>
+                {t.part && t.part[1] > 1 && <span className="muted">part {t.part[0]} of {t.part[1]}</span>}
                 {!t.gated && (
                   <button className="btn ghost small push-right" onClick={() => tick(t)}>Undo</button>
                 )}

@@ -4,8 +4,9 @@ The plan never moves. A task from a past day that is not done stays "overdue".
 
 A "practise" task (a site lesson) is done only when its gate passes:
   - quiz: best score is at least 75% (if the task has a quiz)
-  - exercises: every exercise of the task has passed its tests
-  - project: the project step check has passed (if the task has one)
+  - exercises: every exercise in `exercise_ids` has passed its tests. For a lesson task that is only the
+    first exercise; the others are `bonus_ids`, shown as "bonus n/m" but never needed (soft gate).
+Project steps are not part of any task (theory, quiz and practice only).
 Lessons that are not written yet, and "review" tasks, are ticked by hand.
 """
 
@@ -53,7 +54,7 @@ def load_roadmap() -> dict:
                 task["lesson_id"] = f"{t['track']}/{t['lesson']}"
                 task["available"] = available.get(task["lesson_id"], False)
             task["gated"] = bool(
-                task.get("available") and (task.get("quiz") or task.get("exercise_ids") or task.get("project"))
+                task.get("available") and (task.get("quiz") or task.get("exercise_ids"))
             )
             tasks[t["id"]] = task
             out.append(task)
@@ -102,18 +103,19 @@ def gate_of(task: dict, facts: Facts) -> dict | None:
     if task.get("exercise_ids"):
         solved = len(set(task["exercise_ids"]) & facts.solved.get(lid, set()))
         gate["exercises"] = {"solved": solved, "total": len(task["exercise_ids"]), "ok": solved == len(task["exercise_ids"])}
-    if task.get("project"):
-        gate["project"] = {"ok": lid in facts.projects}
+    if task.get("bonus_ids"):
+        solved = len(set(task["bonus_ids"]) & facts.solved.get(lid, set()))
+        gate["bonus"] = {"solved": solved, "total": len(task["bonus_ids"])}  # never part of done
     return gate
 
 
 def next_tab(task: dict, gate: dict) -> str:
     """Which tab of the lesson page the Start button opens: the first step that is not done."""
     first_part = not task.get("part") or task["part"][0] == 1
-    started = any(g.get("best") or g.get("solved") or g.get("ok") for g in gate.values())
+    started = any(g.get("best") or g.get("solved") or g.get("ok") for key, g in gate.items() if key != "bonus")
     if first_part and not started:
         return "theory"
-    for key, tab in (("quiz", "quiz"), ("exercises", "practice"), ("project", "project")):
+    for key, tab in (("quiz", "quiz"), ("exercises", "practice")):
         if key in gate and not gate[key]["ok"]:
             return tab
     return "theory"
@@ -123,7 +125,7 @@ def is_done(task: dict, facts: Facts) -> bool:
     gate = gate_of(task, facts)
     if gate is None:
         return task["id"] in facts.marked
-    return all(g["ok"] for g in gate.values())
+    return all(g["ok"] for key, g in gate.items() if key != "bonus")
 
 
 def task_out(task: dict, facts: Facts) -> dict:
@@ -225,8 +227,8 @@ def plan_context(view: dict, days: list[dict]) -> str:
                 bits.append("quiz " + (f"best {g['quiz']['best']}%" if g["quiz"]["best"] is not None else "not taken"))
             if "exercises" in g:
                 bits.append(f"exercises {g['exercises']['solved']}/{g['exercises']['total']} passed")
-            if "project" in g:
-                bits.append("project step " + ("passed" if g["project"]["ok"] else "not passed"))
+            if "bonus" in g:
+                bits.append(f"bonus {g['bonus']['solved']}/{g['bonus']['total']} (optional)")
             gate = " [" + ", ".join(bits) + "]"
         return f"{t['date']} {label}: {t['title']} ({t['minutes']} min){gate}. Steps: " + "; ".join(t.get("steps", []))
 

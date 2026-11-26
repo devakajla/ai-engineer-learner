@@ -105,7 +105,7 @@ class WeakSignal(Base):
 
     __tablename__ = "weak_signals"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    source: Mapped[str] = mapped_column(String)  # coach | chat
+    source: Mapped[str] = mapped_column(String)  # coach | chat | walkthrough
     tag: Mapped[str] = mapped_column(String, index=True)  # python lesson slug, or "other"
     detail: Mapped[str] = mapped_column(String, default="")
     created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
@@ -133,3 +133,15 @@ class RoadmapDone(Base):
     __tablename__ = "roadmap_done"
     task_id: Mapped[str] = mapped_column(String, primary_key=True)
     done_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
+
+
+class ExerciseHelp(Base):
+    """Help Dev asked for on one exercise: a Coach hint (level 1-3) or the step-by-step walkthrough."""
+
+    __tablename__ = "exercise_help"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    lesson_id: Mapped[str] = mapped_column(String, index=True)
+    exercise_id: Mapped[str] = mapped_column(String)
+    kind: Mapped[str] = mapped_column(String)  # coach | walkthrough
+    level: Mapped[int] = mapped_column(Integer, default=0)  # hint level for coach, 0 for walkthrough
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())

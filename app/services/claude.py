@@ -165,6 +165,49 @@ Simple English, short sentences, at most 80 characters per line, at most 25 line
 <weak_spots> lists what Dev keeps getting wrong (most important first). On those topics use simpler words and one
 extra small step. Mention an earlier mistake only when it helps this problem. Never print the list itself."""
 
+EXERCISE_COACH_RULES = """You are Dev's Python coach on an exercise page. Dev is a beginner who understands the lesson
+but gets stuck turning the idea into Python. You get the exercise text, Dev's code, the output of the last test run,
+a hint level (1 to 3) and the reference solution.
+
+The reference solution is ONLY for you, so your hints are correct. NEVER write it, never write any line of it, never
+rewrite Dev's code in corrected form. Dev must type the code. Functions marked "given" in the starter are already
+written: tell Dev to call them, do not explain how to write them.
+
+YOUR WHOLE REPLY IS PYTHON COMMENT LINES. Every line starts with `# `. Write, in this order:
+1. `# IDEA:` one or two lines: what the function must do, in plain everyday words.
+2. `# WHAT IS WRONG:` only if Dev's code or the test output shows a mistake: say which line and why, in words.
+   Read the failing test message and say what it means in plain words.
+3. `# STEP 1:`, `# STEP 2:` ... a short plan. Each step says what to do and names the Python tool for it.
+4. A last line `TOPIC: <lesson-slug> | <short detail>` (not a comment, it is for the app). Pick the slug from
+   <topic_list>: the Python lesson whose idea Dev is missing. If Dev's gap is not a Python idea, use `none`.
+
+Hint level:
+- 1: plan in words. End with one question Dev should answer to himself.
+- 2: also give the exact tool or method name for each step and a tiny example of that tool on DIFFERENT data,
+  as a comment (for example `# scores = {"a": 3}` then `# scores["a"]  # -> 3`).
+- 3: make each step more detailed (what goes in, what comes out, what to check), still no solution line.
+
+Simple English, short sentences, at most 80 characters per line, at most 25 lines. No Markdown, no emoji.
+<weak_spots> lists what Dev keeps getting wrong. On those topics use simpler words and one extra small step."""
+
+WALKTHROUGH_RULES = """You are Dev's Python tutor. Dev tried this exercise several times and used every hint, and is
+still stuck. Give a step-by-step walkthrough that gets Dev to write the code himself. You get the exercise text,
+Dev's code, the last test output and the reference solution (ONLY for you, so the walkthrough is correct).
+
+Rules:
+- NEVER show the reference solution or any line of it, and never rewrite Dev's code in corrected form.
+- Write Markdown. Start with `## The idea` (2-3 short sentences, everyday words).
+- Then `## Steps`: numbered steps, one small thing each. For every step write:
+  - what to do, in plain words;
+  - the shape in English pseudo-code (for example: "make an empty list called pieces");
+  - the Python tool shown on DIFFERENT data in a ```python block of at most 4 lines, with output as `# ->`.
+- Then `## Your mistake` (only if Dev's code has one): which line, why it is wrong, in words.
+- Then `## Check yourself`: 2 small questions Dev answers before running the tests.
+- Functions marked "given" in the starter are already written: just say to call them.
+- Simple English, short sentences. At most 450 words.
+- End with one line `TOPIC: <lesson-slug> | <short detail>` (from <topic_list>, the Python idea Dev is missing,
+  or `none`)."""
+
 TRIAL_CHAT_RULES = """You are Dev's Python tutor in a trial room. Dev is a beginner who can think of a solution but
 has trouble writing it in Python. Dev asks you questions. You also get Dev's current code, the output of its last run
 and the earlier messages of this chat.
@@ -390,6 +433,39 @@ async def coach_stream(
         f"<last_run_output>\n{output[-3000:] or '(not run yet)'}\n</last_run_output>"
     )
     async for item in _stream(prompt, _options(COACH_RULES, ai)):
+        yield item
+
+
+def _exercise_block(exercise_prompt: str, starter: str, solution: str, code: str, output: str) -> str:
+    return (
+        f"<exercise>\n{exercise_prompt[:6000]}\n</exercise>\n\n"
+        f"<starter>\n{starter[:6000]}\n</starter>\n\n"
+        f"<reference_solution_for_you_only>\n{solution[:8000]}\n</reference_solution_for_you_only>\n\n"
+        f"<dev_code>\n{code[:20000] or '(empty)'}\n</dev_code>\n\n"
+        f"<last_test_output>\n{output[-3000:] or '(not run yet)'}\n</last_test_output>"
+    )
+
+
+async def exercise_coach_stream(
+    exercise_prompt: str, starter: str, solution: str, code: str, output: str, level: int,
+    ai: AISettings, profile: str = "", tags: str = "",
+) -> AsyncIterator[str | StreamDone]:
+    """Comment-only hint for one exercise in the Practice tab (level 1-3)."""
+    prompt = (
+        f"{_weak_block(profile, tags)}<hint_level>{max(1, min(level, 3))}</hint_level>\n\n"
+        + _exercise_block(exercise_prompt, starter, solution, code, output)
+    )
+    async for item in _stream(prompt, _options(EXERCISE_COACH_RULES, ai)):
+        yield item
+
+
+async def walkthrough_stream(
+    exercise_prompt: str, starter: str, solution: str, code: str, output: str,
+    ai: AISettings, profile: str = "", tags: str = "",
+) -> AsyncIterator[str | StreamDone]:
+    """Step-by-step walkthrough (no solution code) once Dev is really stuck on an exercise."""
+    prompt = _weak_block(profile, tags) + _exercise_block(exercise_prompt, starter, solution, code, output)
+    async for item in _stream(prompt, _options(WALKTHROUGH_RULES, ai)):
         yield item
 
 

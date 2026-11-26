@@ -39,7 +39,12 @@ export type Exercise = {
   latest_code: string | null;
   solved: boolean;
   video: Video | null;
+  tools: { name: string; lesson_id: string | null }[]; // Python tools the exercise needs (no code)
+  help: ExerciseHelpState;
 };
+
+/** Help used on one exercise. The walkthrough opens after 3 failed runs and Coach hint level 3. */
+export type ExerciseHelpState = { coach_level: number; walkthrough: boolean; fails: number; walkthrough_ready: boolean };
 
 export type ProjectStep = {
   name: string; // "TaskFlow" or "DevDocs Copilot", depends on the track
@@ -161,6 +166,7 @@ export type AISettings = {
 export type Gate = {
   quiz?: { best: number | null; need: number; ok: boolean };
   exercises?: { solved: number; total: number; ok: boolean };
+  bonus?: { solved: number; total: number }; // optional exercises, never needed for done
   project?: { ok: boolean };
 };
 
@@ -335,6 +341,36 @@ export const streamTrialChat = (
   onText: (full: string) => void,
 ) => streamText("/api/trial/chat", json({ message, code, output, history }), onText);
 
+/** Coach on an exercise: comment-only hint at `level` (1-3). */
+export const streamExerciseCoach = (
+  lessonId: string,
+  exerciseId: string,
+  code: string,
+  output: string,
+  level: number,
+  onText: (full: string) => void,
+) => {
+  const form = new FormData();
+  form.append("code", code);
+  form.append("output", output);
+  form.append("level", String(level));
+  return streamText(`/api/practice/${lessonId}/${exerciseId}/coach`, { method: "POST", body: form }, onText);
+};
+
+/** Step-by-step walkthrough (no solution code). The server refuses it (403) until Dev is really stuck. */
+export const streamWalkthrough = (
+  lessonId: string,
+  exerciseId: string,
+  code: string,
+  output: string,
+  onText: (full: string) => void,
+) => {
+  const form = new FormData();
+  form.append("code", code);
+  form.append("output", output);
+  return streamText(`/api/practice/${lessonId}/${exerciseId}/walkthrough`, { method: "POST", body: form }, onText);
+};
+
 export const streamReview = (submissionId: number, onText: (full: string) => void) =>
   streamText(`/api/practice/review/${submissionId}`, undefined, onText);
 
@@ -348,8 +384,12 @@ export const streamNotes = (lessonId: string, upto: number, onText: (full: strin
 const onParam = (on?: string | null, first = "?") => (on ? `${first}on=${on}` : "");
 
 /** Haiku's briefing for the plan: what to do now, how, what to watch. */
-export const streamGuide = (onText: (full: string) => void, on?: string | null, fresh = false) =>
-  streamText(`/api/roadmap/guide${fresh ? "?fresh=true" : ""}${onParam(on, fresh ? "&" : "?")}`, undefined, onText);
+export const streamGuide = (
+  onText: (full: string) => void,
+  on?: string | null,
+  fresh = false,
+  signal?: AbortSignal,
+) => streamText(`/api/roadmap/guide${fresh ? "?fresh=true" : ""}${onParam(on, fresh ? "&" : "?")}`, { signal }, onText);
 
 /** Ask Haiku a question about the plan or today's task. */
 export const streamPlanAsk = (question: string, onText: (full: string) => void, on?: string | null) =>

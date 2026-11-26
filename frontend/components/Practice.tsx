@@ -5,9 +5,18 @@ import { indentUnit } from "@codemirror/language";
 import { keymap } from "@codemirror/view";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { api, Exercise, Lesson, RunResult, streamReview } from "@/lib/api";
+import {
+  api,
+  Exercise,
+  ExerciseHelpState,
+  Lesson,
+  RunResult,
+  streamExerciseCoach,
+  streamReview,
+  streamWalkthrough,
+} from "@/lib/api";
 import { useResolvedTheme } from "@/lib/prefs";
-import { TRIAL_STARTER } from "@/lib/trial";
+import { stripTopic, TRIAL_STARTER } from "@/lib/trial";
 import FailureCards from "./FailureCards";
 import Icon from "./Icon";
 import Markdown from "./Markdown";
@@ -24,6 +33,11 @@ type Props = {
 
 const VERDICT_KIND: Record<string, string> = { CORRECT: "good", PARTIAL: "warn", INCORRECT: "bad" };
 
+// In the plan, only the first exercise of a GenAI / Agentic lesson is needed; the rest are bonus.
+const SOFT_GATE_TRACKS = new Set(["genai", "agentic"]);
+const WALKTHROUGH_MIN_FAILS = 3;
+const MAX_HINT_LEVEL = 3;
+
 export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Props) {
   const theme = useResolvedTheme();
   const [exId, setExId] = useState(lesson.exercises[0].id);
@@ -36,11 +50,25 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
   const [review, setReview] = useState("");
   const [error, setError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
+  // Help used per exercise (Coach level, failed runs, walkthrough), starting from what the server knows.
+  const [helps, setHelps] = useState<Record<string, ExerciseHelpState>>(() =>
+    Object.fromEntries(lesson.exercises.map((e) => [e.id, e.help])),
+  );
+  const [helpText, setHelpText] = useState<{ kind: "coach" | "walkthrough"; text: string } | null>(null);
+  const [helping, setHelping] = useState(false);
 
   const exIndex = lesson.exercises.findIndex((e) => e.id === exId);
   const ex = lesson.exercises[exIndex] as Exercise;
   const code = codes[exId];
   const setCode = (v: string) => setCodes((c) => ({ ...c, [exId]: v }));
+  const help = helps[exId] ?? { coach_level: 0, walkthrough: false, fails: 0, walkthrough_ready: false };
+  const setHelp = (patch: Partial<ExerciseHelpState>) =>
+    setHelps((h) => {
+      const next = { ...help, ...h[exId], ...patch };
+      next.walkthrough_ready = next.fails >= WALKTHROUGH_MIN_FAILS && next.coach_level >= MAX_HINT_LEVEL;
+      return { ...h, [exId]: next };
+    });
+  const softGate = SOFT_GATE_TRACKS.has(lesson.track);
 
   useEffect(() => {
     onActive?.(ex);
@@ -61,11 +89,48 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
       if (r.passed) {
         onSolved(exId);
         await requestReview(r.submission_id);
+      } else {
+        setHelp({ fails: help.fails + 1 });
       }
     } catch (e) {
       setError((e as Error).message);
     } finally {
       setRunning("");
+    }
+  };
+
+  const askCoach = async () => {
+    if (helping) return;
+    const level = Math.min(help.coach_level + 1, MAX_HINT_LEVEL);
+    setHelping(true);
+    setError("");
+    setHelpText({ kind: "coach", text: "" });
+    try {
+      await streamExerciseCoach(lesson.id, exId, code, run?.output ?? "", level, (t) =>
+        setHelpText({ kind: "coach", text: stripTopic(t) }),
+      );
+      setHelp({ coach_level: Math.max(help.coach_level, level) });
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setHelping(false);
+    }
+  };
+
+  const askWalkthrough = async () => {
+    if (helping) return;
+    setHelping(true);
+    setError("");
+    setHelpText({ kind: "walkthrough", text: "" });
+    try {
+      await streamWalkthrough(lesson.id, exId, code, run?.output ?? "", (t) =>
+        setHelpText({ kind: "walkthrough", text: stripTopic(t) }),
+      );
+      setHelp({ walkthrough: true });
+    } catch (e) {
+      setError((e as Error).message);
+    } finally {
+      setHelping(false);
     }
   };
 
@@ -96,6 +161,7 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
     setRun(null);
     setReview("");
     setError("");
+    setHelpText(null);
   };
 
   const next = lesson.exercises[exIndex + 1];
@@ -109,6 +175,7 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
               {e.solved ? <Icon name="check" size={11} /> : i + 1}
             </span>
             {e.title}
+            {softGate && i > 0 && <span className="tag">bonus</span>}
           </button>
         ))}
       </div>
@@ -116,10 +183,30 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
       <div className="card ex-prompt">
         <div className="card-label">
           Exercise {exIndex + 1} of {lesson.exercises.length}
+          {softGate && (exIndex === 0 ? " · needed for the plan" : " · bonus (optional)")}
+          {ex.solved && help.walkthrough && <span className="pill warn">solved with help</span>}
         </div>
         <h3>{ex.title}</h3>
         <Markdown text={ex.prompt} />
       </div>
+
+      {ex.tools.length > 0 && (
+        <details className="card tools-box">
+          <summary>Tools you will need ({ex.tools.length})</summary>
+          <ul>
+            {ex.tools.map((t) => (
+              <li key={t.name}>
+                <Markdown text={t.name} inline />
+                {t.lesson_id && (
+                  <a href={`/${t.lesson_id}`} target="_blank" rel="noreferrer" className="muted">
+                    lesson
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
 
       {ex.video && <VideoSegment video={ex.video} label="Watch this problem being solved" />}
 
@@ -165,6 +252,22 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
           {running === "tests" ? "Running tests…" : running === "review" ? "Claude is reviewing…" : "Run tests"}
           {!running && <kbd>⌘↵</kbd>}
         </button>
+        <button className="btn" onClick={askCoach} disabled={helping}>
+          {helping && helpText?.kind === "coach" ? <span className="spinner" /> : <Icon name="sparkle" size={13} />}
+          Coach me (hint {Math.min(help.coach_level + 1, MAX_HINT_LEVEL)}/{MAX_HINT_LEVEL})
+        </button>
+        <button
+          className="btn"
+          onClick={askWalkthrough}
+          disabled={helping || !help.walkthrough_ready}
+          title={
+            help.walkthrough_ready
+              ? "A step-by-step walkthrough. You still write the code."
+              : `Opens after ${WALKTHROUGH_MIN_FAILS} failed test runs (now ${help.fails}) and hint ${MAX_HINT_LEVEL} (now ${help.coach_level}).`
+          }
+        >
+          <Icon name="sparkle" size={13} /> Walkthrough
+        </button>
         <button
           className="btn"
           onClick={() =>
@@ -173,7 +276,7 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
             )
           }
         >
-          <Icon name="sparkle" size={13} /> Ask Claude for a hint
+          <Icon name="sparkle" size={13} /> Ask in chat
         </button>
         <button
           className="btn"
@@ -194,6 +297,30 @@ export default function Practice({ lesson, onSolved, onAskClaude, onActive }: Pr
       </div>
 
       {error && <p className="error">{error}</p>}
+
+      {helpText && (
+        <div className="card help-card">
+          <div className="card-label">
+            {helpText.kind === "coach" ? `Coach · hint ${help.coach_level || 1}` : "Walkthrough"}
+            <button className="btn ghost small push-right" onClick={() => setHelpText(null)}>
+              <Icon name="x" size={12} />
+            </button>
+          </div>
+          {helpText.text ? (
+            helpText.kind === "coach" ? (
+              <pre className="term">{helpText.text}</pre>
+            ) : (
+              <Markdown text={helpText.text} />
+            )
+          ) : (
+            <div className="typing">
+              <span />
+              <span />
+              <span />
+            </div>
+          )}
+        </div>
+      )}
 
       {run && (
         <div className="card result">

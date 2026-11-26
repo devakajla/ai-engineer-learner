@@ -11,7 +11,9 @@ from app.db import AsyncSession, get_session
 from app.models import ChatMessage, ProjectCheck, Progress, QuizAttempt, Submission
 from app.routers.doubts import lesson_doubts, open_doubt_counts
 from app.routers.notes import note_out
+from app.routers.practice import help_state
 from app.routers.project import get_project_dir
+from app.services.tools_needed import tools_needed
 
 router = APIRouter(prefix="/api")
 
@@ -100,6 +102,7 @@ async def lesson_detail(track_id: str, slug: str, session: AsyncSession = Depend
     ).scalars().all()
     solved = {s.exercise_id for s in subs if s.tests_passed}
     latest_code = {s.exercise_id: s.code for s in subs}  # later rows win
+    helps = await help_state(session, lesson_id)
     chat = (
         await session.execute(select(ChatMessage).where(ChatMessage.lesson_id == lesson_id).order_by(ChatMessage.id))
     ).scalars().all()
@@ -147,6 +150,8 @@ async def lesson_detail(track_id: str, slug: str, session: AsyncSession = Depend
                 "latest_code": latest_code.get(e.id),
                 "solved": e.id in solved,
                 "video": video_out(e.video),
+                "tools": tools_needed(e),
+                "help": helps.get(e.id, {"coach_level": 0, "walkthrough": False, "fails": 0, "walkthrough_ready": False}),
             }
             for e in lesson.exercises
         ],

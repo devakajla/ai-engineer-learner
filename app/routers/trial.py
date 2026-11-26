@@ -8,11 +8,11 @@ from pydantic import BaseModel
 from sqlalchemy import delete, select
 
 from app.content import get_lesson
-from app.db import AsyncSession, SessionLocal, get_session
-from app.models import Drill, WeakSignal
+from app.db import AsyncSession, get_session
+from app.models import Drill
 from app.routers.settings import get_ai_settings
 from app.services import claude, drills
-from app.services.profile import build_profile, profile_text, python_tags, tags_text
+from app.services.profile import build_profile, profile_text, python_tags, save_signal, tags_text
 from app.services.runner import run_script
 
 router = APIRouter(prefix="/api/trial")
@@ -33,15 +33,6 @@ def _check(code: str) -> None:
         raise HTTPException(400, "No code to run")
     if len(code.encode()) > MAX_CODE_BYTES:
         raise HTTPException(413, "Code too large")
-
-
-async def _save_signal(source: str, text: str) -> None:
-    """Save the TOPIC line of Claude's reply as a weak-spot signal."""
-    parsed = claude.parse_topic(text, python_tags())
-    if parsed:
-        async with SessionLocal() as s:
-            s.add(WeakSignal(source=source, tag=parsed[0], detail=parsed[1]))
-            await s.commit()
 
 
 @router.post("/run", response_model=ScriptOut)
@@ -73,7 +64,7 @@ async def coach(
         except Exception as e:  # CLI missing, not logged in, etc.
             yield f"# Coach is not available right now: {e}"
             return
-        await _save_signal("coach", text)
+        await save_signal("coach", text)
 
     return StreamingResponse(body(), media_type="text/plain; charset=utf-8")
 
@@ -114,7 +105,7 @@ async def chat(body: ChatIn, session: AsyncSession = Depends(get_session)):
         except Exception as e:  # CLI missing, not logged in, etc.
             yield f"Chat is not available right now: `{e}`"
             return
-        await _save_signal("chat", text)
+        await save_signal("chat", text)
 
     return StreamingResponse(stream(), media_type="text/plain; charset=utf-8")
 
